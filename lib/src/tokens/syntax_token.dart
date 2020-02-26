@@ -1,4 +1,5 @@
 enum SyntaxKind {
+  //TEMP TOKENS
   NumberToken,
   WhitespaceToken,
   PlusToken,
@@ -9,7 +10,19 @@ enum SyntaxKind {
   ClosedParenToken,
   ErrorToken,
   EOFToken,
+  //END TEMP TOKENS
+
+  keywordToken,
+  integerLiteralToken,
+  realLiteralToken,
+  characterLiteralToken,
+  stringLiteralToken,  
+  interpolatedStringLiteralToken,
+  operatorOrPunctorToken
+
 }
+
+
 
 class SyntaxToken {
   SyntaxToken(this.kind, this.position, this.text, this.value);
