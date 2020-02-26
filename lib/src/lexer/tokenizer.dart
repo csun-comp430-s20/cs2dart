@@ -1,5 +1,7 @@
 import '../tokens/syntax_token.dart';
 import 'token_assist.dart';
+import 'token_assist.dart';
+import 'dart:io';
 
 class Lexer {
 
@@ -39,6 +41,28 @@ class Lexer {
 
       while (LexerAssist.isDigit(_current)) {
         _next();
+      }
+
+      // if (_current == 46 ){
+      //   if (LexerAssist.isDigit(_text.codeUnitAt(_position + 1))){
+      //     _next();
+      //     while (LexerAssist.isDigit(_current)) {
+      //     _next();
+      //     }
+      //   }
+      // }
+
+      if (_current == 46 ){
+        _next();
+        if (LexerAssist.isDigit(_current)){
+          _next();
+          while (LexerAssist.isDigit(_current)) {
+          _next();
+          }
+        } 
+        else {
+          // return SyntaxToken(SyntaxKind.ErrorToken, _position++, _text.substring(_position - 1, _position), null);
+        }
       }
       
       var end = _position;
