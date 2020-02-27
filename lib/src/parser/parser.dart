@@ -1,4 +1,4 @@
-import '../tokens/syntax_token.dart';
+import '../../playground/syntax_token.dart';
 
 class Parser {
 

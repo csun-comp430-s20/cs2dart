@@ -1,9 +1,12 @@
 import 'dart:io';
 
-import 'package:cs2dart/tokens.dart';
+import 'package:cs2dart/playground/syntax_token.dart';
 import 'package:cs2dart/lexer.dart';
+import 'package:cs2dart/tokens.dart';
 
 void main(List<String> arguments) {
+
+  // isWhitespace(' ');
 
   while (true) {
 
@@ -17,16 +20,10 @@ void main(List<String> arguments) {
     var lexer = Lexer(line);
 
     while (true) {
-      var token = lexer.nextToken();
-      if (token.kind == SyntaxKind.EOFToken) {
-        break;
+      var token = lexer.lexify();
+      if (token[1] is KeywordToken) {
+        print(token[1]);
       }
-      stdout.write("${token.kind}: '${token.text}'");
-      if (token.value != null) {
-        stdout.write(' ${token.value}');
-      }
-      stdout.writeln();
     }
-
   }
 }
