@@ -1,4 +1,4 @@
-import '../../playground/syntax_token.dart';
+import 'package:cs2dart/tokens.dart';
 
 class Parser {
 
@@ -23,10 +23,10 @@ class Parser {
 
     Parser(this._tokens);
 
-    final List<SyntaxToken> _tokens;
+    final List<Token> _tokens;
     int _position;
 
-    SyntaxToken peek(int offset) {
+    Token peek(int offset) {
       var index = _position + offset;
       if (index >= _tokens.length) {
         return _tokens[_tokens.length - 1];

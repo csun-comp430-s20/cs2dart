@@ -1,13 +1,13 @@
 import '../token.dart';
 
-class KeywordToken extends Token {
+class KeywordToken implements Token {
 
   KeywordToken(
-    this._id,
-  );
+    this._value,
+  ): super();
 
   static final TokenType _type = TokenType.keyword;
-  final String _id;
+  final String _value;
 
   @override
   TokenType get type {
@@ -15,7 +15,8 @@ class KeywordToken extends Token {
     return _type;
   }
 
-  String get id {
-    return _id;
+  @override
+  String get value {
+    return _value;
   }
 }
