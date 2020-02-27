@@ -1,4 +1,4 @@
-class LexerAssist {
+class TokenAssist {
 
   /// isCSharpLexerWhitespace
   static bool isCSharpLexerWhitespace(String line) {
@@ -65,5 +65,6 @@ class LexerAssist {
 
     return false;
   }
-
 }
+
+
