@@ -5,8 +5,6 @@ import 'package:cs2dart/tokens.dart';
 
 void main(List<String> arguments) {
 
-  // isWhitespace(' ');
-
   while (true) {
 
     stdout.write('> ');
@@ -21,7 +19,19 @@ void main(List<String> arguments) {
     var token = lexer.nextToken();
     // it prints keyword tokens :)
     if (token is KeywordToken) {
-      print(token.value);
+      stdout.writeln('${token.runtimeType}: ${token.value}');
+    } else if (token is IdentifierToken) {
+      stdout.writeln('${token.runtimeType}: ${token.value}');
+    } else if (token is CharacterLiteralToken) {
+      stdout.writeln('${token.runtimeType}: ${token.value}');
+    } else if (token is IntegerLiteralToken) {
+      stdout.writeln('${token.runtimeType}: ${token.value}');
+    } else if (token is StringLiteralToken) {
+      stdout.writeln('${token.runtimeType}: ${token.value}');
+    } else if (token == null) {
+      stdout.writeln('Yeah, that was probably null or an unexpected input');
+    } else {
+      stdout.writeln("YEAH, I REALLY DON'T KNOW WHAT YOU GAVE ME");
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cs2dart/tokens.dart';
 
 import 'lexer_assist.dart' as lexer_assist;
@@ -89,12 +91,78 @@ class Lexer {
     return false;
   }
 
-  bool isNewLineCharacter(int char) {
+    bool _isDoubleQuote(int char){
+    if(char == 34) {
+      return true;
+    }
+      
+    return false;
+  }
+
+  bool _isBackSlash(int char){
+    if(char == 92) {
+      return true;
+    }
+    return false;
+  }
+
+  bool _isCarriageReturn(int char){
+    if (char == 10) {
+      return true;
+    }
+    return false;
+  }
+
+  bool _isGraphicalCharacter(int char) {
+
+    var list = [33, 35, 37, 38, 39,
+                40, 41, 42, 43, 44,
+                45, 46, 47, 58, 59,
+                60, 61, 62, 63, 91, 
+                93, 94, 95, 123, 124,
+                125, 126];
+
+    if (list.contains(char)) {
+      return true;
+    }
+    return false;
+  }
+    
+  bool _isNewLineCharacter(int char) {
     if (char == 13 || // return carriage
         char == 10 || // line feed
-        char == 133 ||
-        char == 8232 ||
-        char == 8233) {
+        char == 133 || // next line (nel)
+        char == 8232 || // line separator
+        char == 8233) { // paragraph separator
+      return true;
+    }
+    return false;
+  }
+
+  bool _isU(int char) {
+    if (char == 117 || // u
+        char == 85) {  // U 
+      return true;
+    }
+    return false;
+  }
+
+  bool _isL(int char) {
+    if (char == 76 ||  // L
+        char == 108) { // l
+      return true;
+    }
+    return false;
+  }
+
+
+  // DON'T USE OMEGALUL
+  bool _isIntegerTypeSuffix(String str) {
+    var list = ['U', 'u', 'L', 'l',
+                'UL', 'Ul', 'uL', 'ul',
+                'LU', 'Lu', 'lU', 'lu'];
+
+    if (list.contains(str)) {
       return true;
     }
     return false;
@@ -163,7 +231,7 @@ class Lexer {
   bool _isSingleCharacter(int char) {
     if (char != 39 || // '
         char != 92 || // \
-        !isNewLineCharacter(char)) {
+        !_isNewLineCharacter(char)) {
       return true;
     }
     return false;
@@ -200,7 +268,7 @@ class Lexer {
       }
   }
 
-  Token characterLiteral() {
+  Token _characterLiteral() {
     var chunk = '';
     var end;
     var start = _position;
@@ -219,10 +287,12 @@ class Lexer {
         }
       }
     }
+
+    _position = start;
     return null;
   }
 
-  Token identifierOrKeyword() {
+  Token _identifierOrKeyword() {
     var chunk = '';
     var end;
     var start = _position;
@@ -252,6 +322,68 @@ class Lexer {
 
     } else {
       // doesn't even start correctly
+      // not the right token
+      // reset position back to what it was
+      // so the other functions can check
+      // what the parse is
+      _position = start;
+      return null;
+    }
+  }
+
+  Token _stringLiteral() {
+    var chunk = '';
+    var start = _position;
+    var end;
+
+    if (_isDoubleQuote(_current)) {
+      chunk += '"';
+      _next();
+      while (!_isBackSlash(_current) &&
+             !_isCarriageReturn(_current) &&
+             !_isDoubleQuote(_current)) {
+        _next();
+      }
+      if (_isDoubleQuote(_current)){
+        chunk += '"';
+        end = _position;
+        chunk = _text.substring(start,end);
+        return StringLiteralToken(chunk);
+      } else {
+        _position = start;
+        return null; // illegal character
+      }
+    }
+    _position = start;
+    return null;
+  }
+
+
+  Token _integerLiteral() {
+    var chunk = '';
+    var end;
+    var start = _position;
+
+    if (lexer_assist.isDecimalDigit(_current)) {
+      _next();
+      while (lexer_assist.isDecimalDigit(_current)) {
+        _next();
+      }
+      if (_isU(_current) || _isL(_current)) {
+        _next();
+        if (_isU(_current) || _isL(_current)) {
+          _next();
+        }
+      }
+      end = _position;
+      chunk = _text.substring(start, end);
+
+      return IntegerLiteralToken(chunk);
+
+    } else {
+      // not recognized
+      // reset position
+      _position = start;
       return null;
     }
   }
@@ -292,14 +424,44 @@ class Lexer {
     }
   }
 
+
+
+
   Token nextToken() {
-    var read = identifierOrKeyword();
+
+    var read = _identifierOrKeyword();
+
     if (read != null) {
+
       return read;
+
     } else {
+
+      read = _characterLiteral();
+
+      if (read != null) {
+
+        return read;
+
+      } else {
+
+        read = _integerLiteral();
+
+        if (read != null) {
+
+          return read;
+
+        } else {
+
+          // read =
+
+        }
+
+      }
+
+      // yeah idk what I just read imma
+      // just give you null back lmao
       return null;
-      // read =
-      // do other stuff
     }
   }
 }

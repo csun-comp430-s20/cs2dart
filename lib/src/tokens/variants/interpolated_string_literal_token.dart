@@ -15,6 +15,7 @@ class InterpolatedStringLiteralToken implements Token {
     return _type;
   }
 
+  @override
   String get value {
     return _value;
   }

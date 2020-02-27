@@ -12,9 +12,18 @@ enum TokenType {
 abstract class Token {
 
   Token(
-    this.type,
+    this._type,
+    this._value,
   );
 
-  final TokenType type;
+  final TokenType _type;
+  final String _value;
 
+  TokenType get type {
+    return _type;
+  }
+
+  String get value {
+    return _value;
+  }
 }
