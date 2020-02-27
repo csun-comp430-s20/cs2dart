@@ -99,10 +99,65 @@ class Lexer {
     }
     return false;
   }
+  bool _isDoubleOp(int char)
+  {
+    if (char == 38 || // ampersand
+        char == 43 || // plus sign
+        char == 45 || // hyphen-minus
+        char == 58 || // colon
+        char == 60 || // less-than sign
+        char == 61 || // equal sign
+        char == 62 || // greater-than sign
+        char == 63 || // question mark
+        char == 124 // vertical bar
+    ) {
+      return true;
+    }
+    return false;
+  }
 
+  bool _isTripleOp(int char)
+  {
+    if (char == 61 // equal sign
+    ) {
+      return true;
+    }
+    return false;
+  }
 
-
-
+  bool _isOperatororPunctuator(int char) {
+    var chunk = '';
+    var end;
+    var start = _position;
+    // single chars
+    if (char == 33 || // Exclamation mark
+        char == 37 || // percent sign
+        char == 38 || // ampersand
+        char == 40 || // left parenthesis
+        char == 41 || // right parenthesis
+        char == 42 || // asterisk
+        char == 43 || // plus sign
+        char == 45 || // hyphen-minus
+        char == 46 || // full stop, period
+        char == 47 || // slash
+        char == 58 || // colon
+        char == 59 || // semicolon
+        char == 60 || // less-than sign
+        char == 61 || // equal sign
+        char == 62 || // greater-than sign
+        char == 63 || // question mark
+        char == 91 || // left square bracket
+        char == 93 || // right square bracket
+        char == 94 || // circumflex accent
+        char == 123 || // left curly bracket
+        char == 124 || // vertical bar
+        char == 125 || // right curly bracket
+        char == 126) { // tilde
+          //then check for operators that have 2 characters
+      return true;
+    }
+    return false;
+  }
 
 
   bool _isSingleCharacter(int char) {
@@ -200,6 +255,42 @@ class Lexer {
       return null;
     }
   }
+  Token operatorOrPunctuator() {
+    var chunk = '';
+    var end;
+    var start = _position;
+    // go through on all of these different types of characters
+    if (_isOperatororPunctuator(_current)){
+      _next();
+      if (_isDoubleOp(_current))
+      {
+        _next();
+        if (_isTripleOp(_current))
+        {
+          end = _position;
+          chunk = _text.substring(start, end);
+          if (lexer_assist.isTripleOp(chunk)) {
+            return OperatorOrPunctuatorToken(chunk);
+          }
+        }
+        end = _position;
+        chunk = _text.substring(start, end);
+        if (lexer_assist.isDoubleOp(chunk)) {
+          return OperatorOrPunctuatorToken(chunk);
+        }
+      }
+      chunk = _text.substring(start, end);
+      // chunk ended up being a keyword
+      if (lexer_assist.isKeyword(chunk)) {
+        return KeywordToken(chunk);
+      }
+      return OperatorOrPunctuatorToken(chunk);
+    } else {
+      // doesn't even start correctly
+      _position = start;
+      return null;
+    }
+  }
 
   Token nextToken() {
     var read = identifierOrKeyword();
@@ -207,7 +298,7 @@ class Lexer {
       return read;
     } else {
       return null;
-      // read = 
+      // read =
       // do other stuff
     }
   }
