@@ -1,8 +1,5 @@
 import 'package:cs2dart/tokens.dart';
 
-import '../../playground/syntax_token.dart';
-import '../../playground/token_assist.dart';
-
 import 'lexer_assist.dart' as lexer_assist;
 import 'package:characters/characters.dart' as characters;
 import 'package:unicode/unicode.dart' as unicode;

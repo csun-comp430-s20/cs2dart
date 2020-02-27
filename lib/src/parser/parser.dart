@@ -1,4 +1,4 @@
-import '../../playground/syntax_token.dart';
+import 'package:cs2dart/tokens.dart';
 
 class Parser {
 

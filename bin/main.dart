@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cs2dart/playground/syntax_token.dart';
 import 'package:cs2dart/lexer.dart';
 import 'package:cs2dart/tokens.dart';
 
