@@ -128,7 +128,7 @@ class Lexer {
     return false;
   }
     
-  bool isNewLineCharacter(int char) {
+  bool _isNewLineCharacter(int char) {
     if (char == 13 || // return carriage
         char == 10 || // line feed
         char == 133 || // next line (nel)
@@ -139,7 +139,7 @@ class Lexer {
     return false;
   }
 
-  bool isU(int char) {
+  bool _isU(int char) {
     if (char == 117 || // u
         char == 85) {  // U 
       return true;
@@ -147,7 +147,7 @@ class Lexer {
     return false;
   }
 
-  bool isL(int char) {
+  bool _isL(int char) {
     if (char == 76 ||  // L
         char == 108) { // l
       return true;
@@ -157,7 +157,7 @@ class Lexer {
 
 
   // DON'T USE OMEGALUL
-  bool isIntegerTypeSuffix(String str) {
+  bool _isIntegerTypeSuffix(String str) {
     var list = ['U', 'u', 'L', 'l',
                 'UL', 'Ul', 'uL', 'ul',
                 'LU', 'Lu', 'lU', 'lu'];
@@ -176,7 +176,7 @@ class Lexer {
   bool _isSingleCharacter(int char) {
     if (char != 39 || // '
         char != 92 || // \
-        !isNewLineCharacter(char)) {
+        !_isNewLineCharacter(char)) {
       return true;
     }
     return false;
@@ -213,7 +213,7 @@ class Lexer {
       }
   }
 
-  Token characterLiteral() {
+  Token _characterLiteral() {
     var chunk = '';
     var end;
     var start = _position;
@@ -237,7 +237,7 @@ class Lexer {
     return null;
   }
 
-  Token identifierOrKeyword() {
+  Token _identifierOrKeyword() {
     var chunk = '';
     var end;
     var start = _position;
@@ -276,82 +276,47 @@ class Lexer {
     }
   }
 
-  Token nextToken() {
-    var read = identifierOrKeyword();
-    if (read != null) {
-      return read;
-    } else {
-      // read = 
-      // do other stuff
-    }
-  }
-
-
-  Token stringLiteral() {
+  Token _stringLiteral() {
     var chunk = '';
     var start = _position;
     var end;
-    if(_isDoubleQuote(_current)){
+
+    if (_isDoubleQuote(_current)) {
       chunk += '"';
       _next();
-      while(!_isBackSlash(_current) &&
-            !_isCarriageReturn(_current) &&
-            !_isDoubleQuote(_current)) {
-              _next();
+      while (!_isBackSlash(_current) &&
+             !_isCarriageReturn(_current) &&
+             !_isDoubleQuote(_current)) {
+        _next();
       }
-      if(_isDoubleQuote(_current)){
+      if (_isDoubleQuote(_current)){
         chunk += '"';
         end = _position;
         chunk = _text.substring(start,end);
         return StringLiteralToken(chunk);
       } else {
+        _position = start;
         return null; // illegal character
       }
     }
+    _position = start;
     return null;
   }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  Token integerLiteral() {
+  Token _integerLiteral() {
     var chunk = '';
     var end;
     var start = _position;
 
-    if (lexer_assist.isOperatorOrPunctuator(_current)) {
-
+    if (lexer_assist.isDecimalDigit(_current)) {
+      _next();
       while (lexer_assist.isDecimalDigit(_current)) {
         _next();
       }
-      if (isU(_current) || isL(_current)) {
+      if (_isU(_current) || _isL(_current)) {
         _next();
-        if (isU(_current) || isL(_current)) {
+        if (_isU(_current) || _isL(_current)) {
           _next();
         }
       }
@@ -361,15 +326,19 @@ class Lexer {
       return IntegerLiteralToken(chunk);
 
     } else {
-
+      // not recognized
+      // reset position
+      _position = start;
       return null;
-
     }
   }
 
+
+
+
   Token nextToken() {
 
-    var read = identifierOrKeyword();
+    var read = _identifierOrKeyword();
 
     if (read != null) {
 
@@ -377,7 +346,7 @@ class Lexer {
 
     } else {
 
-      read = characterLiteral();
+      read = _characterLiteral();
 
       if (read != null) {
 
@@ -385,7 +354,17 @@ class Lexer {
 
       } else {
 
-        // read = 
+        read = _integerLiteral();
+
+        if (read != null) {
+
+          return read;
+
+        } else {
+
+          // read =
+
+        }
 
       }
 
