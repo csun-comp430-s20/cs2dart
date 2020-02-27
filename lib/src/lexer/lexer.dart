@@ -92,6 +92,34 @@ class Lexer {
     return false;
   }
 
+    bool _isDoubleQuote(int char){
+    if(char == 34) return true;
+    return false;
+  }
+
+  bool _isBackSlash(int char){
+    if(char == 92) return true;
+    return false;
+  }
+
+  bool _isCarriageReturn(int char){
+    if(char == 10) return true;
+    return false;
+  }
+
+  bool _isGraphicalCharacter(int char) {
+
+    var list = [33, 35, 37, 38, 39,
+                40, 41, 42, 43, 44,
+                45, 46, 47, 58, 59,
+                60, 61, 62, 63, 91, 
+                93, 94, 95, 123, 124,
+                125, 126];
+
+    if(list.contains(char)) return true;
+    return false;
+  }
+
 
 
 
@@ -166,6 +194,32 @@ class Lexer {
       // do other stuff
     }
   }
+
+
+  Token stringLiteral() {
+    var chunk = '';
+    var start = _position;
+    var end;
+    if(_isDoubleQuote(_current)){
+      chunk += '"';
+      _next();
+      while(!_isBackSlash(_current) &&
+            !_isCarriageReturn(_current) &&
+            !_isDoubleQuote(_current)) {
+              _next();
+      }
+      if(_isDoubleQuote(_current)){
+        chunk += '"';
+        end = _position;
+        chunk = _text.substring(start,end);
+        return StringLiteralToken(chunk);
+      } else {
+        return null; // illegal character
+      }
+    }
+    return null;
+  }
+
 
 
 
