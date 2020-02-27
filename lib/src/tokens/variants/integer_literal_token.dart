@@ -7,7 +7,7 @@ class IntegerLiteralToken implements Token {
   ): super();
 
   static final TokenType _type = TokenType.integerLiteral;
-  final int _value;
+  final String _value;
 
   @override
   TokenType get type {
@@ -15,7 +15,8 @@ class IntegerLiteralToken implements Token {
     return _type;
   }
 
-  int get value {
+  @override
+  String get value {
     return _value;
   }
 }

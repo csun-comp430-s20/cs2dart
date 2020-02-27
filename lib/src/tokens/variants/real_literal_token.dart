@@ -7,7 +7,7 @@ class RealLiteralToken implements Token {
   ): super();
 
   static final TokenType _type = TokenType.realLiteral;
-  final double _value;
+  final String _value;
 
   @override
   TokenType get type {
@@ -15,7 +15,8 @@ class RealLiteralToken implements Token {
     return _type;
   }
 
-  double get value {
+  @override
+  String get value {
     return _value;
   }
 }
