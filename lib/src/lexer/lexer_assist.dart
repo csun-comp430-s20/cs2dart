@@ -4,7 +4,7 @@ const _decimalDigits = [48, 49, 50, 51, 52,
 
 const _opsAndPuncs = [33, 37, 38, 40, 41, 42, 43, 44,
                       45, 46, 47, 58, 59, 94,
-                      123, 124, 
+                      123, 124,
                       125,
                       ];
 
@@ -29,6 +29,23 @@ bool isMemberOfZs(int character) {
 
 bool isOperatorOrPunctuator(int character) {
   if (_opsAndPuncs.contains(character)) {
+    return true;
+  }
+  return false;
+}
+
+bool isDoubleOp(String chunk) {
+  var _doubleOps = ['??','::','++','--','&&','||','->','==','!=','<=','>=','+=','-=','*=','/=','%=',
+                             '&=',',=','^=','<<','<<=','=>'];
+  if (_doubleOps.contains(chunk)) {
+    return true;
+  }
+  return false;
+}
+
+bool isTripleOp(String chunk) {
+  if (chunk == '<<=')
+  {
     return true;
   }
   return false;
@@ -59,5 +76,5 @@ bool isWhitespace(String line) {
     return true;
   }
 
-  return false;   
+  return false;
 }
