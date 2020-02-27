@@ -1,13 +1,13 @@
 import '../token.dart';
 
-class IdentifierToken extends Token {
+class IdentifierToken implements Token {
 
   IdentifierToken(
-    this._id
-  );
+    this._value,
+  ): super();
 
   static final TokenType _type = TokenType.identifier;
-  final String _id;
+  final String _value;
 
   @override
   TokenType get type {
@@ -15,7 +15,7 @@ class IdentifierToken extends Token {
     return _type;
   }
 
-  String get id {
-    return _id;
+  String get value {
+    return _value;
   }
 }

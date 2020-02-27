@@ -3,13 +3,11 @@ import '../token.dart';
 class CharacterLiteralToken implements Token {
 
   CharacterLiteralToken(
-    this._char,
-    this._rep
-  );
+    this._value,
+  ): super();
 
   static final TokenType _type = TokenType.characterLiteral;
-  final int _char;
-  final String _rep;
+  final String _value;
 
   @override
   TokenType get type {
@@ -17,13 +15,7 @@ class CharacterLiteralToken implements Token {
     return _type;
   }
 
-  @override
-  int get char {
-    return _char;
-  }
-
-  @override
-  String get rep {
-    return _rep;
+  String get value {
+    return _value;
   }
 }

@@ -9,4 +9,12 @@ enum TokenType {
   stringLiteral,
 }
 
-abstract class Token { }
+abstract class Token {
+
+  Token(
+    this.type,
+  );
+
+  final TokenType type;
+
+}
