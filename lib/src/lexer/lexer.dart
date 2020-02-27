@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cs2dart/tokens.dart';
 
 import 'lexer_assist.dart' as lexer_assist;
@@ -92,9 +94,38 @@ class Lexer {
   bool isNewLineCharacter(int char) {
     if (char == 13 || // return carriage
         char == 10 || // line feed
-        char == 133 ||
-        char == 8232 ||
-        char == 8233) {
+        char == 133 || // next line (nel)
+        char == 8232 || // line separator
+        char == 8233) { // paragraph separator
+      return true;
+    }
+    return false;
+  }
+
+  bool isU(int char) {
+    if (char == 117 || // u
+        char == 85) {  // U 
+      return true;
+    }
+    return false;
+  }
+
+  bool isL(int char) {
+    if (char == 76 ||  // L
+        char == 108) { // l
+      return true;
+    }
+    return false;
+  }
+
+
+  // DON'T USE OMEGALUL
+  bool isIntegerTypeSuffix(String str) {
+    var list = ['U', 'u', 'L', 'l',
+                'UL', 'Ul', 'uL', 'ul',
+                'LU', 'Lu', 'lU', 'lu'];
+
+    if (list.contains(str)) {
       return true;
     }
     return false;
@@ -164,6 +195,8 @@ class Lexer {
         }
       }
     }
+
+    _position = start;
     return null;
   }
 
@@ -197,18 +230,68 @@ class Lexer {
 
     } else {
       // doesn't even start correctly
+      // not the right token
+      // reset position back to what it was
+      // so the other functions can check
+      // what the parse is
+      _position = start;
       return null;
     }
   }
 
-  Token nextToken() {
-    var read = identifierOrKeyword();
-    if (read != null) {
-      return read;
+  Token integerLiteral() {
+    var chunk = '';
+    var end;
+    var start = _position;
+
+    if (lexer_assist.isOperatorOrPunctuator(_current)) {
+
+      while (lexer_assist.isDecimalDigit(_current)) {
+        _next();
+      }
+      if (isU(_current) || isL(_current)) {
+        _next();
+        if (isU(_current) || isL(_current)) {
+          _next();
+        }
+      }
+      end = _position;
+      chunk = _text.substring(start, end);
+
+      return IntegerLiteralToken(chunk);
+
     } else {
+
       return null;
-      // read = 
-      // do other stuff
+
+    }
+  }
+
+  Token nextToken() {
+
+    var read = identifierOrKeyword();
+
+    if (read != null) {
+
+      return read;
+
+    } else {
+
+      read = characterLiteral();
+
+      if (read != null) {
+
+        return read;
+
+      } else {
+
+        // read = 
+
+      }
+
+      // yeah idk what I just read imma
+      // just give you null back lmao
+      return null;
     }
   }
 }
