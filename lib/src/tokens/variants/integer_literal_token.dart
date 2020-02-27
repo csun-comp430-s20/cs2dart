@@ -1,13 +1,13 @@
 import '../token.dart';
 
-class IntegerLiteralToken extends Token {
+class IntegerLiteralToken implements Token {
 
   IntegerLiteralToken(
-    this._char,
-  );
+    this._value,
+  ): super();
 
   static final TokenType _type = TokenType.integerLiteral;
-  final int _char;
+  final int _value;
 
   @override
   TokenType get type {
@@ -15,8 +15,7 @@ class IntegerLiteralToken extends Token {
     return _type;
   }
 
-  @override
-  int get char {
-    return _char;
+  int get value {
+    return _value;
   }
 }

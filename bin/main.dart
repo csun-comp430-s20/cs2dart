@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cs2dart/playground/syntax_token.dart';
 import 'package:cs2dart/lexer.dart';
 import 'package:cs2dart/tokens.dart';
 
@@ -19,11 +18,10 @@ void main(List<String> arguments) {
 
     var lexer = Lexer(line);
 
-    while (true) {
-      var token = lexer.lexify();
-      if (token[1] is KeywordToken) {
-        print(token[1]);
-      }
+    var token = lexer.nextToken();
+    // it prints keyword tokens :)
+    if (token is KeywordToken) {
+      print(token.value);
     }
   }
 }

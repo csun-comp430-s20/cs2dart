@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 // UTF-16, 0 through 9
 const _decimalDigits = [48, 49, 50, 51, 52,
                         53, 54, 55, 56, 57];

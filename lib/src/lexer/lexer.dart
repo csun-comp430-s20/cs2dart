@@ -1,8 +1,5 @@
 import 'package:cs2dart/tokens.dart';
 
-import '../../playground/syntax_token.dart';
-import '../../playground/token_assist.dart';
-
 import 'lexer_assist.dart' as lexer_assist;
 import 'package:characters/characters.dart' as characters;
 import 'package:unicode/unicode.dart' as unicode;
@@ -92,6 +89,31 @@ class Lexer {
     return false;
   }
 
+  bool isNewLineCharacter(int char) {
+    if (char == 13 || // return carriage
+        char == 10 || // line feed
+        char == 133 ||
+        char == 8232 ||
+        char == 8233) {
+      return true;
+    }
+    return false;
+  }
+
+
+
+
+
+
+  bool _isSingleCharacter(int char) {
+    if (char != 39 || // '
+        char != 92 || // \
+        !isNewLineCharacter(char)) {
+      return true;
+    }
+    return false;
+  }
+
 
 
 
@@ -121,6 +143,28 @@ class Lexer {
             _position < _text.length) {
         _next();
       }
+  }
+
+  Token characterLiteral() {
+    var chunk = '';
+    var end;
+    var start = _position;
+
+    if (_current == "'".codeUnitAt(0)) {
+      _next();
+      if (_isSingleCharacter(_current)) {
+        _next();
+        if (_current == "'".codeUnitAt(0)) {
+          _next();
+          end = _position;
+          chunk = _text.substring(start, end);
+
+          return CharacterLiteralToken(chunk);
+
+        }
+      }
+    }
+    return null;
   }
 
   Token identifierOrKeyword() {
@@ -162,105 +206,9 @@ class Lexer {
     if (read != null) {
       return read;
     } else {
+      return null;
       // read = 
       // do other stuff
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // this was orginally a toy function to understand
-  SyntaxToken nextToken2() {
-
-    // <EOF>
-    // <numbers>
-    // <whitespace>
-    // + - * / ( )
-    // <error>
-
-    if (_position >= _text.length) {
-      return SyntaxToken(SyntaxKind.EOFToken, _position, '\0', null);
-    }
-
-    if (TokenAssist.isDigit(_current)) {
-
-      var start = _position;
-
-      while (TokenAssist.isDigit(_current)) {
-        _next();
-      }
-      
-      var end = _position;
-      var text = _text.substring(start, end);
-      var value = int.tryParse(text);
-
-      return SyntaxToken(SyntaxKind.NumberToken, start, text, value);
-    }
-
-    if (TokenAssist.isCSharpLexerCharWhitespace(_current)) {
-        
-      var start = _position;
-
-      while (TokenAssist.isCSharpLexerCharWhitespace(_current)) {
-        _next();
-      }
-      
-      var length = _position - start;
-
-      return SyntaxToken(SyntaxKind.WhitespaceToken, start, ' ', length);
-    }
-
-    if (_current == '+'.codeUnitAt(0)) {
-      return SyntaxToken(SyntaxKind.PlusToken, _position++, '+', null);
-    } else if (_current == '-'.codeUnitAt(0)) {
-      return SyntaxToken(SyntaxKind.MinusToken, _position++, '-', null);
-    } else if (_current == '*'.codeUnitAt(0)) {
-      return SyntaxToken(SyntaxKind.MultiplyToken, _position++, '*', null);
-    } else if (_current == '/'.codeUnitAt(0)) {
-      return SyntaxToken(SyntaxKind.MinusToken, _position++, '/', null);
-    } else if (_current == '('.codeUnitAt(0)) {
-      return SyntaxToken(SyntaxKind.OpenParenToken, _position++, '(', null);
-    } else if (_current == ')'.codeUnitAt(0)) {
-      return SyntaxToken(SyntaxKind.ClosedParenToken, _position++, ')', null);
-    }
-
-    return SyntaxToken(SyntaxKind.ErrorToken, _position++, _text.substring(_position - 1, _position), null);
-  }
-
-
-
 }
