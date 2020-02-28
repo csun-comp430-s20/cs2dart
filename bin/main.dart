@@ -28,6 +28,12 @@ void main(List<String> arguments) {
       stdout.writeln('${token.runtimeType}: ${token.value}');
     } else if (token is StringLiteralToken) {
       stdout.writeln('${token.runtimeType}: ${token.value}');
+    } else if (token is InterpolatedStringLiteralToken) {
+      stdout.writeln('${token.runtimeType}: ${token.value}');
+    } else if (token is OperatorOrPunctuatorToken) {
+      stdout.writeln('${token.runtimeType}: ${token.value}');
+    } else if (token is RealLiteralToken) {
+      stdout.writeln('${token.runtimeType}: ${token.value}');
     } else if (token == null) {
       stdout.writeln('Yeah, that was probably null or an unexpected input');
     } else {
