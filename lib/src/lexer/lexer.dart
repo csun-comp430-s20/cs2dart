@@ -1,3 +1,4 @@
+//import 'dart:html';
 import 'dart:io';
 
 import 'package:cs2dart/tokens.dart';
@@ -96,6 +97,13 @@ class Lexer {
       return true;
     }
       
+    return false;
+  }
+
+  bool _isDollarSign(int char){
+    if (char == 36){
+      return true;
+    }
     return false;
   }
 
@@ -237,6 +245,20 @@ class Lexer {
     return false;
   }
 
+  bool _isOpenBracket(int char){
+    if (char == 123){
+      return true;
+    }
+    return false;
+  }
+
+  bool _isClosedBracket(int char){
+    if (char == 125){
+      return true;
+    }
+    return false;
+  }
+
 
 
 
@@ -331,21 +353,67 @@ class Lexer {
     }
   }
 
+  Token _interpolated_string_literal() {
+    var chunk = '';
+    var start = _position;
+    var end;
+    
+    if (_isDollarSign(_current))
+    {
+      _next();
+
+      if (_isDoubleQuote(_current)) {
+        _next();
+        while (!_isBackSlash(_current) &&
+              !_isCarriageReturn(_current) &&
+              !_isDoubleQuote(_current) && 
+              _position < _text.length) {
+                if (_isOpenBracket(_current))
+                {
+                  while (!_isBackSlash(_current) &&
+                        !_isCarriageReturn(_current) &&
+                        !_isClosedBracket(_current) &&
+                        _position < _text.length - 1)
+                        {
+                          _next();
+                        }
+                  if(!_isClosedBracket(_current)){
+                    return null;
+                  }
+                }
+                
+          _next();
+        }
+        if (_isDoubleQuote(_current)){
+          _next();
+          end = _position;
+          chunk = _text.substring(start,end);
+          return InterpolatedStringLiteralToken(chunk);
+        } else {
+          _position = start;
+          return null; // illegal character
+        }
+      }
+    }
+    _position = start;
+    return null;
+  }
+
   Token _stringLiteral() {
     var chunk = '';
     var start = _position;
     var end;
 
     if (_isDoubleQuote(_current)) {
-      chunk += '"';
       _next();
       while (!_isBackSlash(_current) &&
              !_isCarriageReturn(_current) &&
-             !_isDoubleQuote(_current)) {
+             !_isDoubleQuote(_current) && 
+             _position < _text.length) {
         _next();
       }
       if (_isDoubleQuote(_current)){
-        chunk += '"';
+        _next();
         end = _position;
         chunk = _text.substring(start,end);
         return StringLiteralToken(chunk);
@@ -387,7 +455,7 @@ class Lexer {
       return null;
     }
   }
-  Token operatorOrPunctuator() {
+  Token _operatorOrPunctuator() {
     var chunk = '';
     var end;
     var start = _position;
@@ -453,7 +521,39 @@ class Lexer {
 
         } else {
 
-          // read =
+          read = _operatorOrPunctuator();
+
+          if (read != null) {
+
+            return read;
+
+          } else {
+
+            read = _stringLiteral();
+
+            if (read != null) {
+
+              return read;
+
+            }
+            else{
+              
+              read = _interpolated_string_literal();
+
+              if (read != null)
+              {
+                return read;
+              }
+              // else{
+              //   read = _realLiteral();
+
+              //   if (read != null){
+              //     return read;
+              //   }
+              // }
+            }
+
+          }
 
         }
 
@@ -465,3 +565,4 @@ class Lexer {
     }
   }
 }
+
