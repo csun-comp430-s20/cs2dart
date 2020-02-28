@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cs2dart/tokens.dart';
 
 import '../tokens/token.dart';
+import '../tokens/variants/real_literal_token.dart';
 import 'lexer_assist.dart' as lexer_assist;
 import 'package:characters/characters.dart' as characters;
 import 'package:unicode/unicode.dart' as unicode;
@@ -166,33 +167,35 @@ class Lexer {
     return false;
   }
 
-  bool _isDecimalPoint(int char){
-    if(char == 46){
+  bool _isDecimalPoint(int char) {
+    if (char == 46) {
       return true;
     }
     return false;
   }
 
-  bool _isExponentPart(int char){
-    if(char == 69 || char == 101){
+  bool _isExponentPart(int char) {
+    if (char == 69 || char == 101) {
       return true;
     }
     return false;
   }
-  bool _isSign(int char){
-    if(char == 43 || char == 45){
+
+  bool _isSign(int char) {
+    if (char == 43 || char == 45) {
       return true;
     }
     return false;
   }
-  bool _isRealTypeSuffix(int char){
-    if (char == 70 || 
-        char == 102 || 
-        char == 68 || 
-        char == 100 || 
-        char == 77 || 
-        char == 109){
-        return true;
+
+  bool _isRealTypeSuffix(int char) {
+    if (char == 70 ||
+        char == 102 ||
+        char == 68 ||
+        char == 100 ||
+        char == 77 ||
+        char == 109) {
+      return true;
     }
     return false;
   }
@@ -462,12 +465,61 @@ class Lexer {
     var chunk = '';
     var end;
     var start = _position;
-    
-    if (lexer_assist.isDecimalDigit(_current)){
+
+    if (lexer_assist.isDecimalDigit(_current)) {
       _next();
-      while (lexer_assist.isDecimalDigit(_current)){
+      while (lexer_assist.isDecimalDigit(_current)) {
         _next();
       }
+      if (_isDecimalPoint(_current)) {
+        _next();
+      }
+      while (lexer_assist.isDecimalDigit(_current)) {
+        _next();
+        if (_isExponentPart(_current)) {
+          _next();
+          if (_isSign(_current)) {
+            _next();
+            if (_isRealTypeSuffix(_current)) {
+              _next();
+            }
+          }
+          if (_isRealTypeSuffix(_current)) {
+            _next();
+          }
+        }
+      }
+      // form: XXX'.'XXX
+      end = _position;
+      chunk = _text.substring(start, end);
+      return RealLiteralToken(chunk);
+    } else if (_isDecimalPoint(_current)) {
+      _next();
+      //copied from while loop above
+      while (lexer_assist.isDecimalDigit(_current)) {
+        _next();
+        if (_isExponentPart(_current)) {
+          _next();
+          if (_isSign(_current)) {
+            _next();
+            if (_isRealTypeSuffix(_current)) {
+              _next();
+            }
+          }
+          if (_isRealTypeSuffix(_current)) {
+            _next();
+          }
+        }
+      }
+      // form: '.'XXX
+      end = _position;
+      chunk = _text.substring(start, end);
+      return RealLiteralToken(chunk);
+    } else {
+      // not recognized
+      // reset position
+      _position = start;
+      return null;
     }
   }
 
