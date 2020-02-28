@@ -1,4 +1,3 @@
-//import 'dart:html';
 import 'dart:io';
 
 import 'package:cs2dart/tokens.dart';
@@ -23,22 +22,17 @@ class Lexer {
     return _text.codeUnitAt(_position);
   }
 
+  int _lookAt(int offset) {
+    return _text.codeUnitAt(_position + offset);
+  }
+
   void _next() {
     _position++;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-  // HELPER FUNCTIONS
+  // TOP OF HELPER FUNCTIONS
+  // MIGHT MOVE TO LEXER ASSIST
+  // DON'T KNOW WHERE TO ABSTRACT THESE HELPER FUNCTIONS RN
 
   bool _isCSharpWhitespace(int char) {
     if (unicode.isSpaceSeparator(char) ||
@@ -122,7 +116,6 @@ class Lexer {
   }
 
   bool _isGraphicalCharacter(int char) {
-
     var list = [33, 35, 37, 38, 39,
                 40, 41, 42, 43, 44,
                 45, 46, 47, 58, 59,
@@ -137,9 +130,9 @@ class Lexer {
   }
     
   bool _isNewLineCharacter(int char) {
-    if (char == 13 || // return carriage
-        char == 10 || // line feed
-        char == 133 || // next line (nel)
+    if (char == 13 ||   // return carriage
+        char == 10 ||   // line feed
+        char == 133 ||  // next line (nel)
         char == 8232 || // line separator
         char == 8233) { // paragraph separator
       return true;
@@ -163,8 +156,7 @@ class Lexer {
     return false;
   }
 
-
-  // DON'T USE OMEGALUL
+  // DO NOT USE
   bool _isIntegerTypeSuffix(String str) {
     var list = ['U', 'u', 'L', 'l',
                 'UL', 'Ul', 'uL', 'ul',
@@ -175,36 +167,32 @@ class Lexer {
     }
     return false;
   }
+
   bool _isDoubleOp(int char)
   {
-    if (char == 38 || // ampersand
-        char == 43 || // plus sign
-        char == 45 || // hyphen-minus
-        char == 58 || // colon
-        char == 60 || // less-than sign
-        char == 61 || // equal sign
-        char == 62 || // greater-than sign
-        char == 63 || // question mark
-        char == 124 // vertical bar
-    ) {
+    if (char == 38 ||  // ampersand
+        char == 43 ||  // plus sign
+        char == 45 ||  // hyphen-minus
+        char == 58 ||  // colon
+        char == 60 ||  // less-than sign
+        char == 61 ||  // equal sign
+        char == 62 ||  // greater-than sign
+        char == 63 ||  // question mark
+        char == 124) { // vertical bar
       return true;
     }
     return false;
   }
 
-  bool _isTripleOp(int char)
+  bool _isEqualsSign(int char)
   {
-    if (char == 61 // equal sign
-    ) {
+    if (char == 61) { // equal sign
       return true;
     }
     return false;
   }
 
-  bool _isOperatororPunctuator(int char) {
-    var chunk = '';
-    var end;
-    var start = _position;
+  bool _isOperatorOrPunctuator(int char) {
     // single chars
     if (char == 33 || // Exclamation mark
         char == 37 || // percent sign
@@ -229,13 +217,14 @@ class Lexer {
         char == 124 || // vertical bar
         char == 125 || // right curly bracket
         char == 126) { // tilde
-          //then check for operators that have 2 characters
       return true;
     }
     return false;
   }
 
-
+  ///  Any character except ' apostrophe,
+  ///  \ backwards slash, and C#'s defined
+  /// "new_line_character" (refer to _isNewLineCharacter() method)
   bool _isSingleCharacter(int char) {
     if (char != 39 || // '
         char != 92 || // \
@@ -259,17 +248,8 @@ class Lexer {
     return false;
   }
 
-
-
-
-  // HELPER FUNCTIONS
-
-
-
-
-
-
-
+  // BOTTOM OF HELPER FUNCTIONS
+  // MIGHT MOVE TO LEXER ASSIST
 
   List<Token> lexify() {
     var tokens = <Token>[];
@@ -282,7 +262,7 @@ class Lexer {
     return tokens;
   }
 
-  // skip pass unicode whitespace
+  // skip pass csharp defined whitespace
   void _skipWhitespace() {
       while (_isCSharpWhitespace(_current) &&
             _position < _text.length) {
@@ -295,11 +275,11 @@ class Lexer {
     var end;
     var start = _position;
 
-    if (_current == "'".codeUnitAt(0)) {
+    if (_current == 39) { // ' apostrophe
       _next();
       if (_isSingleCharacter(_current)) {
         _next();
-        if (_current == "'".codeUnitAt(0)) {
+        if (_current == 39) { // ' apostrophe
           _next();
           end = _position;
           chunk = _text.substring(start, end);
@@ -309,9 +289,10 @@ class Lexer {
         }
       }
     }
-
     _position = start;
+
     return null;
+
   }
 
   Token _identifierOrKeyword() {
@@ -320,7 +301,7 @@ class Lexer {
     var start = _position;
 
     // does it start with a '_' or a letterCharacter???
-    if (_current == '_'.codeUnitAt(0) ||
+    if (_current == '_'.codeUnitAt(0) || // 
         _isLetterCharacter(_current)) {
       _next();
       // go through on all of these different types of characters
@@ -333,10 +314,11 @@ class Lexer {
       }
       end = _position;
       chunk = _text.substring(start, end);
-
       // chunk ended up being a keyword
       if (lexer_assist.isKeyword(chunk)) {
+
         return KeywordToken(chunk);
+
       }
 
       // its an identifier
@@ -349,7 +331,9 @@ class Lexer {
       // so the other functions can check
       // what the parse is
       _position = start;
+
       return null;
+
     }
   }
 
@@ -412,20 +396,26 @@ class Lexer {
              _position < _text.length) {
         _next();
       }
-      if (_isDoubleQuote(_current)){
+      if (_isDoubleQuote(_current)) {
         _next();
+        chunk += '"';
         end = _position;
         chunk = _text.substring(start,end);
+
         return StringLiteralToken(chunk);
+
       } else {
         _position = start;
+
         return null; // illegal character
+
       }
     }
     _position = start;
-    return null;
-  }
 
+    return null;
+
+  }
 
   Token _integerLiteral() {
     var chunk = '';
@@ -455,112 +445,74 @@ class Lexer {
       return null;
     }
   }
+
   Token _operatorOrPunctuator() {
     var chunk = '';
     var end;
     var start = _position;
+
     // go through on all of these different types of characters
-    if (_isOperatororPunctuator(_current)){
+    if (_isOperatorOrPunctuator(_current)) {
       _next();
-      if (_isDoubleOp(_current))
-      {
+      if (_isDoubleOp(_current)) {
         _next();
-        if (_isTripleOp(_current))
-        {
+        if (_isEqualsSign(_current)) {
+          _next();
           end = _position;
           chunk = _text.substring(start, end);
           if (lexer_assist.isTripleOp(chunk)) {
+
             return OperatorOrPunctuatorToken(chunk);
+
           }
         }
         end = _position;
         chunk = _text.substring(start, end);
         if (lexer_assist.isDoubleOp(chunk)) {
+
           return OperatorOrPunctuatorToken(chunk);
+
         }
       }
+      end = _position;
       chunk = _text.substring(start, end);
-      // chunk ended up being a keyword
-      if (lexer_assist.isKeyword(chunk)) {
-        return KeywordToken(chunk);
-      }
+
       return OperatorOrPunctuatorToken(chunk);
+
     } else {
-      // doesn't even start correctly
+      // not correct token
       _position = start;
       return null;
     }
   }
 
-
-
-
   Token nextToken() {
-
     var read = _identifierOrKeyword();
 
     if (read != null) {
-
       return read;
-
     } else {
-
       read = _characterLiteral();
-
       if (read != null) {
-
         return read;
-
       } else {
-
         read = _integerLiteral();
-
         if (read != null) {
-
           return read;
-
         } else {
-
           read = _operatorOrPunctuator();
-
           if (read != null) {
-
             return read;
-
           } else {
-
             read = _stringLiteral();
-
             if (read != null) {
-
               return read;
-
             }
-            else{
-              
-              read = _interpolated_string_literal();
-
-              if (read != null)
-              {
-                return read;
-              }
-              // else{
-              //   read = _realLiteral();
-
-              //   if (read != null){
-              //     return read;
-              //   }
-              // }
-            }
-
           }
-
         }
-
       }
-
       // yeah idk what I just read imma
-      // just give you null back lmao
+      // just give you null back
       return null;
     }
   }

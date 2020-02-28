@@ -35,8 +35,12 @@ bool isOperatorOrPunctuator(int character) {
 }
 
 bool isDoubleOp(String chunk) {
-  var _doubleOps = ['??','::','++','--','&&','||','->','==','!=','<=','>=','+=','-=','*=','/=','%=',
-                             '&=',',=','^=','<<','<<=','=>'];
+  var _doubleOps = ['??', '::', '++', '--',
+                    '&&', '||' ,'->', '==',
+                    '!=','<=','>=','+=',
+                    '-=','*=','/=','%=',
+                    '&=',',=','^=','<<',
+                    '=>'];
   if (_doubleOps.contains(chunk)) {
     return true;
   }
