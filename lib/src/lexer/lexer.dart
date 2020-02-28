@@ -337,7 +337,7 @@ class Lexer {
     }
   }
 
-  Token _interpolated_string_literal() {
+  Token _interpolatedStringLiteral() {
     var chunk = '';
     var start = _position;
     var end;
@@ -345,7 +345,6 @@ class Lexer {
     if (_isDollarSign(_current))
     {
       _next();
-
       if (_isDoubleQuote(_current)) {
         _next();
         while (!_isBackSlash(_current) &&
@@ -504,9 +503,14 @@ class Lexer {
           if (read != null) {
             return read;
           } else {
-            read = _stringLiteral();
+            read = _interpolatedStringLiteral();
             if (read != null) {
               return read;
+            } else {
+              read = _stringLiteral();
+              if (read != null) {
+                return read;
+              }
             }
           }
         }
