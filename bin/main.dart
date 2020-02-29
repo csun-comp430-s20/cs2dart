@@ -21,11 +21,14 @@ void main(List<String> arguments) {
     var listOfTokens = lexer.lexify();
 
     listOfTokens.forEach((token) {
-      print('${token.runtimeType}: ${token.value}');
+      stdout.writeln('${token.runtimeType}: ${token.value}');
     });
   }
 }
 
+// we are saving this for later
+// do not use this unless you are
+// testing individual potential tokens
 void whichToken(Token token) {
   // it prints keyword tokens :)
   // KeywordToken
