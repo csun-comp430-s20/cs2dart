@@ -278,15 +278,15 @@ class Lexer {
     return false;
   }
 
-  bool _isOpenBracket(int char){
-    if (char == 123){
+  bool _isOpenBracket(int char) {
+    if (char == 123) {
       return true;
     }
     return false;
   }
 
-  bool _isClosedBracket(int char){
-    if (char == 125){
+  bool _isClosedBracket(int char) {
+    if (char == 125) {
       return true;
     }
     return false;
@@ -382,8 +382,7 @@ class Lexer {
     var start = _position;
     var end;
     
-    if (_isDollarSign(_current))
-    {
+    if (_isDollarSign(_current)) {
       _next();
       if (_isDoubleQuote(_current)) {
         _next();
@@ -391,20 +390,18 @@ class Lexer {
               !_isCarriageReturn(_current) &&
               !_isDoubleQuote(_current) && 
               _position < _text.length) {
-                if (_isOpenBracket(_current))
-                {
-                  while (!_isBackSlash(_current) &&
-                        !_isCarriageReturn(_current) &&
-                        !_isClosedBracket(_current) &&
-                        _position < _text.length - 1)
-                        {
-                          _next();
-                        }
-                  if(!_isClosedBracket(_current)){
-                    return null;
-                  }
-                }
-                
+          if (_isOpenBracket(_current)) {
+            _next();
+            while (!_isBackSlash(_current) &&
+                  !_isCarriageReturn(_current) &&
+                  !_isClosedBracket(_current) &&
+                  _position < _text.length) {
+              _next();
+            }
+            if(!_isClosedBracket(_current)){
+              return null;
+            }
+          }
           _next();
         }
         if (_isDoubleQuote(_current)){
@@ -530,13 +527,15 @@ class Lexer {
 
     if (lexer_assist.isDecimalDigit(_current)) {
       _next();
-      while (lexer_assist.isDecimalDigit(_current)) {
+      while (lexer_assist.isDecimalDigit(_current)
+            && _position < _text.length) {
         _next();
       }
       if (_isDecimalPoint(_current)) {
         _next();
       }
-      while (lexer_assist.isDecimalDigit(_current)) {
+      while (lexer_assist.isDecimalDigit(_current)
+            && _position < _text.length) {
         _next();
         if (_isExponentPart(_current)) {
           _next();
