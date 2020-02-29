@@ -584,13 +584,22 @@ class Lexer {
     }
   }
 
+  Token _error() {
+    var start = _position;
+    _next();
+    var end = _position;
+    // yeah idk what I just read imma
+    // just give you an error token back
+    return ErrorToken(_text.substring(start, end));
+  }
+
   Token nextToken() {
     var read = _identifierOrKeyword();
 
     if (read != null) {
       return read;
     } else {
-      read = _characterLiteral();
+      read = _realLiteral();
       if (read != null) {
         return read;
       } else {
@@ -598,25 +607,31 @@ class Lexer {
         if (read != null) {
           return read;
         } else {
-          read = _operatorOrPunctuator();
+          read = _interpolatedStringLiteral();
           if (read != null) {
             return read;
           } else {
-            read = _interpolatedStringLiteral();
+            read = _stringLiteral();
             if (read != null) {
               return read;
             } else {
-              read = _stringLiteral();
+              read = _characterLiteral();
               if (read != null) {
                 return read;
+              } else {
+                read = _operatorOrPunctuator();
+                if (read != null) {
+                  return read;
+                }
               }
             }
           }
         }
       }
-      // yeah idk what I just read imma
-      // just give you null back
-      return null;
+      // i don't know what i just read
+      // but it's definetly not supported
+      // imma give you an error token back
+      return _error();
     }
   }
 }
