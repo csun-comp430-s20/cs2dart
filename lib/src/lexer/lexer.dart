@@ -2,10 +2,8 @@ import 'dart:io';
 
 import 'package:cs2dart/tokens.dart';
 
-import '../tokens/token.dart';
-import '../tokens/variants/real_literal_token.dart';
 import 'lexer_assist.dart' as lexer_assist;
-import 'package:characters/characters.dart' as characters;
+// import 'package:characters/characters.dart' as characters;
 import 'package:unicode/unicode.dart' as unicode;
 
 class Lexer {
@@ -280,15 +278,15 @@ class Lexer {
     return false;
   }
 
-  bool _isOpenBracket(int char){
-    if (char == 123){
+  bool _isOpenBracket(int char) {
+    if (char == 123) {
       return true;
     }
     return false;
   }
 
-  bool _isClosedBracket(int char){
-    if (char == 125){
+  bool _isClosedBracket(int char) {
+    if (char == 125) {
       return true;
     }
     return false;
@@ -384,8 +382,7 @@ class Lexer {
     var start = _position;
     var end;
     
-    if (_isDollarSign(_current))
-    {
+    if (_isDollarSign(_current)) {
       _next();
       if (_isDoubleQuote(_current)) {
         _next();
@@ -393,20 +390,18 @@ class Lexer {
               !_isCarriageReturn(_current) &&
               !_isDoubleQuote(_current) && 
               _position < _text.length) {
-                if (_isOpenBracket(_current))
-                {
-                  while (!_isBackSlash(_current) &&
-                        !_isCarriageReturn(_current) &&
-                        !_isClosedBracket(_current) &&
-                        _position < _text.length - 1)
-                        {
-                          _next();
-                        }
-                  if(!_isClosedBracket(_current)){
-                    return null;
-                  }
-                }
-                
+          if (_isOpenBracket(_current)) {
+            _next();
+            while (!_isBackSlash(_current) &&
+                  !_isCarriageReturn(_current) &&
+                  !_isClosedBracket(_current) &&
+                  _position < _text.length) {
+              _next();
+            }
+            if(!_isClosedBracket(_current)){
+              return null;
+            }
+          }
           _next();
         }
         if (_isDoubleQuote(_current)){
@@ -532,13 +527,15 @@ class Lexer {
 
     if (lexer_assist.isDecimalDigit(_current)) {
       _next();
-      while (lexer_assist.isDecimalDigit(_current)) {
+      while (lexer_assist.isDecimalDigit(_current)
+            && _position < _text.length) {
         _next();
       }
       if (_isDecimalPoint(_current)) {
         _next();
       }
-      while (lexer_assist.isDecimalDigit(_current)) {
+      while (lexer_assist.isDecimalDigit(_current)
+            && _position < _text.length) {
         _next();
         if (_isExponentPart(_current)) {
           _next();
@@ -587,13 +584,22 @@ class Lexer {
     }
   }
 
+  Token _error() {
+    var start = _position;
+    _next();
+    var end = _position;
+    // yeah idk what I just read imma
+    // just give you an error token back
+    return ErrorToken(_text.substring(start, end));
+  }
+
   Token nextToken() {
     var read = _identifierOrKeyword();
 
     if (read != null) {
       return read;
     } else {
-      read = _characterLiteral();
+      read = _realLiteral();
       if (read != null) {
         return read;
       } else {
@@ -601,25 +607,31 @@ class Lexer {
         if (read != null) {
           return read;
         } else {
-          read = _operatorOrPunctuator();
+          read = _interpolatedStringLiteral();
           if (read != null) {
             return read;
           } else {
-            read = _interpolatedStringLiteral();
+            read = _stringLiteral();
             if (read != null) {
               return read;
             } else {
-              read = _stringLiteral();
+              read = _characterLiteral();
               if (read != null) {
                 return read;
+              } else {
+                read = _operatorOrPunctuator();
+                if (read != null) {
+                  return read;
+                }
               }
             }
           }
         }
       }
-      // yeah idk what I just read imma
-      // just give you null back
-      return null;
+      // i don't know what i just read
+      // but it's definetly not supported
+      // imma give you an error token back
+      return _error();
     }
   }
 }

@@ -2,6 +2,7 @@ library tokens;
 
 export 'src/tokens/token.dart';
 export 'src/tokens/variants/character_literal_token.dart';
+export 'src/tokens/variants/error_token.dart';
 export 'src/tokens/variants/identifier_token.dart';
 export 'src/tokens/variants/integer_literal_token.dart';
 export 'src/tokens/variants/interpolated_string_literal_token.dart';

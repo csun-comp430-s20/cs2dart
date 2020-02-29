@@ -7,6 +7,7 @@ enum TokenType {
   operatorOrPunctuator,
   realLiteral,
   stringLiteral,
+  error,
 }
 
 abstract class Token {
