@@ -2,10 +2,8 @@ import 'dart:io';
 
 import 'package:cs2dart/tokens.dart';
 
-import '../tokens/token.dart';
-import '../tokens/variants/real_literal_token.dart';
 import 'lexer_assist.dart' as lexer_assist;
-import 'package:characters/characters.dart' as characters;
+// import 'package:characters/characters.dart' as characters;
 import 'package:unicode/unicode.dart' as unicode;
 
 class Lexer {
