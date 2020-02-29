@@ -2,15 +2,14 @@ import 'dart:io';
 
 import 'package:cs2dart/tokens.dart';
 
+import '../tokens/token.dart';
+import '../tokens/variants/real_literal_token.dart';
 import 'lexer_assist.dart' as lexer_assist;
 import 'package:characters/characters.dart' as characters;
 import 'package:unicode/unicode.dart' as unicode;
 
 class Lexer {
-
-  Lexer(
-    this._text
-  ): _position = 0;
+  Lexer(this._text) : _position = 0;
 
   final String _text;
   int _position;
@@ -29,6 +28,7 @@ class Lexer {
   void _next() {
     _position++;
   }
+
 
   // TOP OF HELPER FUNCTIONS
   // MIGHT MOVE TO LEXER ASSIST
@@ -72,8 +72,7 @@ class Lexer {
   }
 
   bool _isCombiningCharacter(int char) {
-    if (unicode.isNonspacingMark(char) ||
-        unicode.isSpacingMark(char)) {
+    if (unicode.isNonspacingMark(char) || unicode.isSpacingMark(char)) {
       return true;
     }
     return false;
@@ -86,11 +85,11 @@ class Lexer {
     return false;
   }
 
-    bool _isDoubleQuote(int char){
-    if(char == 34) {
+  bool _isDoubleQuote(int char) {
+    if (char == 34) {
       return true;
     }
-      
+
     return false;
   }
 
@@ -108,7 +107,7 @@ class Lexer {
     return false;
   }
 
-  bool _isCarriageReturn(int char){
+  bool _isCarriageReturn(int char) {
     if (char == 10) {
       return true;
     }
@@ -128,13 +127,14 @@ class Lexer {
     }
     return false;
   }
-    
+
   bool _isNewLineCharacter(int char) {
     if (char == 13 ||   // return carriage
         char == 10 ||   // line feed
         char == 133 ||  // next line (nel)
         char == 8232 || // line separator
-        char == 8233) { // paragraph separator
+        char == 8233) {
+      // paragraph separator
       return true;
     }
     return false;
@@ -142,15 +142,50 @@ class Lexer {
 
   bool _isU(int char) {
     if (char == 117 || // u
-        char == 85) {  // U 
+        char == 85) {
+      // U
       return true;
     }
     return false;
   }
 
   bool _isL(int char) {
-    if (char == 76 ||  // L
-        char == 108) { // l
+    if (char == 76 || // L
+        char == 108) {
+      // l
+      return true;
+    }
+    return false;
+  }
+
+  bool _isDecimalPoint(int char) {
+    if (char == 46) {
+      return true;
+    }
+    return false;
+  }
+
+  bool _isExponentPart(int char) {
+    if (char == 69 || char == 101) {
+      return true;
+    }
+    return false;
+  }
+
+  bool _isSign(int char) {
+    if (char == 43 || char == 45) {
+      return true;
+    }
+    return false;
+  }
+
+  bool _isRealTypeSuffix(int char) {
+    if (char == 70 ||
+        char == 102 ||
+        char == 68 ||
+        char == 100 ||
+        char == 77 ||
+        char == 109) {
       return true;
     }
     return false;
@@ -158,9 +193,20 @@ class Lexer {
 
   // DO NOT USE
   bool _isIntegerTypeSuffix(String str) {
-    var list = ['U', 'u', 'L', 'l',
-                'UL', 'Ul', 'uL', 'ul',
-                'LU', 'Lu', 'lU', 'lu'];
+    var list = [
+      'U',
+      'u',
+      'L',
+      'l',
+      'UL',
+      'Ul',
+      'uL',
+      'ul',
+      'LU',
+      'Lu',
+      'lU',
+      'lu'
+    ];
 
     if (list.contains(str)) {
       return true;
@@ -264,10 +310,9 @@ class Lexer {
 
   // skip pass csharp defined whitespace
   void _skipWhitespace() {
-      while (_isCSharpWhitespace(_current) &&
-            _position < _text.length) {
-        _next();
-      }
+    while (_isCSharpWhitespace(_current) && _position < _text.length) {
+      _next();
+    }
   }
 
   Token _characterLiteral() {
@@ -285,7 +330,6 @@ class Lexer {
           chunk = _text.substring(start, end);
 
           return CharacterLiteralToken(chunk);
-
         }
       }
     }
@@ -301,15 +345,14 @@ class Lexer {
     var start = _position;
 
     // does it start with a '_' or a letterCharacter???
-    if (_current == '_'.codeUnitAt(0) || // 
-        _isLetterCharacter(_current)) {
+    if (_current == '_'.codeUnitAt(0) || _isLetterCharacter(_current)) {
       _next();
       // go through on all of these different types of characters
-      while(_isLetterCharacter(_current) ||
-            _isDecimalDigitCharacter(_current) ||
-            _isConnectingCharacter(_current) ||
-            _isCombiningCharacter(_current) ||
-            _isFormattingCharacter(_current)) {
+      while (_isLetterCharacter(_current) ||
+          _isDecimalDigitCharacter(_current) ||
+          _isConnectingCharacter(_current) ||
+          _isCombiningCharacter(_current) ||
+          _isFormattingCharacter(_current)) {
         _next();
       }
       end = _position;
@@ -323,7 +366,6 @@ class Lexer {
 
       // its an identifier
       return IdentifierToken(chunk);
-
     } else {
       // doesn't even start correctly
       // not the right token
@@ -413,7 +455,6 @@ class Lexer {
     _position = start;
 
     return null;
-
   }
 
   Token _integerLiteral() {
@@ -436,7 +477,6 @@ class Lexer {
       chunk = _text.substring(start, end);
 
       return IntegerLiteralToken(chunk);
-
     } else {
       // not recognized
       // reset position
@@ -485,6 +525,68 @@ class Lexer {
     }
   }
 
+  Token _realLiteral() {
+    var chunk = '';
+    var end;
+    var start = _position;
+
+    if (lexer_assist.isDecimalDigit(_current)) {
+      _next();
+      while (lexer_assist.isDecimalDigit(_current)) {
+        _next();
+      }
+      if (_isDecimalPoint(_current)) {
+        _next();
+      }
+      while (lexer_assist.isDecimalDigit(_current)) {
+        _next();
+        if (_isExponentPart(_current)) {
+          _next();
+          if (_isSign(_current)) {
+            _next();
+            if (_isRealTypeSuffix(_current)) {
+              _next();
+            }
+          }
+          if (_isRealTypeSuffix(_current)) {
+            _next();
+          }
+        }
+      }
+      // form: XXX'.'XXX
+      end = _position;
+      chunk = _text.substring(start, end);
+      return RealLiteralToken(chunk);
+    } else if (_isDecimalPoint(_current)) {
+      _next();
+      //copied from while loop above
+      while (lexer_assist.isDecimalDigit(_current)) {
+        _next();
+        if (_isExponentPart(_current)) {
+          _next();
+          if (_isSign(_current)) {
+            _next();
+            if (_isRealTypeSuffix(_current)) {
+              _next();
+            }
+          }
+          if (_isRealTypeSuffix(_current)) {
+            _next();
+          }
+        }
+      }
+      // form: '.'XXX
+      end = _position;
+      chunk = _text.substring(start, end);
+      return RealLiteralToken(chunk);
+    } else {
+      // not recognized
+      // reset position
+      _position = start;
+      return null;
+    }
+  }
+
   Token nextToken() {
     var read = _identifierOrKeyword();
 
@@ -521,4 +623,3 @@ class Lexer {
     }
   }
 }
-
