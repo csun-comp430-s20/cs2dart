@@ -57,10 +57,10 @@ bool isTripleOp(String chunk) {
 
 bool isKeyword(String keyword) {
   var list = ['abstract', 'as', 'bool', 'break', 'byte', 'case', 'char', 'class', 'const', 'continue',
-              'decimal', 'do', 'double', 'else', 'false', 'for', 'foreach', 'if', 'in', 'int',
-              'interface', 'internal', 'is', 'long', 'new', 'null', 'object', 'private', 'protected', 'public',
-              'readonly', 'return', 'sbyte', 'short', 'static', 'string', 'switch', 'this', 'true', 'typeof',
-              'uint', 'ulong', 'ushort', 'void', 'while'];
+              'decimal', 'do', 'double', 'else', 'false', 'float', 'for', 'foreach', 'if', 'in',
+              'int', 'interface', 'internal', 'is', 'long', 'new', 'null', 'object', 'private', 'protected', 
+              'public', 'readonly', 'return', 'sbyte', 'short', 'static', 'string', 'switch', 'this', 'true', 
+              'typeof', 'uint', 'ulong', 'ushort', 'void', 'while'];
 
   if (list.contains(keyword)) {
     return true;
