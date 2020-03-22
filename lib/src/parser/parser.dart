@@ -1,25 +1,7 @@
+import 'package:cs2dart/src/parser/parseResult.dart';
 import 'package:cs2dart/tokens.dart';
-
+import 'package:cs2dart/src/parser/parseException.dart';
 class Parser {
-
-    // Parser(String _text) {
-    //   var tokens = [];
-
-    //   var lexer = Lexer(_text);
-
-    //   SyntaxToken token;
-    //   do {
-    //     token = lexer.nextToken();
-
-    //     if (token.kind != SyntaxKind.WhitespaceToken &&
-    //         token.kind != SyntaxKind.ErrorToken) {
-    //           tokens.add(token);
-    //         }
-
-    //   } while (token.kind != SyntaxKind.EOFToken);
-
-    //   _listOfTokens = tokens;
-    // }
 
     Parser(this._tokens);
 
@@ -33,5 +15,30 @@ class Parser {
       }
       return _tokens[index];
     }
+
+    void checkTokenIs(int position, Token input){
+      if(!_tokens[_position].equals(input))//equals written, need to test, unsure why error
+      {
+        throw ParseException('Expected: ' + input.toString() + 'Received: ' + _tokens[position].toString());
+      }
+    }
     
+    // ParseResult parseAdditiveExpHelper(final int startPos){
+    //   final List<Exp> resultList  = new List<Exp>;
+    //   int curPos = startPos;
+    //   while(curPos < _tokens.length){
+    //     try{
+    //       checkTokenIs(curPos, new PlusToken)
+    //     }
+    //   }
+    // }
+    ParseResult<Exp> parseAdditiveExp(final int startPos) {
+      final ParseResult<Exp> starting = parsePrimary(startPos);
+      
+
+    }
+    ParseResult parsePrimary(int startPos){
+
+    }
+
   }
