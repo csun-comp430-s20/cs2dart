@@ -1,4 +1,5 @@
-import 'package:cs2dart/src/parser/Exp.dart';
+import '../expr.dart';
+
 class PlusExp implements Exp{
   final Exp _left;
   final Exp _right;
