@@ -19,4 +19,9 @@ class InterpolatedStringLiteralToken implements Token {
   String get value {
     return _value;
   }
+
+  @override
+  bool equals(Token token){
+    return token.type == TokenType.interpolatedStringLiteral;
+  }
 }

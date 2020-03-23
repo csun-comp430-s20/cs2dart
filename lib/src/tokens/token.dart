@@ -27,4 +27,9 @@ abstract class Token {
   String get value {
     return _value;
   }
+
+  //To Do: Test this function 
+  bool equals(Token token){
+    return _type == token.type;
+  }
 }
