@@ -26,21 +26,21 @@ void main() {
     expect(TokenType.keyword, token.type);
   });
 
-  test("Simple assignment test", (){
-  var line = Lexer('boolean x = !false;');
-  var list = line.lexify();
-  expect('boolean', list[0].value);
-  expect('x', list[1].value);
-  expect('=', list[2].value);
-  expect('!', list[3].value);
-  expect('false', list[4].value);
-  expect(';', list[5].value);
+  test('Simple assignment test', () {
+    var line = Lexer('boolean x = !false;');
+    var list = line.lexify();
 
-});
-  test("Full 'if' test", (){
+    expect('boolean', list[0].value);
+    expect('x', list[1].value);
+    expect('=', list[2].value);
+    expect('!', list[3].value);
+    expect('false', list[4].value);
+    expect(';', list[5].value);
+  });
 
-  
-    var line = Lexer('if(True){ int x = 0;} else { int y = 1;}');
+  test("Full 'if' test", () {
+
+    var line = Lexer('if (True) { int x = 0; } else { int y = 1;}');
     var list = line.lexify();
 
     expect('if', list[0].value);

@@ -1,8 +1,7 @@
-import 'package:cs2dart/src/parser/parseResult.dart';
+import 'package:cs2dart/parser.dart';
 import 'package:cs2dart/tokens.dart';
-import 'package:cs2dart/src/parser/parseException.dart';
-import 'package:cs2dart/src/parser/ifExp.dart';
-import 'package:cs2dart/src/parser/Exp.dart';
+import 'package:cs2dart/expr.dart';
+
 class Parser {
 
     Parser(this._tokens);
@@ -19,7 +18,8 @@ class Parser {
     }
 
     void checkTokenIs(int position, Token input){
-      if(!_tokens[_position].equals(input))//equals written, need to test, unsure why error
+      //equals written, need to test, unsure why error
+      if(!_tokens[_position].equals(input))
       {
         throw ParseException('Expected: ' + input.toString() + 'Received: ' + _tokens[position].toString());
       }
@@ -34,13 +34,12 @@ class Parser {
     //     }
     //   }
     // }
+
     ParseResult<Exp> parseAdditiveExp(final int startPos) {
       final ParseResult<Exp> starting = parsePrimary(startPos);
-      
-
+      return null;
     }
     ParseResult parsePrimary(int startPos){
-
+      return null;
     }
-
   }
