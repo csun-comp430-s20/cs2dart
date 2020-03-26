@@ -1,0 +1,3 @@
+class TypeParameter implements Type {
+
+}

@@ -1,5 +1,4 @@
 import 'package:cs2dart/lexer.dart';
-
 import 'package:cs2dart/tokens.dart';
 
 import 'package:test/test.dart';

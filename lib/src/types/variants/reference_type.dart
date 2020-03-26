@@ -1,0 +1,3 @@
+class ReferenceType implements Type {
+
+}

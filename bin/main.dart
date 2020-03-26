@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cs2dart/lexer.dart';
 import 'package:cs2dart/tokens.dart';
+import 'package:cs2dart/parser.dart';
 
 void main(List<String> arguments) {
 
@@ -20,9 +21,17 @@ void main(List<String> arguments) {
 
     var listOfTokens = lexer.lexify();
 
-    listOfTokens.forEach((token) {
-      stdout.writeln('${token.runtimeType}: ${token.value}');
-    });
+    try {
+      listOfTokens.forEach((token) {
+        stdout.writeln('${token.runtimeType}: ${token.value}');
+      });
+    } on LexerException {
+      stdout.writeln('Unrecognized expression.');
+      break;
+    } on NoSuchMethodError {
+      stdout.writeln('Unrecognized expression.');
+      break;
+    }
   }
 }
 
@@ -57,6 +66,4 @@ void whichToken(Token token) {
     stdout.writeln("YEAH, I REALLY DON'T KNOW WHAT YOU GAVE ME");
   }
 }
-
-
 

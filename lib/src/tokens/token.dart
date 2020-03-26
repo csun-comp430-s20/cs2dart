@@ -7,7 +7,6 @@ enum TokenType {
   operatorOrPunctuator,
   realLiteral,
   stringLiteral,
-  error,
 }
 
 abstract class Token {
@@ -28,7 +27,7 @@ abstract class Token {
     return _value;
   }
 
-  //To Do: Test this function 
+  // To Do: Test this function 
   bool equals(Token token){
     return _type == token.type;
   }
