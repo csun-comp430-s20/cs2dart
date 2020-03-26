@@ -6,7 +6,7 @@ class ParseException implements Exception {
 
   @override
   String toString() {
-    return (message == null) ? 'LexerException' :
+    return (message == null) ? 'ParserException' :
       "ParserException: '$message'";
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cs2dart/lexer.dart';
 import 'package:cs2dart/tokens.dart';
 
 import 'lexer_assist.dart' as lexer_assist;
@@ -300,7 +301,12 @@ class Lexer {
     while (_position < _text.length) {
       _skipWhitespace();
       if (_position < _text.length) {
-        tokens.add(nextToken());
+        try {
+          tokens.add(nextToken());
+        } on LexerException {
+          stdout.writeln('Unexpected halt ${_text[_position]} at index ${_position} in input String.');
+          return null;
+        }
       }
     }
     return tokens;
@@ -584,15 +590,6 @@ class Lexer {
     }
   }
 
-  Token _error() {
-    var start = _position;
-    _next();
-    var end = _position;
-    // yeah idk what I just read imma
-    // just give you an error token back
-    return ErrorToken(_text.substring(start, end));
-  }
-
   Token nextToken() {
     var read = _identifierOrKeyword();
 
@@ -631,7 +628,7 @@ class Lexer {
       // i don't know what i just read
       // but it's definetly not supported
       // imma give you an error token back
-      return _error();
+      throw LexerException('Unexpected character');
     }
   }
 }

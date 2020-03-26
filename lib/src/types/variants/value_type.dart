@@ -1,0 +1,3 @@
+class ValueType implements Type {
+
+}
