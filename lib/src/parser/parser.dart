@@ -4,8 +4,15 @@ import 'package:cs2dart/expressions.dart';
 
 import 'dart:io';
 
-class Parser {
+import '../../parser.dart';
+import '../../parser.dart';
+import '../../parser.dart';
+import '../../parser.dart';
+import '../../parser.dart';
+import '../tokens/variants/integer_literal_token.dart';
+import '../tokens/variants/operator_or_punctuator_token.dart';
 
+class Parser {
   Parser(this._tokens);
 
   final List<Token> _tokens;
