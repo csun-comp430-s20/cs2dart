@@ -9,7 +9,20 @@ import '../../parser.dart';
 import '../../parser.dart';
 import '../../parser.dart';
 import '../../parser.dart';
+import '../interfaces/interface.dart';
+import '../tokens/variants/identifier_token.dart';
+import '../tokens/variants/identifier_token.dart';
+import '../tokens/variants/identifier_token.dart';
 import '../tokens/variants/integer_literal_token.dart';
+import '../tokens/variants/keyword_token.dart';
+import '../tokens/variants/keyword_token.dart';
+import '../tokens/variants/operator_or_punctuator_token.dart';
+import '../tokens/variants/operator_or_punctuator_token.dart';
+import '../tokens/variants/operator_or_punctuator_token.dart';
+import '../tokens/variants/operator_or_punctuator_token.dart';
+import '../tokens/variants/operator_or_punctuator_token.dart';
+import '../tokens/variants/operator_or_punctuator_token.dart';
+import '../tokens/variants/operator_or_punctuator_token.dart';
 import '../tokens/variants/operator_or_punctuator_token.dart';
 
 class Parser {
@@ -53,6 +66,59 @@ class Parser {
   }
 
   ParseResult<Exp> _parseType(final int startPos) {
+
+  }
+
+  ParseResult<Interface> _parseInterface(final int startPos){
+    int currPos = startPos;
+    if(_tokens[currPos] is KeywordToken){
+      if(_tokens[currPos].value == 'new' || _tokens[currPos].value == 'public'
+         ||_tokens[currPos].value == 'protected'||_tokens[currPos].value == 'internal'
+         ||_tokens[currPos].value == 'private'){
+         //make helper function for this   
+        }
+      if(_tokens[currPos] is KeywordToken && _tokens[currPos].value == 'interface'){
+        if(_tokens[currPos] is IdentifierToken){
+          //param list
+          if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '<'){
+            if(true){
+              //check for params here maybe make helper
+            }
+            if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '>'){
+
+            } 
+          }
+          //end param list
+          //start interface base
+          if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == ':'){
+            if(_tokens[currPos] is IdentifierToken){
+
+            }
+          }
+          //end interface base
+          //start type param constraint
+          //end type param constraint
+          //start interface body
+          if (_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '{'){
+            
+            //fuck dude idk, maybe make a helper method, 
+            //close bracket
+            if (_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '}'){
+
+            }
+          }
+          //end interfacebody
+          //check if this shit is actually allowed
+          if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == ';'){
+
+          }
+          
+        }
+      }
+    }
+    else{
+      return null;
+    }
 
   }
 
