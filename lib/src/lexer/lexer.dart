@@ -548,15 +548,19 @@ class Lexer {
           _next();
           if (_isSign(_current)) {
             _next();
-            if (_isRealTypeSuffix(_current)) {
-              _next();
-            }
+            // if (_isRealTypeSuffix(_current)) {
+            //   _next();
+            // }
           }
-          if (_isRealTypeSuffix(_current)) {
+          // if (_isRealTypeSuffix(_current)) {
+          //   _next();
+          // }
+        }
+        
+      }
+      if (_isRealTypeSuffix(_current)) {
             _next();
           }
-        }
-      }
       // form: XXX'.'XXX
       end = _position;
       chunk = _text.substring(start, end);
@@ -570,15 +574,18 @@ class Lexer {
           _next();
           if (_isSign(_current)) {
             _next();
-            if (_isRealTypeSuffix(_current)) {
-              _next();
-            }
+            // if (_isRealTypeSuffix(_current)) {
+            //   _next();
+            // }
           }
-          if (_isRealTypeSuffix(_current)) {
-            _next();
-          }
+          // if (_isRealTypeSuffix(_current)) {
+          //   _next();
+          // }
         }
       }
+      if (_isRealTypeSuffix(_current)) {
+            _next();
+          }
       // form: '.'XXX
       end = _position;
       chunk = _text.substring(start, end);

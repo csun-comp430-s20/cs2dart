@@ -116,7 +116,7 @@ class Parser {
           //param list
           if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '<'){
             currPos++;
-            while(){//refactor loop vars for here, or make helper function
+            while(true){//refactor loop vars for here, or make helper function
 
               //check for params here maybe makebool helper
               currPos++;
@@ -265,7 +265,7 @@ class Parser {
           //param list
           if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '<'){
             currPos++;
-            while(){//refactor loop vars for here, or make helper function
+            while(true){//refactor loop vars for here, or make helper function
 
               //check for params here maybe makebool helper
               currPos++;
