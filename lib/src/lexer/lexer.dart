@@ -239,6 +239,7 @@ class Lexer {
 
   bool _isOperatorOrPunctuator(int char) {
     // single chars
+    print(new String.fromCharCode(char));
     if (char == 33 || // Exclamation mark
         char == 37 || // percent sign
         char == 38 || // ampersand
@@ -246,9 +247,9 @@ class Lexer {
         char == 41 || // right parenthesis
         char == 42 || // asterisk
         char == 43 || // plus sign
-        char == 44 || //comma
+        char == 44 || // comma
         char == 45 || // hyphen-minus
-        char == 46 || // full stop, period
+        char == 0 || // full stop, period
         char == 47 || // slash
         char == 58 || // colon
         char == 59 || // semicolon
@@ -263,7 +264,9 @@ class Lexer {
         char == 124 || // vertical bar
         char == 125 || // right curly bracket
         char == 126 ) { // tilde
+        print('here');
       return true;
+      
     }
     return false;
   }
@@ -494,6 +497,10 @@ class Lexer {
 
     // go through on all of these different types of characters
     if (_isOperatorOrPunctuator(_current)) {
+      // if(_current == 0){
+      // _next();
+      // return OperatorOrPunctuatorToken('.');
+      // }
       _next();
       if (_isDoubleOp(_current)) {
         _next();
@@ -568,7 +575,10 @@ class Lexer {
     } else if (_isDecimalPoint(_current)) {
       _next();
       //copied from while loop above
-      while (lexer_assist.isDecimalDigit(_current)) {
+      if(lexer_assist.isDecimalDigit(_current))
+      {
+        _next();
+        while (lexer_assist.isDecimalDigit(_current)) {
         _next();
         if (_isExponentPart(_current)) {
           _next();
@@ -590,6 +600,7 @@ class Lexer {
       end = _position;
       chunk = _text.substring(start, end);
       return RealLiteralToken(chunk);
+      }
     } else {
       // not recognized
       // reset position

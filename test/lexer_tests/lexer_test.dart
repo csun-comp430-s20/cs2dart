@@ -257,75 +257,336 @@ void main() {
 
   test('decimal realLiteral Test', () {
     var token = Lexer('1.1').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
   test('decimal exponent realLiteral Test', () {
     var token = Lexer('1.1e10').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
   test('decimal exponent with sign realLiteral Test', () {
     var token = Lexer('1.1e-10').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
   test('decimal exponent big E realLiteral Test', () {
     var token = Lexer('1.1E10').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
   test('decimal exponent big E with sign realLiteral Test', () {
     var token = Lexer('1.1E-10').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
    test("type suffix 'F' realLiteral Test", () {//fails check if need to implement 
     var token = Lexer('1F').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
   test("type suffix 'f' realLiteral Test", () {//fails check if need to implement 
     var token = Lexer('1f').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
   test("type suffix 'D' realLiteral Test", () {//fails check if need to implement 
     var token = Lexer('1D').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
   test("type suffix 'd' realLiteral Test", () {//fails check if need to implement 
     var token = Lexer('1d').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
   test("type suffix 'M' realLiteral Test", () {//fails check if need to implement 
     var token = Lexer('1M').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
   test("type suffix 'm' realLiteral Test", () {//fails check if need to implement 
     var token = Lexer('1m').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
   test('type suffix with decimal realLiteral Test', () {//fails check if need to implement 
     var token = Lexer('1.1f').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
   test('type suffix with decimal 2 realLiteral Test', () {//fails check if need to implement 
     var token = Lexer('.1f').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
 
   test('type suffix with exponent realLiteral Test', () {//fails check if need to implement 
     var token = Lexer('1.1e1f').nextToken();
-    expect(TokenType.identifier, token.type);
+    expect(TokenType.realLiteral, token.type);
   });
-  
   //end real literal tests
+
+  //begin intergerliteral tests ***come back to this
+
+  //end intergerliteral tests
+
+  //begin interpolated stringliteral tests
+  test('basic interpolated string literal test', () {//fails check if need to implement 
+    var token = Lexer('\$\"hi\"').nextToken();
+    expect(TokenType.interpolatedStringLiteral, token.type);
+  });
+
+  test('basic interpolated string literal test', () {//fails check if need to implement 
+    var token = Lexer('\$\"hi\"').nextToken();
+    expect(TokenType.interpolatedStringLiteral, token.type);
+  });
+
+  test('interpolated string literal with brakets test', () {//fails check if need to implement 
+    var token = Lexer('\$\"hi{hello}\"').nextToken();
+    expect(TokenType.interpolatedStringLiteral, token.type);
+  });
+  //end interpolated string literal tests
+
+  //begin string literal tests
+  test('basic  string literal test', () {//fails check if need to implement 
+    var token = Lexer('\"hello\"').nextToken();
+    expect(TokenType.stringLiteral, token.type);
+  });
+  //end string literal tests
+
+  //begin character literal tests
+  test('basic character literal test', () {//fails check if need to implement 
+    var token = Lexer("\'a\'").nextToken();
+    expect(TokenType.characterLiteral, token.type);
+  });
+  //end character literal tests
+
+  //begin operator or punctuator tests
+  test('{ operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('{').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('} operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('}').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('[ operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('[').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('] operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer(']').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('( operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('(').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test(') operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer(')').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('. operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('.').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test(', operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer(',').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test(': operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer(':').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('; operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer(';').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('+ operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('+').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('- operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('-').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('* operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('*').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('/ operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('/').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('% operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('%').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('& operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('&').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('| operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('|').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('^ operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('^').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('! operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('!').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('~ operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('~').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('= operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('=').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('< operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('<').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('> operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('>').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('? operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('?').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('?? operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('??').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test(':: operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('::').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('++ operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('++').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('-- operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('--').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('&& operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('&&').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('|| operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('||').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('-> operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('->').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('== operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('==').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('!= operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('!=').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('<= operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('<=').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('>= operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('>=').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('+= operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('+=').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('-= operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('-=').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('/= operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('/=').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('&= operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('%=').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('&= operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('&=').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('|= operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('|=').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('^= operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('^=').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('<< operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('<<').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('<<= operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('<<=').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+
+  test('=> operatorOrPunctuator test', () {//fails check if need to implement 
+    var token = Lexer('=>').nextToken();
+    expect(TokenType.operatorOrPunctuator, token.type);
+  });
+  //end operator or punctuator tests
   test('Simple assignment test', () {
     var line = Lexer('boolean x = !false;');
     var list = line.lexify();
