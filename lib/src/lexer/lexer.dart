@@ -239,7 +239,6 @@ class Lexer {
 
   bool _isOperatorOrPunctuator(int char) {
     // single chars
-    print(new String.fromCharCode(char));
     if (char == 33 || // Exclamation mark
         char == 37 || // percent sign
         char == 38 || // ampersand
@@ -249,7 +248,7 @@ class Lexer {
         char == 43 || // plus sign
         char == 44 || // comma
         char == 45 || // hyphen-minus
-        char == 0 || // full stop, period
+        char == 46 || // full stop, period
         char == 47 || // slash
         char == 58 || // colon
         char == 59 || // semicolon
@@ -264,7 +263,6 @@ class Lexer {
         char == 124 || // vertical bar
         char == 125 || // right curly bracket
         char == 126 ) { // tilde
-        print('here');
       return true;
       
     }
@@ -573,6 +571,7 @@ class Lexer {
       chunk = _text.substring(start, end);
       return RealLiteralToken(chunk);
     } else if (_isDecimalPoint(_current)) {
+      
       _next();
       //copied from while loop above
       if(lexer_assist.isDecimalDigit(_current))
@@ -584,13 +583,7 @@ class Lexer {
           _next();
           if (_isSign(_current)) {
             _next();
-            // if (_isRealTypeSuffix(_current)) {
-            //   _next();
-            // }
           }
-          // if (_isRealTypeSuffix(_current)) {
-          //   _next();
-          // }
         }
       }
       if (_isRealTypeSuffix(_current)) {
@@ -601,10 +594,17 @@ class Lexer {
       chunk = _text.substring(start, end);
       return RealLiteralToken(chunk);
       }
+      else{
+      //decrement next
+    
+      _position = start;
+      return null;
+      }
     } else {
       // not recognized
       // reset position
       _position = start;
+
       return null;
     }
   }
