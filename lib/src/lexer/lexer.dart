@@ -246,6 +246,7 @@ class Lexer {
         char == 41 || // right parenthesis
         char == 42 || // asterisk
         char == 43 || // plus sign
+        char == 44 || //comma
         char == 45 || // hyphen-minus
         char == 46 || // full stop, period
         char == 47 || // slash
@@ -261,7 +262,7 @@ class Lexer {
         char == 123 || // left curly bracket
         char == 124 || // vertical bar
         char == 125 || // right curly bracket
-        char == 126) { // tilde
+        char == 126 ) { // tilde
       return true;
     }
     return false;
