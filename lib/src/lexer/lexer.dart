@@ -190,28 +190,28 @@ class Lexer {
     return false;
   }
 
-  // DO NOT USE
-  bool _isIntegerTypeSuffix(String str) {
-    var list = [
-      'U',
-      'u',
-      'L',
-      'l',
-      'UL',
-      'Ul',
-      'uL',
-      'ul',
-      'LU',
-      'Lu',
-      'lU',
-      'lu'
-    ];
+  // // DO NOT USE
+  // bool _isIntegerTypeSuffix(String str) {
+  //   var list = [
+  //     'U',
+  //     'u',
+  //     'L',
+  //     'l',
+  //     'UL',
+  //     'Ul',
+  //     'uL',
+  //     'ul',
+  //     'LU',
+  //     'Lu',
+  //     'lU',
+  //     'lu'
+  //   ];
 
-    if (list.contains(str)) {
-      return true;
-    }
-    return false;
-  }
+  //   if (list.contains(str)) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   bool _isDoubleOp(int char)
   {
@@ -246,6 +246,7 @@ class Lexer {
         char == 41 || // right parenthesis
         char == 42 || // asterisk
         char == 43 || // plus sign
+        char == 44 || // comma
         char == 45 || // hyphen-minus
         char == 46 || // full stop, period
         char == 47 || // slash
@@ -261,8 +262,9 @@ class Lexer {
         char == 123 || // left curly bracket
         char == 124 || // vertical bar
         char == 125 || // right curly bracket
-        char == 126) { // tilde
+        char == 126 ) { // tilde
       return true;
+      
     }
     return false;
   }
@@ -458,33 +460,33 @@ class Lexer {
     return null;
   }
 
-  Token _integerLiteral() {
-    var chunk = '';
-    var end;
-    var start = _position;
+  // Token _integerLiteral() {
+  //   var chunk = '';
+  //   var end;
+  //   var start = _position;
 
-    if (lexer_assist.isDecimalDigit(_current)) {
-      _next();
-      while (lexer_assist.isDecimalDigit(_current)) {
-        _next();
-      }
-      if (_isU(_current) || _isL(_current)) {
-        _next();
-        if (_isU(_current) || _isL(_current)) {
-          _next();
-        }
-      }
-      end = _position;
-      chunk = _text.substring(start, end);
+  //   if (lexer_assist.isDecimalDigit(_current)) {
+  //     _next();
+  //     while (lexer_assist.isDecimalDigit(_current)) {
+  //       _next();
+  //     }
+  //     if (_isU(_current) || _isL(_current)) {
+  //       _next();
+  //       if (_isU(_current) || _isL(_current)) {
+  //         _next();
+  //       }
+  //     }
+  //     end = _position;
+  //     chunk = _text.substring(start, end);
 
-      return IntegerLiteralToken(chunk);
-    } else {
-      // not recognized
-      // reset position
-      _position = start;
-      return null;
-    }
-  }
+  //     return IntegerLiteralToken(chunk);
+  //   } else {
+  //     // not recognized
+  //     // reset position
+  //     _position = start;
+  //     return null;
+  //   }
+  // }
 
   Token _operatorOrPunctuator() {
     var chunk = '';
@@ -493,6 +495,10 @@ class Lexer {
 
     // go through on all of these different types of characters
     if (_isOperatorOrPunctuator(_current)) {
+      // if(_current == 0){
+      // _next();
+      // return OperatorOrPunctuatorToken('.');
+      // }
       _next();
       if (_isDoubleOp(_current)) {
         _next();
@@ -526,69 +532,280 @@ class Lexer {
     }
   }
 
-  Token _realLiteral() {
+Token _realLiteralOrIntegerLiteral() {
     var chunk = '';
     var end;
     var start = _position;
 
     if (lexer_assist.isDecimalDigit(_current)) {
       _next();
-      while (lexer_assist.isDecimalDigit(_current)
-            && _position < _text.length) {
+      while (lexer_assist.isDecimalDigit(_current)) {
         _next();
       }
       if (_isDecimalPoint(_current)) {
         _next();
-      }
-      while (lexer_assist.isDecimalDigit(_current)
-            && _position < _text.length) {
-        _next();
-        if (_isExponentPart(_current)) {
-          _next();
-          if (_isSign(_current)) {
+        if(lexer_assist.isDecimalDigit(_current)){
+          while(lexer_assist.isDecimalDigit(_current)){
             _next();
-            if (_isRealTypeSuffix(_current)) {
-              _next();
+          }
+          if(_isExponentPart(_current)){
+            _next();
+            if (_isSign(_current)) {
+            _next();
+              if(lexer_assist.isDecimalDigit(_current)){
+                while(lexer_assist.isDecimalDigit(_current)){
+                  _next();
+                }
+                if(_isRealTypeSuffix(_current)){
+                  _next();
+                }
+                end = _position;
+                chunk = _text.substring(start,end);
+                return RealLiteralToken(chunk);
+              }
+              else{
+                _position = _position - 2;
+                end = _position;
+                chunk = _text.substring(start,end);
+                return RealLiteralToken(chunk);
+              }
+            }
+            else if(lexer_assist.isDecimalDigit(_current)){
+              while(lexer_assist.isDecimalDigit(_current)){
+                _next();
+              }
+              if(_isRealTypeSuffix(_current)){
+                _next();
+              }
+              end = _position;
+              chunk = _text.substring(start,end);
+              return RealLiteralToken(chunk);
+            }
+            else{
+              _position = _position-1;
+              end = _position;
+              chunk = _text.substring(start, end);
+              return RealLiteralToken(chunk);
             }
           }
-          if (_isRealTypeSuffix(_current)) {
+          if(_isRealTypeSuffix(_current)){
             _next();
           }
+          end = _position;
+          chunk = _text.substring(start,end);
+          return RealLiteralToken(chunk);
+        }
+        else{
+          _position = _position-1;
+          end = _position;
+          chunk = _text.substring(start, end);
+          return IntegerLiteralToken(chunk);
+        }
+      }
+      if(_isExponentPart(_current)){
+            _next();
+            if (_isSign(_current)) {
+            _next();
+              if(lexer_assist.isDecimalDigit(_current)){
+                while(lexer_assist.isDecimalDigit(_current)){
+                  _next();
+                }
+                if(_isRealTypeSuffix(_current)){
+                  _next();
+                }
+                end = _position;
+                chunk = _text.substring(start,end);
+                return RealLiteralToken(chunk);
+              }
+              else{
+                _position = _position - 2;
+                end = _position;
+                chunk = _text.substring(start,end);
+                return IntegerLiteralToken(chunk);
+              }
+            }
+            else if(lexer_assist.isDecimalDigit(_current)){
+          
+              while(lexer_assist.isDecimalDigit(_current)){
+                _next();
+              }
+              if(_isRealTypeSuffix(_current)){
+                _next();
+              }
+              end = _position;
+              chunk = _text.substring(start,end);
+              return RealLiteralToken(chunk);
+            }
+            else{
+              _position = _position-1;
+              end = _position;
+              chunk = _text.substring(start, end);
+              return IntegerLiteralToken(chunk);
+            }
+          }
+      // while (lexer_assist.isDecimalDigit(_current)) {
+      //   _next();
+      //   if (_isExponentPart(_current)) {
+      //     _next();
+      //     if (_isSign(_current)) {
+      //       _next();
+      //     }
+      //   }
+        
+      // }
+      if (_isRealTypeSuffix(_current)) {
+            _next();
+            end = _position;
+            chunk = _text.substring(start, end);
+            return RealLiteralToken(chunk);
+      }
+      else if(_isU(_current) || _isL(_current)){
+        _next();
+        if(_isU(_current) || _isL(_current)){
+          _next();
         }
       }
       // form: XXX'.'XXX
       end = _position;
       chunk = _text.substring(start, end);
-      return RealLiteralToken(chunk);
-    } else if (_isDecimalPoint(_current)) {
+      return IntegerLiteralToken(chunk);
+    } else if (_isDecimalPoint(_current)) {//finish bug stomping here
+      
       _next();
       //copied from while loop above
-      while (lexer_assist.isDecimalDigit(_current)) {
+      if(lexer_assist.isDecimalDigit(_current))
+      {
         _next();
-        if (_isExponentPart(_current)) {
+        while (lexer_assist.isDecimalDigit(_current)) {
+        _next();
+      }
+      if (_isExponentPart(_current)) {
           _next();
-          if (_isSign(_current)) {
-            _next();
-            if (_isRealTypeSuffix(_current)) {
+        if (_isSign(_current)) {
+          _next();
+          if(lexer_assist.isDecimalDigit(_current)){
+            while(lexer_assist.isDecimalDigit(_current)){
               _next();
             }
           }
-          if (_isRealTypeSuffix(_current)) {
+          else{
+            _position = _position - 2;
+            end = _position;
+            chunk = _text.substring(start, end);
+            return RealLiteralToken(chunk);
+          }
+        }
+        else if(lexer_assist.isDecimalDigit(_current)){
+          while(lexer_assist.isDecimalDigit(_current)){
             _next();
           }
         }
+        else{
+          _position = _position-1;
+          end = _position;
+          chunk = _text.substring(start, end);
+          return RealLiteralToken(chunk);
+        }
       }
+      if (_isRealTypeSuffix(_current)) {
+            _next();
+          }
       // form: '.'XXX
       end = _position;
       chunk = _text.substring(start, end);
       return RealLiteralToken(chunk);
+      }
+      else{
+      //decrement next
+    
+      _position = start;
+      return null;
+      }
     } else {
       // not recognized
       // reset position
       _position = start;
+
       return null;
     }
   }
+
+  // Token _realLiteral() {
+  //   var chunk = '';
+  //   var end;
+  //   var start = _position;
+
+  //   if (lexer_assist.isDecimalDigit(_current)) {
+  //     _next();
+  //     while (lexer_assist.isDecimalDigit(_current)
+  //           && _position < _text.length) {
+  //       _next();
+  //     }
+  //     if (_isDecimalPoint(_current)) {
+  //       _next();
+  //     }
+  //     while (lexer_assist.isDecimalDigit(_current)
+  //           && _position < _text.length) {
+  //       _next();
+  //       if (_isExponentPart(_current)) {
+  //         _next();
+  //         if (_isSign(_current)) {
+  //           _next();
+  //           // if (_isRealTypeSuffix(_current)) {
+  //           //   _next();
+  //           // }
+  //         }
+  //         // if (_isRealTypeSuffix(_current)) {
+  //         //   _next();
+  //         // }
+  //       }
+        
+  //     }
+  //     if (_isRealTypeSuffix(_current)) {
+  //           _next();
+  //         }
+  //     // form: XXX'.'XXX
+  //     end = _position;
+  //     chunk = _text.substring(start, end);
+  //     return RealLiteralToken(chunk);
+  //   } else if (_isDecimalPoint(_current)) {
+      
+  //     _next();
+  //     //copied from while loop above
+  //     if(lexer_assist.isDecimalDigit(_current))
+  //     {
+  //       _next();
+  //       while (lexer_assist.isDecimalDigit(_current)) {
+  //       _next();
+  //       if (_isExponentPart(_current)) {
+  //         _next();
+  //         if (_isSign(_current)) {
+  //           _next();
+  //         }
+  //       }
+  //     }
+  //     if (_isRealTypeSuffix(_current)) {
+  //           _next();
+  //         }
+  //     // form: '.'XXX
+  //     end = _position;
+  //     chunk = _text.substring(start, end);
+  //     return RealLiteralToken(chunk);
+  //     }
+  //     else{
+  //     //decrement next
+    
+  //     _position = start;
+  //     return null;
+  //     }
+  //   } else {
+  //     // not recognized
+  //     // reset position
+  //     _position = start;
+
+  //     return null;
+  //   }
+  // }
 
   Token nextToken() {
     var read = _identifierOrKeyword();
@@ -596,21 +813,17 @@ class Lexer {
     if (read != null) {
       return read;
     } else {
-      read = _realLiteral();
+      read = _realLiteralOrIntegerLiteral();
       if (read != null) {
         return read;
       } else {
-        read = _integerLiteral();
+        read = _interpolatedStringLiteral();
         if (read != null) {
           return read;
         } else {
-          read = _interpolatedStringLiteral();
-          if (read != null) {
-            return read;
-          } else {
             read = _stringLiteral();
             if (read != null) {
-              return read;
+            return read;
             } else {
               read = _characterLiteral();
               if (read != null) {
@@ -624,7 +837,6 @@ class Lexer {
             }
           }
         }
-      }
       // i don't know what i just read
       // but it's definetly not supported
       // imma give you an error token back
