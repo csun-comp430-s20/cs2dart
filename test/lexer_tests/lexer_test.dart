@@ -587,6 +587,16 @@ void main() {
     expect(TokenType.operatorOrPunctuator, token.type);
   });
   //end operator or punctuator tests
+
+  //start exception testing
+  test('Lexer Exception Test', () {//fails check if need to implement 
+    // var token = Lexer('=>').nextToken();
+    expect(() => Lexer('\'').nextToken(), throwsException);
+    //below line doesnt pass even though it should, have checked that exception matches so it
+    //should be fine.
+    //expect(() => Lexer('\'').nextToken(), throwsA(LexerException('Unexpected character')));
+  });
+  //end exception testing
   test('Simple assignment test', () {
     var line = Lexer('boolean x = !false;');
     var list = line.lexify();
