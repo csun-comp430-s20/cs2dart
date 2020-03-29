@@ -5,6 +5,6 @@ import 'lexer_tests/lexer_test.dart' as lexer_tests_lexer_test;
 import 'parser_tests/parser_test.dart' as parser_tests_parser_test;
 
 void main() {
-  //parser_tests_parser_test.main();
+  parser_tests_parser_test.main();
   lexer_tests_lexer_test.main();
 }
