@@ -40,13 +40,16 @@ class Parser {
   //   return _tokens[index];
   // }
 
-  void checkTokenIs(int position, Token input){
+  void checkTokenIs(int position, Token input) {
     // equals written, need to test, unsure why error
-    if(!_tokens[position].equals(input)) {
-      throw ParseException('Expected: ' + input.toString() + 'Received: ' + _tokens[position].toString());
+    if (!_tokens[position].equals(input)) {
+      throw ParseException('Expected: ' +
+          input.toString() +
+          'Received: ' +
+          _tokens[position].toString());
     }
   }
-  
+
   // ParseResult parseAdditiveExpHelper(final int startPos){
   //   final List<Exp> resultList  = new List<Exp>;
   //   int curPos = startPos;
@@ -62,342 +65,413 @@ class Parser {
     return null;
   }
 
-  ParseResult parsePrimary(int startPos){
+  ParseResult parsePrimary(int startPos) {
     return null;
   }
 
-  ParseResult<Exp> _parseType(final int startPos) {
-
-  }
+  ParseResult<Exp> _parseType(final int startPos) {}
 
   //dump this into parser_assist later
-  bool _isInterfaceModifier(KeywordToken input){//modifie to check for repeats
-    if (input.value == 'new' || input.value == 'public'
-         ||input.value == 'protected'||input.value == 'internal'
-         || input.value == 'private' ){
-           return true;
-         }
-    else{
+  bool _isInterfaceModifier(KeywordToken input) {
+    //modifie to check for repeats
+    if (input.value == 'new' ||
+        input.value == 'public' ||
+        input.value == 'protected' ||
+        input.value == 'internal' ||
+        input.value == 'private') {
+      return true;
+    } else {
       return false;
     }
-
   }
   //end interface helper functions
 
   //start class helper functions
-  bool _isClassModifier(KeywordToken input){//modify to check for repeats
-    if (input.value == 'new' || input.value == 'public'
-         ||input.value == 'protected'||input.value == 'internal'
-         || input.value == 'private' || input.value == 'abstract' || input.value == 'static' ){
-           return true;
-         }
-    else{
+  bool _isClassModifier(KeywordToken input) {
+    //modify to check for repeats
+    if (input.value == 'new' ||
+        input.value == 'public' ||
+        input.value == 'protected' ||
+        input.value == 'internal' ||
+        input.value == 'private' ||
+        input.value == 'abstract' ||
+        input.value == 'static') {
+      return true;
+    } else {
       return false;
     }
-
-  } 
+  }
   //end class helper functions
 
-  ParseResult<Class> _parseClass(final int startPos){
-     var currPos = startPos;
-    if(_tokens[currPos] is KeywordToken){
+  //start Expressions helper funtions
+
+  //end Expressions helper funtions
+
+  ParseResult<Class> _parseClass(final int startPos) {
+    var currPos = startPos;
+    if (_tokens[currPos] is KeywordToken) {
       currPos++;
       //while loop to parse modifiers
-      while(_tokens[currPos] is KeywordToken && _isClassModifier(_tokens[currPos]))
-      {
+      while (_tokens[currPos] is KeywordToken &&
+          _isClassModifier(_tokens[currPos])) {
         currPos++;
-      }//end loop
+      } //end loop
 
       //start interface parsing
-      if(_tokens[currPos] is KeywordToken && _tokens[currPos].value == 'class'){
+      if (_tokens[currPos] is KeywordToken &&
+          _tokens[currPos].value == 'class') {
         currPos++;
-        if(_tokens[currPos] is IdentifierToken){//parsing identifier
+        if (_tokens[currPos] is IdentifierToken) {
+          //parsing identifier
           currPos++;
           //param list
-          if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '<'){
+          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+              _tokens[currPos].value == '<') {
             currPos++;
-            while(true){//refactor loop vars for here, or make helper function
+            while (true) {
+              //refactor loop vars for here, or make helper function
 
               //check for params here maybe makebool helper
               currPos++;
             }
-            if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '>'){
+            if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                _tokens[currPos].value == '>') {
               currPos++;
-                //start type param constraint
-              while(_tokens[currPos] is IdentifierToken && _tokens[currPos].value == 'where'){
+              //start type param constraint
+              while (_tokens[currPos] is IdentifierToken &&
+                  _tokens[currPos].value == 'where') {
                 currPos++;
-                if(_tokens[currPos] is IdentifierToken){
+                if (_tokens[currPos] is IdentifierToken) {
                   currPos++;
-                  if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == ':'){
+                  if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                      _tokens[currPos].value == ':') {
                     currPos++;
                     var exitLoop = false;
                     var ateConstructorConstraint = false;
-                    while (!exitLoop){
-                      if(_tokens[currPos] is KeywordToken && _tokens[currPos].value == 'new' && !ateConstructorConstraint){
+                    while (!exitLoop) {
+                      if (_tokens[currPos] is KeywordToken &&
+                          _tokens[currPos].value == 'new' &&
+                          !ateConstructorConstraint) {
                         currPos++;
-                        if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '('){
+                        if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                            _tokens[currPos].value == '(') {
                           currPos++;
-                          if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == ')'){
+                          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                              _tokens[currPos].value == ')') {
                             currPos++;
                             ateConstructorConstraint = true;
-                          }
-                          else{
+                          } else {
                             return null;
                           }
-                        }
-                        else{
+                        } else {
                           return null;
                         }
-                      }
-                      else if(_tokens[currPos] is IdentifierToken){
+                      } else if (_tokens[currPos] is IdentifierToken) {
                         currPos++;
-                        if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '<'){
+                        if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                            _tokens[currPos].value == '<') {
                           currPos++;
-                          if(_tokens[currPos] is IdentifierToken){
+                          if (_tokens[currPos] is IdentifierToken) {
                             currPos++;
-                            if (_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '>'){
+                            if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                                _tokens[currPos].value == '>') {
                               currPos++;
-                            }
-                            else{
+                            } else {
                               return null;
                             }
+                          } else {
+                            return null;
                           }
-                          else{
-
-                          return null;
-                          }
-                        }
-                        else{
+                        } else {
                           return null;
                         }
                       }
-                      if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == ',' ){
+                      if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                          _tokens[currPos].value == ',') {
                         currPos++;
-                      }
-                      else{
+                      } else {
                         currPos++;
                         exitLoop = true;
                       }
                     }
-                  }
-                  else{
+                  } else {
                     return null;
                   }
-                }
-                else{
+                } else {
                   return null;
                 }
               }
               //end type param constraint
-            } 
-            else{
+            } else {
               return null;
             }
           }
           //end param list
           //start class base
-          if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == ':'){
+          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+              _tokens[currPos].value == ':') {
             currPos++;
-            
-            if(_tokens[currPos] is IdentifierToken){
+
+            if (_tokens[currPos] is IdentifierToken) {
               currPos++;
-                
-            }
-            else{
+            } else {
               return null;
             }
           }
           //end class base
-          
-          //start class body
-          if (_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '{'){
-            currPos++;
-            
-            //fuck dude idk, maybe make a helper method, 
-            //close bracket
-            if (_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '}'){
-              currPos++;
 
-            }
-            else{
+          //start class body
+          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+              _tokens[currPos].value == '{') {
+            currPos++;
+
+            //fuck dude idk, maybe make a helper method,
+            //close bracket
+            if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                _tokens[currPos].value == '}') {
+              currPos++;
+            } else {
               return null;
             }
           }
           //end class body
           //ending semicolon, optional
-          if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == ';'){
+          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+              _tokens[currPos].value == ';') {
             currPos++;
-
-          }   
-        }
-        else{
+          }
+        } else {
           return null;
         }
         // final return
         return null;
-      }      
+      }
       //end identifier parsing
-      else{
+      else {
         return null;
       }
-    }
-    else{
+    } else {
       return null;
     }
-
   }
 
-  ParseResult<Interface> _parseInterface(final int startPos){
+  ParseResult<Interface> _parseInterface(final int startPos) {
     var currPos = startPos;
-    if(_tokens[currPos] is KeywordToken){
+    if (_tokens[currPos] is KeywordToken) {
       currPos++;
       //while loop to parse modifiers
-      while(_tokens[currPos] is KeywordToken && _isInterfaceModifier(_tokens[currPos]))
-      {
+      while (_tokens[currPos] is KeywordToken &&
+          _isInterfaceModifier(_tokens[currPos])) {
         currPos++;
-      }//end loop
+      } //end loop
 
       //start interface parsing
-      if(_tokens[currPos] is KeywordToken && _tokens[currPos].value == 'interface'){
+      if (_tokens[currPos] is KeywordToken &&
+          _tokens[currPos].value == 'interface') {
         currPos++;
-        if(_tokens[currPos] is IdentifierToken){//parsing identifier
+        if (_tokens[currPos] is IdentifierToken) {
+          //parsing identifier
           currPos++;
           //param list
-          if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '<'){
+          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+              _tokens[currPos].value == '<') {
             currPos++;
-            while(true){//refactor loop vars for here, or make helper function
+            while (true) {
+              //refactor loop vars for here, or make helper function
 
               //check for params here maybe makebool helper
               currPos++;
             }
-            if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '>'){
+            if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                _tokens[currPos].value == '>') {
               currPos++;
-                //start type param constraint
-              while(_tokens[currPos] is IdentifierToken && _tokens[currPos].value == 'where'){
+              //start type param constraint
+              while (_tokens[currPos] is IdentifierToken &&
+                  _tokens[currPos].value == 'where') {
                 currPos++;
-                if(_tokens[currPos] is IdentifierToken){
+                if (_tokens[currPos] is IdentifierToken) {
                   currPos++;
-                  if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == ':'){
+                  if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                      _tokens[currPos].value == ':') {
                     currPos++;
                     var exitLoop = false;
                     var ateConstructorConstraint = false;
-                    while (!exitLoop){
-                      if(_tokens[currPos] is KeywordToken && _tokens[currPos].value == 'new' && !ateConstructorConstraint){
+                    while (!exitLoop) {
+                      if (_tokens[currPos] is KeywordToken &&
+                          _tokens[currPos].value == 'new' &&
+                          !ateConstructorConstraint) {
                         currPos++;
-                        if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '('){
+                        if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                            _tokens[currPos].value == '(') {
                           currPos++;
-                          if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == ')'){
+                          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                              _tokens[currPos].value == ')') {
                             currPos++;
                             ateConstructorConstraint = true;
-                          }
-                          else{
+                          } else {
                             return null;
                           }
-                        }
-                        else{
+                        } else {
                           return null;
                         }
-                      }
-                      else if(_tokens[currPos] is IdentifierToken){
+                      } else if (_tokens[currPos] is IdentifierToken) {
                         currPos++;
-                        if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '<'){
+                        if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                            _tokens[currPos].value == '<') {
                           currPos++;
-                          if(_tokens[currPos] is IdentifierToken){
+                          if (_tokens[currPos] is IdentifierToken) {
                             currPos++;
-                            if (_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '>'){
+                            if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                                _tokens[currPos].value == '>') {
                               currPos++;
-                            }
-                            else{
+                            } else {
                               return null;
                             }
+                          } else {
+                            return null;
                           }
-                          else{
-
-                          return null;
-                          }
-                        }
-                        else{
+                        } else {
                           return null;
                         }
                       }
-                      if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == ',' ){
+                      if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                          _tokens[currPos].value == ',') {
                         currPos++;
-                      }
-                      else{
+                      } else {
                         currPos++;
                         exitLoop = true;
                       }
                     }
-                  }
-                  else{
+                  } else {
                     return null;
                   }
-                }
-                else{
+                } else {
                   return null;
                 }
               }
               //end type param constraint
-            } 
-            else{
+            } else {
               return null;
             }
           }
           //end param list
           //start class base
-          if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == ':'){
+          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+              _tokens[currPos].value == ':') {
             currPos++;
-            
-            if(_tokens[currPos] is IdentifierToken){
+
+            if (_tokens[currPos] is IdentifierToken) {
               currPos++;
-                
-            }
-            else{
+            } else {
               return null;
             }
           }
           //end class base
-          
-          //start class body
-          if (_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '{'){
-            currPos++;
-            
-            //fuck dude idk, maybe make a helper method, 
-            //close bracket
-            if (_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == '}'){
-              currPos++;
 
-            }
-            else{
+          //start class body
+          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+              _tokens[currPos].value == '{') {
+            currPos++;
+
+            //fuck dude idk, maybe make a helper method,
+            //close bracket
+            if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                _tokens[currPos].value == '}') {
+              currPos++;
+            } else {
               return null;
             }
           }
           //end class body
           //ending semicolon, optional
-          if(_tokens[currPos] is OperatorOrPunctuatorToken && _tokens[currPos].value == ';'){
+          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+              _tokens[currPos].value == ';') {
             currPos++;
-
-          }   
-        }
-        else{
+          }
+        } else {
           return null;
         }
         // final return
         return null;
-      }      
+      }
       //end identifier parsing
-      else{
+      else {
         return null;
       }
-    }
-    else{
+    } else {
       return null;
     }
-
-
   }
 
   ParseResult<Exp> parseExp(final int startPos) {
+    var currPos = startPos;
+    /*
+    array_creation_expression
+    examples:
+    new int[3]
+    new int[3] { 10, 20, 30 }
+    new int[] { 10, 20, 30 }
+    new[] { 10, 20, 30 }
+    
+    currently supports array creation in the form of: new _datatype_ [_sizeinteger_]
+    our current documentation doesn't detail array creation that much and the c# docs i feel contain features we don't need
+    */
+    if (_tokens[currPos].value == 'new' && _tokens[currPos] is KeywordToken) {
+      currPos++;
+      if (_tokens[currPos] is KeywordToken ||
+          _tokens[currPos] is IdentifierToken) {
+        //using keyword token and identifierToken bc the array could be of ANY data type
+        //Todo maybe make an isClass or classToken bc currently this will pass keywords that aren't data types
+        currPos++;
+        if (_tokens[currPos].value == '[') {
+          currPos++;
+          if (_tokens[currPos].value == ']') {
+            currPos++;
+            if (_tokens[currPos].value == '{') {
+              currPos++;
+              while (_tokens[currPos].value != '}') {
+                //TODO: make the expression fail if the elements do not match the type. currently this only works for integers
+                if (_tokens[currPos] is IntegerLiteralToken) {
+                  currPos++;
+                  if (_tokens[currPos].value == ',') {
+                    currPos++;
+                  }
+                }
+              }
+            }
+          }
+          if (_tokens[currPos] is IntegerLiteralToken) {
+            int array_declared_size = _tokens[currPos].value as int;
+            currPos++;
+            if (_tokens[currPos].value == ']') {
+              currPos++;
+              if (_tokens[currPos].value == '{') {
+                currPos++;
+                int array_size = 0;
+                while (_tokens[currPos].value != '}') {
+                  //TODO: make the expression fail if the elements do not match the type. currently this only works for integers
+                  if (_tokens[currPos] is IntegerLiteralToken) {
+                    currPos++;
+                    array_size++;
+                    if (_tokens[currPos].value == ',') {
+                      currPos++;
+                    }
+                  }
+                }
+                if (array_declared_size != array_size || array_size != 0) {
+                  return null;
+                }
+              }
+            }
+            
+          } else {
+            return null;
+          }
+        }
+      }
+    } else {
+      return null;
+    }
     // if (_tokens[startPos] is IdentifierToken) {
 
     // } else if (_tokens[startPos] is KeywordToken) {
@@ -419,9 +493,7 @@ class Parser {
 
     if (result != null) {
       return result;
-    }
-    
-    else {
+    } else {
       throw ParseException('Unrecognized token in parser.');
     }
   }
@@ -434,7 +506,7 @@ class Parser {
       if (result.nextPos == _tokens.length) {
         return result.result;
       } else {
-          throw ParseException('Extra tokens at end');
+        throw ParseException('Extra tokens at end');
       }
     } on ParseException catch (e) {
       stdout.writeln('$e');
