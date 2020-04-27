@@ -229,8 +229,29 @@ class AST {
     stdout.write('${base.token.value}\n');
     printTreeB(base.leftToken, it);
   }
-  void printTree()
+  void printTree(int i)
   {
+    if (i == 1){
+      printPreOrderTraversal(_head);
+    }
+    else{
     printTreeB(_head, 0);
+    }
+  }
+
+  void printPreOrderTraversal(ParseNode start){
+    if (start == null){
+      return;
+    }
+    stdout.write('${start.token.value}');
+
+    if (start.leftToken != null){
+      stdout.write('left');
+      printPreOrderTraversal(start.leftToken);
+    }
+    if (start.rightToken != null){
+      stdout.write('right');
+      printPreOrderTraversal(start.rightToken);
+    }
   }
 }
