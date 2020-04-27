@@ -43,7 +43,8 @@ void main() {
   for (var i=0; i<list.length; i++) {
     tmpNode = ParseNode(list[i], null, null);
     statementEx.insert(tmpNode);
-    print("Token ${list[i].value} is pushed.");
+    print('Token ${list[i].value} is pushed.');
   }
-  statementEx.printTree();
+
+  statementEx.printTree(1);
 }
