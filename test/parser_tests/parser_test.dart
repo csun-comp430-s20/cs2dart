@@ -13,35 +13,37 @@ void main() {
     print(list[i].value);
   }
 
-   var astTree = AST();
+   var statementEx = AST();
 
   ParseNode tmpNode;
-  tmpNode = ParseNode(list[0], null, null);
-  astTree.insert(tmpNode);
-  print("Token ${list[0].value} is pushed.");
-  tmpNode = ParseNode(list[1], null, null);
-  astTree.insert(tmpNode);
-  print("Token ${list[1].value} is pushed.");
-  tmpNode = ParseNode(list[2], null, null);
-  astTree.insert(tmpNode);
-  print("Token ${list[2].value} is pushed.");
-  tmpNode = ParseNode(list[3], null, null);
-  astTree.insert(tmpNode);
-  print("Token ${list[3].value} is pushed.");
-  tmpNode = ParseNode(list[4], null, null);
-  astTree.insert(tmpNode);
-  print("Token ${list[4].value} is pushed.");
-  tmpNode = ParseNode(list[5], null, null);
-  astTree.insert(tmpNode);
-  print("Token ${list[5].value} is pushed.");
-  tmpNode = ParseNode(list[6], null, null);
-  astTree.insert(tmpNode);
-  print("Token ${list[6].value} is pushed.");
-  tmpNode = ParseNode(list[7], null, null);
-  astTree.insert(tmpNode);
-  print("Token ${list[7].value} is pushed.");
-  // for (var i=0; i<list.length; i++) {
-  //   print("Token ${list[i].value} is pushed.");
-  // }
-  astTree.printTree();
+  // tmpNode = ParseNode(list[0], null, null);
+  // astTree.insert(tmpNode);
+  // print("Token ${list[0].value} is pushed.");
+  // tmpNode = ParseNode(list[1], null, null);
+  // astTree.insert(tmpNode);
+  // print("Token ${list[1].value} is pushed.");
+  // tmpNode = ParseNode(list[2], null, null);
+  // astTree.insert(tmpNode);
+  // print("Token ${list[2].value} is pushed.");
+  // tmpNode = ParseNode(list[3], null, null);
+  // astTree.insert(tmpNode);
+  // print("Token ${list[3].value} is pushed.");
+  // tmpNode = ParseNode(list[4], null, null);
+  // astTree.insert(tmpNode);
+  // print("Token ${list[4].value} is pushed.");
+  // tmpNode = ParseNode(list[5], null, null);
+  // astTree.insert(tmpNode);
+  // print("Token ${list[5].value} is pushed.");
+  // tmpNode = ParseNode(list[6], null, null);
+  // astTree.insert(tmpNode);
+  // print("Token ${list[6].value} is pushed.");
+  // tmpNode = ParseNode(list[7], null, null);
+  // astTree.insert(tmpNode);
+  // print("Token ${list[7].value} is pushed.");
+  for (var i=0; i<list.length; i++) {
+    tmpNode = ParseNode(list[i], null, null);
+    statementEx.insert(tmpNode);
+    print("Token ${list[i].value} is pushed.");
+  }
+  statementEx.printTree();
 }
