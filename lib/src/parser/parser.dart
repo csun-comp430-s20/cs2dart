@@ -5,26 +5,13 @@ import 'package:cs2dart/expressions.dart';
 import 'dart:io';
 
 import '../../parser.dart';
-import '../../parser.dart';
-import '../../parser.dart';
-import '../../parser.dart';
-import '../../parser.dart';
 import '../interfaces/interface.dart';
 import '../classes/classes.dart';
 import '../tokens/variants/identifier_token.dart';
-import '../tokens/variants/identifier_token.dart';
-import '../tokens/variants/identifier_token.dart';
 import '../tokens/variants/integer_literal_token.dart';
 import '../tokens/variants/keyword_token.dart';
-import '../tokens/variants/keyword_token.dart';
 import '../tokens/variants/operator_or_punctuator_token.dart';
-import '../tokens/variants/operator_or_punctuator_token.dart';
-import '../tokens/variants/operator_or_punctuator_token.dart';
-import '../tokens/variants/operator_or_punctuator_token.dart';
-import '../tokens/variants/operator_or_punctuator_token.dart';
-import '../tokens/variants/operator_or_punctuator_token.dart';
-import '../tokens/variants/operator_or_punctuator_token.dart';
-import '../tokens/variants/operator_or_punctuator_token.dart';
+
 
 class Parser {
   Parser(this._tokens);
@@ -412,7 +399,7 @@ class Parser {
     new int[3] { 10, 20, 30 }
     new int[] { 10, 20, 30 }
     new[] { 10, 20, 30 }
-    
+
     currently supports array creation in the form of: new _datatype_ [_sizeinteger_]
     our current documentation doesn't detail array creation that much and the c# docs i feel contain features we don't need
     */
@@ -463,7 +450,7 @@ class Parser {
                 }
               }
             }
-            
+
           } else {
             return null;
           }
@@ -500,17 +487,17 @@ class Parser {
 
   // Top level expressions file entrance
   Exp parseToplevelExp() {
-    try {
-      final result = parseExp(0);
-
-      if (result.nextPos == _tokens.length) {
-        return result.result;
-      } else {
-        throw ParseException('Extra tokens at end');
-      }
-    } on ParseException catch (e) {
-      stdout.writeln('$e');
-      exit(1);
-    }
+    // try {
+    //   final result = parseExp(0);
+    //
+    //   if (result.nextPos == _tokens.length) {
+    //     return result.result;
+    //   } else {
+    //     throw ParseException('Extra tokens at end');
+    //   }
+    // } on ParseException catch (e) {
+    //   stdout.writeln('$e');
+    //   exit(1);
+    // }
   }
 }
