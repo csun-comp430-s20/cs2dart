@@ -4,6 +4,7 @@ import 'package:cs2dart/expressions.dart';
 
 import 'dart:io';
 
+import '../parser/parser_ast2.dart';
 import '../../parser.dart';
 import '../interfaces/interface.dart';
 import '../classes/classes.dart';
@@ -94,8 +95,10 @@ class Parser {
 
   //end Expressions helper funtions
 
-  ParseResult<Class> _parseClass(final int startPos) {
+  AST _parseClass(final int startPos) {
     var currPos = startPos;
+    var output = AST2(null);
+    var tempNode;
     if (_tokens[currPos] is KeywordToken) {
       currPos++;
       //while loop to parse modifiers
@@ -104,94 +107,96 @@ class Parser {
         currPos++;
       } //end loop
 
-      //start interface parsing
+      //start class parsing
       if (_tokens[currPos] is KeywordToken &&
           _tokens[currPos].value == 'class') {
+            output.children.add(AST2(_tokens[currPos]));
         currPos++;
         if (_tokens[currPos] is IdentifierToken) {
+          output.children.add(AST2(_tokens[currPos]));
           //parsing identifier
           currPos++;
           //param list
-          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+          if (_tokens[currPos] is OperatorOrPunctuatorToken && 
               _tokens[currPos].value == '<') {
-            currPos++;
-            while (true) {
-              //refactor loop vars for here, or make helper function
+              currPos++;
+              while (true) {
+                //refactor loop vars for here, or make helper function
 
-              //check for params here maybe makebool helper
-              currPos++;
-            }
-            if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                _tokens[currPos].value == '>') {
-              currPos++;
-              //start type param constraint
-              while (_tokens[currPos] is IdentifierToken &&
-                  _tokens[currPos].value == 'where') {
+                //check for params here maybe makebool helper
                 currPos++;
-                if (_tokens[currPos] is IdentifierToken) {
+              }
+              if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                  _tokens[currPos].value == '>') {
+                currPos++;
+                //start type param constraint
+                while (_tokens[currPos] is IdentifierToken &&
+                    _tokens[currPos].value == 'where') {
                   currPos++;
-                  if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                      _tokens[currPos].value == ':') {
+                  if (_tokens[currPos] is IdentifierToken) {
                     currPos++;
-                    var exitLoop = false;
-                    var ateConstructorConstraint = false;
-                    while (!exitLoop) {
-                      if (_tokens[currPos] is KeywordToken &&
-                          _tokens[currPos].value == 'new' &&
-                          !ateConstructorConstraint) {
-                        currPos++;
-                        if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                            _tokens[currPos].value == '(') {
+                    if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                        _tokens[currPos].value == ':') {
+                      currPos++;
+                      var exitLoop = false;
+                      var ateConstructorConstraint = false;
+                      while (!exitLoop) {
+                        if (_tokens[currPos] is KeywordToken &&
+                            _tokens[currPos].value == 'new' &&
+                            !ateConstructorConstraint) {
                           currPos++;
                           if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                              _tokens[currPos].value == ')') {
-                            currPos++;
-                            ateConstructorConstraint = true;
-                          } else {
-                            return null;
-                          }
-                        } else {
-                          return null;
-                        }
-                      } else if (_tokens[currPos] is IdentifierToken) {
-                        currPos++;
-                        if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                            _tokens[currPos].value == '<') {
-                          currPos++;
-                          if (_tokens[currPos] is IdentifierToken) {
+                              _tokens[currPos].value == '(') {
                             currPos++;
                             if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                                _tokens[currPos].value == '>') {
+                                _tokens[currPos].value == ')') {
                               currPos++;
+                              ateConstructorConstraint = true;
                             } else {
                               return null;
                             }
                           } else {
                             return null;
                           }
+                        } else if (_tokens[currPos] is IdentifierToken) {
+                          currPos++;
+                          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                              _tokens[currPos].value == '<') {
+                            currPos++;
+                            if (_tokens[currPos] is IdentifierToken) {
+                              currPos++;
+                              if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                                  _tokens[currPos].value == '>') {
+                                currPos++;
+                              } else {
+                                return null;
+                              }
+                            } else {
+                              return null;
+                            }
+                          } else {
+                            return null;
+                          }
+                        }
+                        if (_tokens[currPos] is OperatorOrPunctuatorToken &&
+                            _tokens[currPos].value == ',') {
+                          currPos++;
                         } else {
-                          return null;
+                          currPos++;
+                          exitLoop = true;
                         }
                       }
-                      if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                          _tokens[currPos].value == ',') {
-                        currPos++;
-                      } else {
-                        currPos++;
-                        exitLoop = true;
-                      }
+                    } else {
+                      return null;
                     }
                   } else {
                     return null;
                   }
-                } else {
-                  return null;
                 }
+                //end type param constraint
+              } else {
+                return null;
               }
-              //end type param constraint
-            } else {
-              return null;
-            }
           }
           //end param list
           //start class base
@@ -209,8 +214,10 @@ class Parser {
 
           //start class body
           if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-              _tokens[currPos].value == '{') {
-            currPos++;
+              _tokens[currPos].value == '{') 
+              {
+              output.children.add(AST2(_tokens[currPos]));
+              currPos++;
 
             //fuck dude idk, maybe make a helper method,
             //close bracket

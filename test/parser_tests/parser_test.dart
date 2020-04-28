@@ -19,7 +19,7 @@ void main() {
 
 
   
-  var line = Lexer('byte y = 1+2+3;');
+  var line = Lexer(';');
   var list = line.lexify();
 
   for (var i=0; i<list.length; i++) {
