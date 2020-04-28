@@ -17,6 +17,20 @@ class AST {
 
   AST();
 
+  bool isAType(String value){
+    var _types = ['bool', 'decimal', 'sbyte', 'byte',
+                    'short', 'ushort' ,'int', 'uint',
+                    'long','ulong','char','float',
+                    'double'];
+    if (_types.contains(value)){
+      return true;
+    }
+    else{
+      return false;
+    }
+    
+  }
+
   void insert(ParseNode inputNode)
   {
     insertA(_head, inputNode);
@@ -170,7 +184,7 @@ class AST {
         insertB(curr2, inputNode);
         return;
       }
-      if (inputNode.token.value == 'int')
+      if (isAType(inputNode.token.value))
       {
         insertB(curr2, inputNode);
       }

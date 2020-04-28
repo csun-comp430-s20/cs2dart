@@ -3,8 +3,23 @@ import 'package:cs2dart/lexer.dart';
 
 import 'package:test/test.dart';
 
+
+ 
+
+
+
 void main() {
-  var line = Lexer('int y = 1+2+3;');
+
+   //fails, use for template of AST tests
+  //  test('simple test', () {
+  //   var testAST = AST();
+  //   expect(AST(), testAST);
+  // });
+
+
+
+  
+  var line = Lexer(';');
   var list = line.lexify();
 
   for (var i=0; i<list.length; i++) {
