@@ -7,7 +7,7 @@ class Block implements EmbeddedStatement{
   ): super();
 
   static final EmbeddedStatementType _type = EmbeddedStatementType.block;
-  final String _value;
+  final List _value;
 
   @override
   EmbeddedStatementType get type {
@@ -16,7 +16,7 @@ class Block implements EmbeddedStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

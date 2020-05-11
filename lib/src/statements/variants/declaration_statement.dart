@@ -12,7 +12,7 @@ abstract class DeclarationStatement implements Statement {
 
 
   static final Statementype _type = Statementype.declaration_statement;
-  final String _value;
+  final List _value;
 
   @override
   Object get type {
@@ -21,7 +21,7 @@ abstract class DeclarationStatement implements Statement {
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

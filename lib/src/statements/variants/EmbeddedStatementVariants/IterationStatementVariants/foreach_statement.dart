@@ -8,7 +8,7 @@ class ForEachStatement implements IterationStatement{
   ): super();
 
   static final IterationStatementType _type = IterationStatementType.foreach_statement;
-  final String _value;
+  final List _value;
 
   @override
   IterationStatementType get type {
@@ -17,7 +17,7 @@ class ForEachStatement implements IterationStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

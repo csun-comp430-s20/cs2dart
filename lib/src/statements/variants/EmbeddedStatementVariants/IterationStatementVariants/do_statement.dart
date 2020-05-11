@@ -8,7 +8,7 @@ class DoStatement implements IterationStatement{
   ): super();
 
   static final IterationStatementType _type = IterationStatementType.do_statement;
-  final String _value;
+  final List _value;
 
   @override
   IterationStatementType get type {
@@ -17,7 +17,7 @@ class DoStatement implements IterationStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

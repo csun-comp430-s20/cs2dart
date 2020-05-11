@@ -12,7 +12,7 @@ class SwitchStatement implements SelectionStatement{
   ): super();
 
   static final SelectionStatementType _type = SelectionStatementType.switch_statement;
-  final String _value;
+  final List _value;
 
   @override
   Object get type {
@@ -21,7 +21,7 @@ class SwitchStatement implements SelectionStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

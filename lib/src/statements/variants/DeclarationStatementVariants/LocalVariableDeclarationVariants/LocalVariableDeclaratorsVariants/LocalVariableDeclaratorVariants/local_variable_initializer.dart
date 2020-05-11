@@ -8,7 +8,7 @@ class LocalVariableInitializer implements LocalVariableDeclarator {
   ): super();
 
   static final LocalVariableDeclaratorTypes _type = LocalVariableDeclaratorTypes.local_variable_initializer;
-  final String _value;
+  final List _value;
 
   @override
   LocalVariableDeclaratorTypes get type {
@@ -17,7 +17,7 @@ class LocalVariableInitializer implements LocalVariableDeclarator {
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

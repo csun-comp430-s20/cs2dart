@@ -8,7 +8,7 @@ class BreakStatement implements JumpStatement{
   ): super();
 
   static final JumpStatementType _type = JumpStatementType.break_statement;
-  final String _value;
+  final List _value;
 
   @override
   JumpStatementType get type {
@@ -17,7 +17,7 @@ class BreakStatement implements JumpStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

@@ -8,7 +8,7 @@ class ReturnStatement implements JumpStatement{
   ): super();
 
   static final JumpStatementType _type = JumpStatementType.return_statement;
-  final String _value;
+  final List _value;
 
   @override
   JumpStatementType get type {
@@ -17,7 +17,7 @@ class ReturnStatement implements JumpStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

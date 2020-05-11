@@ -12,7 +12,7 @@ class SwitchBlock implements SwitchStatement{
   ): super();
 
   static final SwitchStatementType _type = SwitchStatementType.switch_block;
-  final String _value;
+  final List _value;
 
   @override
   Object get type {
@@ -21,7 +21,7 @@ class SwitchBlock implements SwitchStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

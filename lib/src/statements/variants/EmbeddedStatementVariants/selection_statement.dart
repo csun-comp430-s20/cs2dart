@@ -12,7 +12,7 @@ class SelectionStatement implements EmbeddedStatement{
     ): super();
 
     static final EmbeddedStatementType _type = EmbeddedStatementType.selection_statement;
-    final String _value;
+    final List _value;
 
     @override
     Object get type {
@@ -21,7 +21,7 @@ class SelectionStatement implements EmbeddedStatement{
     }
 
     @override
-    String get value {
+    List get value {
       return _value;
     }
 

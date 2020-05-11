@@ -20,7 +20,7 @@ class StatementExpression implements ExpressionStatement{
   ): super();
 
   static final ExpressionStatementType _type = ExpressionStatementType.statement_expression;
-  final String _value;
+  final List _value;
 
   @override
   ExpressionStatementType get type {
@@ -29,7 +29,7 @@ class StatementExpression implements ExpressionStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

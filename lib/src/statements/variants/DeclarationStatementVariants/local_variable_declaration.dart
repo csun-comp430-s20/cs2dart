@@ -13,7 +13,7 @@ class LocalVariableDeclaration implements DeclarationStatement {
   ): super();
 
   static final DeclarationStatementType _type = DeclarationStatementType.local_variable_declaration;
-  final String _value;
+  final List _value;
 
   @override
   Object get type {
@@ -22,7 +22,7 @@ class LocalVariableDeclaration implements DeclarationStatement {
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

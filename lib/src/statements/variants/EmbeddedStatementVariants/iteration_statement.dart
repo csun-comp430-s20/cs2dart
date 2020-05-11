@@ -13,7 +13,7 @@ class IterationStatement implements EmbeddedStatement{
   ): super();
 
   static final EmbeddedStatementType _type = EmbeddedStatementType.iteration_statement;
-  final String _value;
+  final List _value;
 
   @override
   Object get type {
@@ -22,7 +22,7 @@ class IterationStatement implements EmbeddedStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

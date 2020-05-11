@@ -16,7 +16,7 @@ class EmbeddedStatement implements Statement {
 
 
   static final Statementype _type = Statementype.embedded_statement;
-  final String _value;
+  final List _value;
 
   @override
   Object get type {
@@ -25,7 +25,7 @@ class EmbeddedStatement implements Statement {
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

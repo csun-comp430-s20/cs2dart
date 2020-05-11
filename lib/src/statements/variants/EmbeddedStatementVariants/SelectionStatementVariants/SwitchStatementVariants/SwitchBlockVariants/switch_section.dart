@@ -12,7 +12,7 @@ class SwitchSection implements SwitchBlock{
   ): super();
 
   static final SwitchBlockType _type = SwitchBlockType.switch_section;
-  final String _value;
+  final List _value;
 
   @override
   Object get type {
@@ -21,7 +21,7 @@ class SwitchSection implements SwitchBlock{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

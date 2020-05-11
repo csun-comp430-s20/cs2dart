@@ -8,7 +8,7 @@ class IfStatement implements SelectionStatement{
   ): super();
 
   static final SelectionStatementType _type = SelectionStatementType.if_statement;
-  final String _value;
+  final List _value;
 
   @override
   SelectionStatementType get type {
@@ -17,7 +17,7 @@ class IfStatement implements SelectionStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

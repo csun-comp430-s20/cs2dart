@@ -8,7 +8,7 @@ class WhileStatement implements IterationStatement{
   ): super();
 
   static final IterationStatementType _type = IterationStatementType.while_statement;
-  final String _value;
+  final List _value;
 
   @override
   IterationStatementType get type {
@@ -17,7 +17,7 @@ class WhileStatement implements IterationStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

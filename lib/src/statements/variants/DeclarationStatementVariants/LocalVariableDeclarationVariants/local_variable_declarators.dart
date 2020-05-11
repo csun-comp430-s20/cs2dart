@@ -12,7 +12,7 @@ class LocalVariableDeclarators implements LocalVariableDeclaration {
   ): super();
 
   static final LocalVariableDeclarationTypes _type = LocalVariableDeclarationTypes.local_variable_declarators;
-  final String _value;
+  final List _value;
 
   @override
   Object get type {
@@ -21,7 +21,7 @@ class LocalVariableDeclarators implements LocalVariableDeclaration {
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

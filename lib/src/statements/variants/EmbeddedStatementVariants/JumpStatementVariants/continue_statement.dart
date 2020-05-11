@@ -8,7 +8,7 @@ class ContinueStatement implements JumpStatement{
   ): super();
 
   static final JumpStatementType _type = JumpStatementType.continue_statement;
-  final String _value;
+  final List _value;
 
   @override
   JumpStatementType get type {
@@ -17,7 +17,7 @@ class ContinueStatement implements JumpStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

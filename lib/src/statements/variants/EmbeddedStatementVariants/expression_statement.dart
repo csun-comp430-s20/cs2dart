@@ -11,7 +11,7 @@ class ExpressionStatement implements EmbeddedStatement{
   ): super();
 
   static final EmbeddedStatementType _type = EmbeddedStatementType.expression_statement;
-  final String _value;
+  final List _value;
 
   @override
   Object get type {
@@ -20,7 +20,7 @@ class ExpressionStatement implements EmbeddedStatement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 
