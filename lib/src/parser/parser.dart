@@ -117,7 +117,7 @@ class Parser {
           //parsing identifier
           currPos++;
           //param list
-          if (_tokens[currPos] is OperatorOrPunctuatorToken && 
+          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
               _tokens[currPos].value == '<') {
               currPos++;
               while (true) {
@@ -214,7 +214,7 @@ class Parser {
 
           //start class body
           if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-              _tokens[currPos].value == '{') 
+              _tokens[currPos].value == '{')
               {
               output.children.add(AST2(_tokens[currPos]));
               currPos++;
@@ -396,6 +396,10 @@ class Parser {
       return null;
     }
   }
+  ParseResult<Exp> parseState(final int startPos) {
+    
+  }
+
 
   ParseResult<Exp> parseExp(final int startPos) {
     var currPos = startPos;
