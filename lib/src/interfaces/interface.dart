@@ -1,5 +1,18 @@
-import 'package:cs2dart/src/abstractions/abstraction.dart';
+enum InterfaceKind{
+  interfaceDeclaration,
+  interfaceModifier,
+  interfaceBase,
+  interfaceBody
+}
+class InterfaceAST{
 
-abstract class Interface implements Abstraction {
+  InterfaceAST(this._value);
+
+  List _value;
+
+  List get value {
+    return _value;
+  }
+
 
 }
