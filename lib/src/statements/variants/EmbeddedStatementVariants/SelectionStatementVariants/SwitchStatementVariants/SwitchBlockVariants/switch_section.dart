@@ -1,15 +1,22 @@
-class SwitchSection implements Statement{
+import '../switch_block.dart';
+import '../../../../../statement.dart';
+
+enum SwitchSectionType {
+  switch_label,
+}
+
+class SwitchSection implements SwitchBlock{
 
   SwitchSection(
     this._value,
   ): super();
 
-  static final SelectionStatementType _type = SelectionStatementType.switch_statement;
+  static final SwitchBlockType _type = SwitchBlockType.switch_section;
   final String _value;
 
   @override
-  Statementype get type {
-    assert(_type == Statementype.switch_statement);
+  Object get type {
+    assert(_type == SwitchBlockType.switch_section);
     return _type;
   }
 
@@ -20,6 +27,6 @@ class SwitchSection implements Statement{
 
   @override
   bool equals(Statement token){
-   return token.type == Statementype.switch_statement;
+   return token.type == SwitchBlockType.switch_section;
  }
 }

@@ -13,7 +13,7 @@ enum StatementExpressionType {
   await_expression,
 }
 
-class StatementExpression implements Statement{
+class StatementExpression implements ExpressionStatement{
 
   StatementExpression(
     this._value,

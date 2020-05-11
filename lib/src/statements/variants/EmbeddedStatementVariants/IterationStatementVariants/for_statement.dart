@@ -5,7 +5,7 @@ import '../../../statement.dart';
 //   for_condition,
 //   for_iterator,
 // }
-class ForStatement implements Statement{
+class ForStatement implements IterationStatement{
 
   ForStatement(
     this._value,
@@ -26,7 +26,7 @@ class ForStatement implements Statement{
   }
 
   @override
-  bool equals(IterationStatementType token){
+  bool equals(Statement token){
    return token.type == IterationStatementType.for_statement;
  }
 }

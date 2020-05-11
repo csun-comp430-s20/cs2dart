@@ -10,12 +10,12 @@ class ExpressionStatement implements EmbeddedStatement{
     this._value,
   ): super();
 
-  static final Statementype _type = Statementype.embedded_statement;
+  static final EmbeddedStatementType _type = EmbeddedStatementType.expression_statement;
   final String _value;
 
   @override
-  Statementype get type {
-    assert(_type == Statementype.embedded_statement);
+  Object get type {
+    assert(_type == EmbeddedStatementType.expression_statement);
     return _type;
   }
 
@@ -26,6 +26,6 @@ class ExpressionStatement implements EmbeddedStatement{
 
   @override
   bool equals(Statement token){
-   return token.type == Statementype.embedded_statement;
+   return token.type == EmbeddedStatementType.expression_statement;
  }
 }

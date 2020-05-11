@@ -15,12 +15,12 @@ class EmbeddedStatement implements Statement {
   ): super();
 
 
-  static final Statementype _type = Statementype.labeled_statement;
+  static final Statementype _type = Statementype.embedded_statement;
   final String _value;
 
   @override
-  Statementype get type {
-    assert(_type == Statementype.labeled_statement);
+  Object get type {
+    assert(_type == Statementype.embedded_statement);
     return _type;
   }
 
@@ -31,7 +31,7 @@ class EmbeddedStatement implements Statement {
 
   @override
   bool equals(Statement token){
-   return token.type == Statementype.labeled_statement;
+   return token.type == Statementype.embedded_statement;
  }
 
 }

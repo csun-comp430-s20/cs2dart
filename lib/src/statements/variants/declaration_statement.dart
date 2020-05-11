@@ -11,12 +11,12 @@ abstract class DeclarationStatement implements Statement {
   ): super();
 
 
-  static final Statementype _type = Statementype.labeled_statement;
+  static final Statementype _type = Statementype.declaration_statement;
   final String _value;
 
   @override
-  Statementype get type {
-    assert(_type == Statementype.labeled_statement);
+  Object get type {
+    assert(_type == Statementype.declaration_statement);
     return _type;
   }
 
@@ -27,7 +27,7 @@ abstract class DeclarationStatement implements Statement {
 
   @override
   bool equals(Statement token){
-   return token.type == Statementype.labeled_statement;
+   return token.type == Statementype.declaration_statement;
  }
 
 }

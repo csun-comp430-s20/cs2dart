@@ -1,7 +1,7 @@
 import '../iteration_statement.dart';
 import '../../../statement.dart';
 
-class ForEachStatement implements Statement{
+class ForEachStatement implements IterationStatement{
 
   ForEachStatement(
     this._value,
@@ -22,7 +22,7 @@ class ForEachStatement implements Statement{
   }
 
   @override
-  bool equals(IterationStatementType token){
+  bool equals(Statement token){
    return token.type == IterationStatementType.foreach_statement;
  }
 }

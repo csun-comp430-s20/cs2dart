@@ -1,7 +1,7 @@
 import '../jump_statement.dart';
 import '../../../statement.dart';
 
-class ReturnStatement implements Statement{
+class ReturnStatement implements JumpStatement{
 
   ReturnStatement(
     this._value,
@@ -22,7 +22,7 @@ class ReturnStatement implements Statement{
   }
 
   @override
-  bool equals(JumpStatementType token){
+  bool equals(Statement token){
    return token.type == JumpStatementType.return_statement;
  }
 }

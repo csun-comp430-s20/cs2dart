@@ -1,7 +1,7 @@
 import '../iteration_statement.dart';
 import '../../../statement.dart';
 
-class WhileStatement implements Statement{
+class WhileStatement implements IterationStatement{
 
   WhileStatement(
     this._value,
@@ -22,7 +22,7 @@ class WhileStatement implements Statement{
   }
 
   @override
-  bool equals(IterationStatementType token){
+  bool equals(Statement token){
    return token.type == IterationStatementType.while_statement;
  }
 }

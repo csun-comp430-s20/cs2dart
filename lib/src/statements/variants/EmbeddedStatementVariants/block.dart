@@ -1,6 +1,6 @@
 import '../embedded_statement.dart';
 import '../../statement.dart';
-class Block implements Statement{
+class Block implements EmbeddedStatement{
 
   Block(
     this._value,
@@ -10,8 +10,8 @@ class Block implements Statement{
   final String _value;
 
   @override
-  Statementype get type {
-    assert(_type == Statementype.labeled_statement);
+  EmbeddedStatementType get type {
+    assert(_type == EmbeddedStatementType.block);
     return _type;
   }
 
@@ -22,6 +22,6 @@ class Block implements Statement{
 
   @override
   bool equals(Statement token){
-   return token.type == Statementype.labeled_statement;
+   return token.type == EmbeddedStatementType.block;
  }
 }

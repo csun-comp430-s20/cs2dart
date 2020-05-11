@@ -16,7 +16,7 @@ abstract class Statement {
   final Statementype _type;
   final String _value;
 
-  Statementype get type {
+  Object get type {
     return _type;
   }
 
