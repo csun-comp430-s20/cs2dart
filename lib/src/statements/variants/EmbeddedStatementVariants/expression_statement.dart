@@ -4,7 +4,7 @@ enum ExpressionStatementType {
   statement_expression,
 }
 
-class ExpressionStatement implements Statement{
+class ExpressionStatement implements EmbeddedStatement{
 
   ExpressionStatement(
     this._value,
