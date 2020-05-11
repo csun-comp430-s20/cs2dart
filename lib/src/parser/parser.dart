@@ -1,4 +1,6 @@
 import 'package:cs2dart/parser.dart';
+import 'package:cs2dart/src/classes/classAST.dart';
+import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
 import 'package:cs2dart/tokens.dart';
 import 'package:cs2dart/expressions.dart';
 
@@ -7,7 +9,14 @@ import 'dart:io';
 import '../parser/parser_ast2.dart';
 import '../../parser.dart';
 import '../interfaces/interface.dart';
-import '../classes/classes.dart';
+import '../interfaces/variants/InterfaceBase.dart';
+import '../interfaces/variants/InterfaceBody.dart';
+import '../interfaces/variants/InterfaceDeclaration.dart';
+import '../interfaces/variants/InterfaceModifier.dart';
+import '../classes/classAST.dart';
+import '../classes/variants/ClassBody.dart';
+import '../classes/variants/ClassDeclaration.dart';
+import '../classes/variants/ClassModifier.dart';
 import '../tokens/variants/identifier_token.dart';
 import '../tokens/variants/integer_literal_token.dart';
 import '../tokens/variants/keyword_token.dart';
@@ -18,7 +27,7 @@ class Parser {
   Parser(this._tokens);
 
   final List<Token> _tokens;
-  // int _position = 0;
+  int _position = 0;
 
   // Token peek(int offset) {
   //   var index = _position + offset;
@@ -95,314 +104,80 @@ class Parser {
 
   //end Expressions helper funtions
 
-  AST _parseClass(final int startPos) {
-    var currPos = startPos;
-    var output = AST2(null);
-    var tempNode;
-    if (_tokens[currPos] is KeywordToken) {
-      currPos++;
-      //while loop to parse modifiers
-      while (_tokens[currPos] is KeywordToken &&
-          _isClassModifier(_tokens[currPos])) {
-        currPos++;
-      } //end loop
+  ClassBody parseClassBody(){
+    return null;
+  }
 
-      //start class parsing
-      if (_tokens[currPos] is KeywordToken &&
-          _tokens[currPos].value == 'class') {
-            output.children.add(AST2(_tokens[currPos]));
-        currPos++;
-        if (_tokens[currPos] is IdentifierToken) {
-          output.children.add(AST2(_tokens[currPos]));
-          //parsing identifier
-          currPos++;
-          //param list
-          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-              _tokens[currPos].value == '<') {
-              currPos++;
-              while (true) {
-                //refactor loop vars for here, or make helper function
+  ClassDeclaration parseClass(){
+    int startPos = _position;
+    ClassDeclaration  output = new ClassDeclaration(new List());
+    //class modifier COME BACK TO THIS
+    if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'class'){
 
-                //check for params here maybe makebool helper
-                currPos++;
-              }
-              if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                  _tokens[currPos].value == '>') {
-                currPos++;
-                //start type param constraint
-                while (_tokens[currPos] is IdentifierToken &&
-                    _tokens[currPos].value == 'where') {
-                  currPos++;
-                  if (_tokens[currPos] is IdentifierToken) {
-                    currPos++;
-                    if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                        _tokens[currPos].value == ':') {
-                      currPos++;
-                      var exitLoop = false;
-                      var ateConstructorConstraint = false;
-                      while (!exitLoop) {
-                        if (_tokens[currPos] is KeywordToken &&
-                            _tokens[currPos].value == 'new' &&
-                            !ateConstructorConstraint) {
-                          currPos++;
-                          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                              _tokens[currPos].value == '(') {
-                            currPos++;
-                            if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                                _tokens[currPos].value == ')') {
-                              currPos++;
-                              ateConstructorConstraint = true;
-                            } else {
-                              return null;
-                            }
-                          } else {
-                            return null;
-                          }
-                        } else if (_tokens[currPos] is IdentifierToken) {
-                          currPos++;
-                          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                              _tokens[currPos].value == '<') {
-                            currPos++;
-                            if (_tokens[currPos] is IdentifierToken) {
-                              currPos++;
-                              if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                                  _tokens[currPos].value == '>') {
-                                currPos++;
-                              } else {
-                                return null;
-                              }
-                            } else {
-                              return null;
-                            }
-                          } else {
-                            return null;
-                          }
-                        }
-                        if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                            _tokens[currPos].value == ',') {
-                          currPos++;
-                        } else {
-                          currPos++;
-                          exitLoop = true;
-                        }
-                      }
-                    } else {
-                      return null;
-                    }
-                  } else {
-                    return null;
-                  }
-                }
-                //end type param constraint
-              } else {
-                return null;
-              }
+    }
+    //class keyword
+    if(_tokens[_position] is KeywordToken && _tokens[_position].value == 'class'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      //identifier
+      if(_tokens[_position] is IdentifierToken){
+        output.value.add(_tokens[_position]);
+        _position++;
+        //class body
+        ClassBody body = parseClassBody();
+        if(body != null){
+          output.value.add(body);
+          if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == ';' ){
+            output.value.add(_tokens[_position]);
           }
-          //end param list
-          //start class base
-          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-              _tokens[currPos].value == ':') {
-            currPos++;
-
-            if (_tokens[currPos] is IdentifierToken) {
-              currPos++;
-            } else {
-              return null;
-            }
-          }
-          //end class base
-
-          //start class body
-          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-              _tokens[currPos].value == '{')
-              {
-              output.children.add(AST2(_tokens[currPos]));
-              currPos++;
-
-            //fuck dude idk, maybe make a helper method,
-            //close bracket
-            if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                _tokens[currPos].value == '}') {
-              currPos++;
-            } else {
-              return null;
-            }
-          }
-          //end class body
-          //ending semicolon, optional
-          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-              _tokens[currPos].value == ';') {
-            currPos++;
-          }
-        } else {
+          return output;
+        }
+        else{
+          _position = startPos;
           return null;
         }
-        // final return
+      }
+      else{
+        _position = startPos;
         return null;
       }
-      //end identifier parsing
-      else {
-        return null;
-      }
-    } else {
+    }
+    else{
+      _position = startPos;
       return null;
     }
   }
 
-  ParseResult<Interface> _parseInterface(final int startPos) {
-    var currPos = startPos;
-    if (_tokens[currPos] is KeywordToken) {
-      currPos++;
-      //while loop to parse modifiers
-      while (_tokens[currPos] is KeywordToken &&
-          _isInterfaceModifier(_tokens[currPos])) {
-        currPos++;
-      } //end loop
+  InterfaceBody parseInterfaceBody(){
+    return null;
+  }
 
-      //start interface parsing
-      if (_tokens[currPos] is KeywordToken &&
-          _tokens[currPos].value == 'interface') {
-        currPos++;
-        if (_tokens[currPos] is IdentifierToken) {
-          //parsing identifier
-          currPos++;
-          //param list
-          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-              _tokens[currPos].value == '<') {
-            currPos++;
-            while (true) {
-              //refactor loop vars for here, or make helper function
+  InterfaceDeclaration parseInterface(){
+    int startPos = _position;
+    InterfaceDeclaration output = new InterfaceDeclaration(new List());
+    //interface modifier COMEBACK TO THIS
+    if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'interface'){
 
-              //check for params here maybe makebool helper
-              currPos++;
-            }
-            if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                _tokens[currPos].value == '>') {
-              currPos++;
-              //start type param constraint
-              while (_tokens[currPos] is IdentifierToken &&
-                  _tokens[currPos].value == 'where') {
-                currPos++;
-                if (_tokens[currPos] is IdentifierToken) {
-                  currPos++;
-                  if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                      _tokens[currPos].value == ':') {
-                    currPos++;
-                    var exitLoop = false;
-                    var ateConstructorConstraint = false;
-                    while (!exitLoop) {
-                      if (_tokens[currPos] is KeywordToken &&
-                          _tokens[currPos].value == 'new' &&
-                          !ateConstructorConstraint) {
-                        currPos++;
-                        if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                            _tokens[currPos].value == '(') {
-                          currPos++;
-                          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                              _tokens[currPos].value == ')') {
-                            currPos++;
-                            ateConstructorConstraint = true;
-                          } else {
-                            return null;
-                          }
-                        } else {
-                          return null;
-                        }
-                      } else if (_tokens[currPos] is IdentifierToken) {
-                        currPos++;
-                        if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                            _tokens[currPos].value == '<') {
-                          currPos++;
-                          if (_tokens[currPos] is IdentifierToken) {
-                            currPos++;
-                            if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                                _tokens[currPos].value == '>') {
-                              currPos++;
-                            } else {
-                              return null;
-                            }
-                          } else {
-                            return null;
-                          }
-                        } else {
-                          return null;
-                        }
-                      }
-                      if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                          _tokens[currPos].value == ',') {
-                        currPos++;
-                      } else {
-                        currPos++;
-                        exitLoop = true;
-                      }
-                    }
-                  } else {
-                    return null;
-                  }
-                } else {
-                  return null;
-                }
-              }
-              //end type param constraint
-            } else {
-              return null;
-            }
-          }
-          //end param list
-          //start class base
-          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-              _tokens[currPos].value == ':') {
-            currPos++;
-
-            if (_tokens[currPos] is IdentifierToken) {
-              currPos++;
-            } else {
-              return null;
-            }
-          }
-          //end class base
-
-          //start class body
-          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-              _tokens[currPos].value == '{') {
-            currPos++;
-
-            //fuck dude idk, maybe make a helper method,
-            //close bracket
-            if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-                _tokens[currPos].value == '}') {
-              currPos++;
-            } else {
-              return null;
-            }
-          }
-          //end class body
-          //ending semicolon, optional
-          if (_tokens[currPos] is OperatorOrPunctuatorToken &&
-              _tokens[currPos].value == ';') {
-            currPos++;
-          }
-        } else {
-          return null;
-        }
-        // final return
+    }
+    //interface keyword
+    if(_tokens[_position] is KeywordToken && _tokens[_position].value == 'interface'){
+      
+      InterfaceBody body = parseInterfaceBody();
+      //interface Body
+      if(body != null){
+       
+       
+      }
+      else{
+        _position = startPos;
         return null;
       }
-      //end identifier parsing
-      else {
-        return null;
-      }
-    } else {
+    }
+    else{
+      _position = startPos;
       return null;
     }
   }
-  ParseResult<Exp> parseState(final int startPos) {
-    var currPos = startPos;
-
-    if (_tokens[currPos].value == 'new' && _tokens[currPos] is KeywordToken) {
-
-  }
-
 
   ParseResult<Exp> parseExp(final int startPos) {
     var currPos = startPos;
