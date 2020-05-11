@@ -397,7 +397,10 @@ class Parser {
     }
   }
   ParseResult<Exp> parseState(final int startPos) {
-    
+    var currPos = startPos;
+
+    if (_tokens[currPos].value == 'new' && _tokens[currPos] is KeywordToken) {
+
   }
 
 
