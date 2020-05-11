@@ -2,7 +2,7 @@ import '../local_variable_declarators.dart';
 import '../../../../statement.dart';
 
 enum LocalVariableDeclaratorTypes {
-  local_variable_declarator,
+  local_variable_initializer,
 }
 
 class LocalVariableDeclarator implements LocalVariableDeclarators {
@@ -15,7 +15,7 @@ class LocalVariableDeclarator implements LocalVariableDeclarators {
   final String _value;
 
   @override
-  LocalVariableDeclaratorsTypes get type {
+  Object get type {
     assert(_type == LocalVariableDeclaratorsTypes.local_variable_declarator);
     return _type;
   }

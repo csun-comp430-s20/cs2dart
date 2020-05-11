@@ -161,12 +161,12 @@ class Parser {
     }
     //interface keyword
     if(_tokens[_position] is KeywordToken && _tokens[_position].value == 'interface'){
-      
+
       InterfaceBody body = parseInterfaceBody();
       //interface Body
       if(body != null){
-       
-       
+
+
       }
       else{
         _position = startPos;
@@ -178,6 +178,11 @@ class Parser {
       return null;
     }
   }
+
+  //Parse statements function.
+
+  parseStatements(final int startPos)
+
 
   ParseResult<Exp> parseExp(final int startPos) {
     var currPos = startPos;
