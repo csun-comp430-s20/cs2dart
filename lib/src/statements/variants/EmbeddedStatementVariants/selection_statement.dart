@@ -5,28 +5,28 @@ enum SelectionStatementType {
   switch_statement,
 }
 
-class SelectionStatement implements Statement{
+class SelectionStatement implements EmbeddedStatement{
 
     SelectionStatement(
       this._value,
     ): super();
 
-    static final EmbeddedStatementType _type = EmbeddedStatementType.block;
-    final String _value;
+    static final EmbeddedStatementType _type = EmbeddedStatementType.selection_statement;
+    final List _value;
 
     @override
-    Statementype get type {
-      assert(_type == Statementype.embedded_statement);
+    Object get type {
+      assert(_type == EmbeddedStatementType.selection_statement);
       return _type;
     }
 
     @override
-    String get value {
+    List get value {
       return _value;
     }
 
     @override
     bool equals(Statement token){
-     return token.type == Statementype.embedded_statement;
+     return token.type == EmbeddedStatementType.selection_statement;
    }
   }

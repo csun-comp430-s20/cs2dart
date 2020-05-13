@@ -6,28 +6,28 @@ enum IterationStatementType {
   for_statement,
   foreach_statement,
 }
-class IterationStatement implements Statement{
+class IterationStatement implements EmbeddedStatement{
 
   IterationStatement(
     this._value,
   ): super();
 
-  static final EmbeddedStatementType _type = EmbeddedStatementType.block;
-  final String _value;
+  static final EmbeddedStatementType _type = EmbeddedStatementType.iteration_statement;
+  final List _value;
 
   @override
-  Statementype get type {
-    assert(_type == Statementype.labeled_statement);
+  Object get type {
+    assert(_type == EmbeddedStatementType.iteration_statement);
     return _type;
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 
   @override
   bool equals(Statement token){
-   return token.type == Statementype.labeled_statement;
+   return token.type == EmbeddedStatementType.iteration_statement;
  }
 }

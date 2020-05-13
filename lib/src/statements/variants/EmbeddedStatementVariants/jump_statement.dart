@@ -6,28 +6,28 @@ enum JumpStatementType {
   return_statement,
 }
 
-class JumpStatement implements Statement{
+class JumpStatement implements EmbeddedStatement{
 
   JumpStatement(
     this._value,
   ): super();
 
-  static final EmbeddedStatementType _type = EmbeddedStatementType.block;
-  final String _value;
+  static final EmbeddedStatementType _type = EmbeddedStatementType.jump_statement;
+  final List _value;
 
   @override
-  Statementype get type {
-    assert(_type == Statementype.labeled_statement);
+  Object get type {
+    assert(_type == EmbeddedStatementType.jump_statement);
     return _type;
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 
   @override
   bool equals(Statement token){
-   return token.type == Statementype.labeled_statement;
+   return token.type == EmbeddedStatementType.jump_statement;
  }
 }

@@ -13,6 +13,7 @@ import '../interfaces/variants/InterfaceBase.dart';
 import '../interfaces/variants/InterfaceBody.dart';
 import '../interfaces/variants/InterfaceDeclaration.dart';
 import '../interfaces/variants/InterfaceModifier.dart';
+import '../statements/statement.dart';
 import '../classes/classAST.dart';
 import '../classes/variants/ClassBody.dart';
 import '../classes/variants/ClassDeclaration.dart';
@@ -161,12 +162,12 @@ class Parser {
     }
     //interface keyword
     if(_tokens[_position] is KeywordToken && _tokens[_position].value == 'interface'){
-      
+
       InterfaceBody body = parseInterfaceBody();
       //interface Body
       if(body != null){
-       
-       
+
+
       }
       else{
         _position = startPos;
@@ -178,6 +179,30 @@ class Parser {
       return null;
     }
   }
+
+  //Parse statements function.
+
+  Statement parseStatements(final int startPos)
+  {
+    var currPos = startPos;
+    if(_tokens[currPos] is IdentifierToken && _tokens[currPos + 1].value == ':'){
+      return parseStatements(currPos + 2);
+    }
+    else
+    {
+      // if ()
+      // {
+      //
+      // }
+      // else
+      // {
+      //
+      // }
+      //parseLocalVariableDeclaration(currPos);
+    }
+
+  }
+
 
   ParseResult<Exp> parseExp(final int startPos) {
     var currPos = startPos;

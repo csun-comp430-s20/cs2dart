@@ -7,7 +7,7 @@ class LabeledStatement implements Statement {
 
 
   static final Statementype _type = Statementype.labeled_statement;
-  final String _value;
+  final List _value;
 
   @override
   Statementype get type {
@@ -16,7 +16,7 @@ class LabeledStatement implements Statement {
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

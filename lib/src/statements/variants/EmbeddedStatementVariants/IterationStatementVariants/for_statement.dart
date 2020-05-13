@@ -5,14 +5,14 @@ import '../../../statement.dart';
 //   for_condition,
 //   for_iterator,
 // }
-class ForStatement implements Statement{
+class ForStatement implements IterationStatement{
 
   ForStatement(
     this._value,
   ): super();
 
   static final IterationStatementType _type = IterationStatementType.for_statement;
-  final String _value;
+  final List _value;
 
   @override
   IterationStatementType get type {
@@ -21,12 +21,12 @@ class ForStatement implements Statement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 
   @override
-  bool equals(IterationStatementType token){
+  bool equals(Statement token){
    return token.type == IterationStatementType.for_statement;
  }
 }

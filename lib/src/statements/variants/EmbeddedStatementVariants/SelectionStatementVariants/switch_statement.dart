@@ -1,28 +1,32 @@
 import '../selection_statement.dart';
 import '../../../statement.dart';
 
-class SwitchStatement implements Statement{
+enum SwitchStatementType {
+  switch_block,
+}
+
+class SwitchStatement implements SelectionStatement{
 
   SwitchStatement(
     this._value,
   ): super();
 
   static final SelectionStatementType _type = SelectionStatementType.switch_statement;
-  final String _value;
+  final List _value;
 
   @override
-  Statementype get type {
-    assert(_type == Statementype.switch_statement);
+  Object get type {
+    assert(_type == SelectionStatementType.switch_statement);
     return _type;
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 
   @override
   bool equals(Statement token){
-   return token.type == Statementype.switch_statement;
+   return token.type == SelectionStatementType.switch_statement;
  }
 }

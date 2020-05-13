@@ -13,14 +13,14 @@ enum StatementExpressionType {
   await_expression,
 }
 
-class StatementExpression implements Statement{
+class StatementExpression implements ExpressionStatement{
 
   StatementExpression(
     this._value,
   ): super();
 
   static final ExpressionStatementType _type = ExpressionStatementType.statement_expression;
-  final String _value;
+  final List _value;
 
   @override
   ExpressionStatementType get type {
@@ -29,7 +29,7 @@ class StatementExpression implements Statement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 

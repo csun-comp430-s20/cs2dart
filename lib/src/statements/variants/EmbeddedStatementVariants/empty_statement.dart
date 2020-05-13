@@ -1,27 +1,27 @@
 import '../embedded_statement.dart';
 import '../../statement.dart';
-class EmptyStatement implements Statement{
+class EmptyStatement implements EmbeddedStatement{
 
   EmptyStatement(
     this._value,
   ): super();
 
-  static final EmbeddedStatementType _type = EmbeddedStatementType.block;
-  final String _value;
+  static final EmbeddedStatementType _type = EmbeddedStatementType.empty_statement;
+  final List _value;
 
   @override
-  Statementype get type {
-    assert(_type == Statementype.labeled_statement);
+  EmbeddedStatementType get type {
+    assert(_type == EmbeddedStatementType.empty_statement);
     return _type;
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 
   @override
   bool equals(Statement token){
-   return token.type == Statementype.labeled_statement;
+   return token.type == EmbeddedStatementType.empty_statement;
  }
 }

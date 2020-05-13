@@ -1,28 +1,28 @@
 import '../selection_statement.dart';
 import '../../../statement.dart';
 
-class IfStatement implements Statement{
+class IfStatement implements SelectionStatement{
 
   IfStatement(
     this._value,
   ): super();
 
   static final SelectionStatementType _type = SelectionStatementType.if_statement;
-  final String _value;
+  final List _value;
 
   @override
-  Statementype get type {
-    assert(_type == Statementype.labeled_statement);
+  SelectionStatementType get type {
+    assert(_type == SelectionStatementType.if_statement);
     return _type;
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 
   @override
   bool equals(Statement token){
-   return token.type == Statementype.labeled_statement;
+   return token.type == SelectionStatementType.if_statement;
  }
 }

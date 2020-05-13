@@ -1,14 +1,14 @@
 import '../jump_statement.dart';
 import '../../../statement.dart';
 
-class BreakStatement implements Statement{
+class BreakStatement implements JumpStatement{
 
   BreakStatement(
     this._value,
   ): super();
 
   static final JumpStatementType _type = JumpStatementType.break_statement;
-  final String _value;
+  final List _value;
 
   @override
   JumpStatementType get type {
@@ -17,12 +17,12 @@ class BreakStatement implements Statement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 
   @override
-  bool equals(JumpStatementType token){
+  bool equals(Statement token){
    return token.type == JumpStatementType.break_statement;
  }
 }

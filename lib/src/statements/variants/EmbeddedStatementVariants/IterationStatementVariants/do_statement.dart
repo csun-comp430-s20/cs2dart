@@ -1,14 +1,14 @@
 import '../iteration_statement.dart';
 import '../../../statement.dart';
 
-class DoStatement implements Statement{
+class DoStatement implements IterationStatement{
 
   DoStatement(
     this._value,
   ): super();
 
   static final IterationStatementType _type = IterationStatementType.do_statement;
-  final String _value;
+  final List _value;
 
   @override
   IterationStatementType get type {
@@ -17,12 +17,12 @@ class DoStatement implements Statement{
   }
 
   @override
-  String get value {
+  List get value {
     return _value;
   }
 
   @override
-  bool equals(IterationStatementType token){
+  bool equals(Statement token){
    return token.type == IterationStatementType.do_statement;
  }
 }

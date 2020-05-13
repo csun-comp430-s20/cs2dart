@@ -14,13 +14,13 @@ abstract class Statement {
   );
 
   final Statementype _type;
-  final String _value;
+  final List _value;
 
-  Statementype get type {
+  Object get type {
     return _type;
   }
 
-  String get value {
+  List get value {
     return _value;
   }
   bool equals(Statement statement){
