@@ -13,10 +13,10 @@ import '../interfaces/variants/InterfaceBase.dart';
 import '../interfaces/variants/InterfaceBody.dart';
 import '../interfaces/variants/InterfaceDeclaration.dart';
 import '../interfaces/variants/InterfaceModifier.dart';
-import '../statements/statement.dart';
 import '../classes/classAST.dart';
 import '../classes/variants/ClassBody.dart';
 import '../classes/variants/ClassDeclaration.dart';
+import '../classes/variants/ClassBase.dart';
 import '../classes/variants/ClassModifier.dart';
 import '../tokens/variants/identifier_token.dart';
 import '../tokens/variants/integer_literal_token.dart';
@@ -85,37 +85,63 @@ class Parser {
   //end interface helper functions
 
   //start class helper functions
-  bool _isClassModifier(KeywordToken input) {
-    //modify to check for repeats
-    if (input.value == 'new' ||
-        input.value == 'public' ||
-        input.value == 'protected' ||
-        input.value == 'internal' ||
-        input.value == 'private' ||
-        input.value == 'abstract' ||
-        input.value == 'static') {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // bool _isClassModifier(KeywordToken input) {
+  //   //modify to check for repeats
+  //   if (input.value == 'new' ||
+  //       input.value == 'public' ||
+  //       input.value == 'protected' ||
+  //       input.value == 'internal' ||
+  //       input.value == 'private' ||
+  //       input.value == 'abstract' ||
+  //       input.value == 'static') {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
   //end class helper functions
 
   //start Expressions helper funtions
 
   //end Expressions helper funtions
 
+
+  ClassBase parseClassBase() {
+    var startPos = _position;
+    var output = ClassBase(new List());
+    if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == ':'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position] is IdentifierToken){
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      _position = startPos;
+      return null;
+    }
+    
+  }
+
+
   ClassBody parseClassBody(){
     return null;
   }
 
-  ClassDeclaration parseClass(){
-    int startPos = _position;
-    ClassDeclaration  output = new ClassDeclaration(new List());
-    //class modifier COME BACK TO THIS
-    if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'class'){
 
-    }
+  ClassDeclaration parseClass(){
+    var startPos = _position;
+    var  output = new ClassDeclaration(new List());
+    //class modifier COME BACK TO THIS
+    // if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'class'){
+
+    // }
     //class keyword
     if(_tokens[_position] is KeywordToken && _tokens[_position].value == 'class'){
       output.value.add(_tokens[_position]);
@@ -124,8 +150,19 @@ class Parser {
       if(_tokens[_position] is IdentifierToken){
         output.value.add(_tokens[_position]);
         _position++;
+        
+        //class base
+        if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == ':'){
+          var classBase = parseClassBase();
+          if(classBase == null){
+            return null;
+          }
+          else{
+            output.value.add(classBase);
+          }
+        }
         //class body
-        ClassBody body = parseClassBody();
+        var body = parseClassBody();
         if(body != null){
           output.value.add(body);
           if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == ';' ){
@@ -153,21 +190,48 @@ class Parser {
     return null;
   }
 
-  InterfaceDeclaration parseInterface(){
-    int startPos = _position;
-    InterfaceDeclaration output = new InterfaceDeclaration(new List());
-    //interface modifier COMEBACK TO THIS
-    if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'interface'){
+  // InterfaceModifier parseInterfaceModifier(){
+  //   return null;
+  // }
 
+    InterfaceBase parseInterfaceBase(){
+    var startPos = _position;
+    var output = InterfaceBase(new List());
+    if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == ':'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position] is IdentifierToken){
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
     }
+    else{
+      _position = startPos;
+      return null;
+    }
+    
+  }
+
+  InterfaceDeclaration parseInterface(){
+    var startPos = _position;
+    var output = InterfaceDeclaration(new List());
+    //interface modifier COMEBACK TO THIS
+    // if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'interface'){
+
+    // }
     //interface keyword
     if(_tokens[_position] is KeywordToken && _tokens[_position].value == 'interface'){
-
-      InterfaceBody body = parseInterfaceBody();
+      
+      var body = parseInterfaceBody();
       //interface Body
       if(body != null){
-
-
+       
+       
       }
       else{
         _position = startPos;
@@ -179,30 +243,6 @@ class Parser {
       return null;
     }
   }
-
-  //Parse statements function.
-
-  Statement parseStatements(final int startPos)
-  {
-    var currPos = startPos;
-    if(_tokens[currPos] is IdentifierToken && _tokens[currPos + 1].value == ':'){
-      return parseStatements(currPos + 2);
-    }
-    else
-    {
-      // if ()
-      // {
-      //
-      // }
-      // else
-      // {
-      //
-      // }
-      //parseLocalVariableDeclaration(currPos);
-    }
-
-  }
-
 
   ParseResult<Exp> parseExp(final int startPos) {
     var currPos = startPos;
@@ -314,4 +354,5 @@ class Parser {
     //   exit(1);
     // }
   }
+
 }
