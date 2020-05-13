@@ -1,5 +1,11 @@
 import '../classAST.dart';
 
+enum ClassBodyKind{
+  constantDeclaration,
+  fieldDeclaration,
+  methodDeclaration,
+  constructorDeclaration
+}
 class ClassBody implements ClassAST{
 
   ClassBody(this._value);

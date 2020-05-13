@@ -1,6 +1,7 @@
 import 'package:cs2dart/parser.dart';
 import 'package:cs2dart/src/classes/classAST.dart';
 import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
+import 'package:cs2dart/src/types/type_assist.dart';
 import 'package:cs2dart/tokens.dart';
 import 'package:cs2dart/expressions.dart';
 
@@ -15,6 +16,10 @@ import '../interfaces/variants/InterfaceDeclaration.dart';
 import '../interfaces/variants/InterfaceModifier.dart';
 import '../classes/classAST.dart';
 import '../classes/variants/ClassBody.dart';
+import '../classes/variants/variants/ConstantDeclaration.dart';
+import '../classes/variants/variants/ConstructorDeclaration.dart';
+import '../classes/variants/variants/FieldDeclaration.dart';
+import '../classes/variants/variants/MethodDeclaration.dart';
 import '../classes/variants/ClassDeclaration.dart';
 import '../classes/variants/ClassBase.dart';
 import '../classes/variants/ClassModifier.dart';
@@ -82,6 +87,27 @@ class Parser {
       return false;
     }
   }
+
+  bool _isType(KeywordToken input){
+    if (input.value =='bool' ||
+        input.value == 'byte' ||
+        input.value == 'char' ||
+        input.value == 'double' ||
+        input.value == 'float' ||
+        input.value == 'int' ||
+        input.value == 'long' ||
+        input.value == 'sbyte' ||
+        input.value == 'short' ||
+        input.value == 'string' ||
+        input.value == 'uint' ||
+        input.value == 'ulong' ||
+        input.value == 'ushort'){
+          return true;
+        }
+        else{
+          return false;
+        }
+  }
   //end interface helper functions
 
   //start class helper functions
@@ -105,7 +131,7 @@ class Parser {
 
   //end Expressions helper funtions
 
-
+  //seems done
   ClassBase parseClassBase() {
     var startPos = _position;
     var output = ClassBase(new List());
@@ -129,15 +155,93 @@ class Parser {
     
   }
 
+  //wait for others to finish to finish class+interface methods
+  ConstantDeclaration parseConstDeclaration(){
+    var startPos = _position;
+    var output = ConstantDeclaration(new List());
+    if(_tokens[_position].value == 'const'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position] is KeywordToken){
+        if(isType())
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
 
+  FieldDeclaration parseFieldDeclaration(){
+
+  }
+
+  MethodDeclaration parseMethodDeclaration(){
+
+  }
+
+  ConstructorDeclaration parseConstructorDeclaration(){
+
+  }
+
+  //done, need to finish helper methods
   ClassBody parseClassBody(){
-    return null;
+    var startPos = _position;
+    var output = ClassBody(new List());
+    if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == '{'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      while(_tokens[_position].value != '}'){
+        //if end of list without braket return null
+        if(_position > _tokens.length){
+          _position = startPos;
+          return null;
+        }
+        var constDecl = parseConstDeclaration();
+        if(constDecl != null){
+          output.value.add(constDecl);
+        }
+        else{
+          var fieldDecl = parseFieldDeclaration();
+          if (fieldDecl != null){
+            output.value.add(fieldDecl);
+          }
+          else{
+            var methodDecl = parseMethodDeclaration();
+            if (methodDecl != null){
+              output.value.add(methodDecl);
+            }
+            else{
+              var constructorDecl = parseConstructorDeclaration();
+              if (constructorDecl != null){
+                output.value.add(constructorDecl);
+              }
+              else{
+                _position = startPos;
+                return null;
+              }
+            }
+          }
+        }
+      }
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    }
+    else{
+      _position = startPos;
+      return null;
+    }
+    
   }
 
 
   ClassDeclaration parseClass(){
     var startPos = _position;
-    var  output = new ClassDeclaration(new List());
+    var  output = ClassDeclaration(new List());
     //class modifier COME BACK TO THIS
     // if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'class'){
 
@@ -155,6 +259,7 @@ class Parser {
         if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == ':'){
           var classBase = parseClassBase();
           if(classBase == null){
+            _position = startPos;
             return null;
           }
           else{
@@ -186,6 +291,7 @@ class Parser {
     }
   }
 
+  //finish
   InterfaceBody parseInterfaceBody(){
     return null;
   }
@@ -193,7 +299,7 @@ class Parser {
   // InterfaceModifier parseInterfaceModifier(){
   //   return null;
   // }
-
+    //seems done
     InterfaceBase parseInterfaceBase(){
     var startPos = _position;
     var output = InterfaceBase(new List());
@@ -217,6 +323,7 @@ class Parser {
     
   }
 
+  //Seems done
   InterfaceDeclaration parseInterface(){
     var startPos = _position;
     var output = InterfaceDeclaration(new List());
@@ -226,12 +333,21 @@ class Parser {
     // }
     //interface keyword
     if(_tokens[_position] is KeywordToken && _tokens[_position].value == 'interface'){
-      
+      output.value.add(_tokens[_position]);
+      _position++;
       var body = parseInterfaceBody();
       //interface Body
       if(body != null){
-       
-       
+       output.value.add(body);
+       _position++;
+       if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == ';'){
+         output.value.add(_tokens[_position]);
+         _position++;
+         return output;
+       }
+       else{
+         return output;
+       }
       }
       else{
         _position = startPos;
