@@ -3,7 +3,6 @@ import 'package:cs2dart/src/classes/classAST.dart';
 import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
 import 'package:cs2dart/src/expressions/primary_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/parenthesized_expression.dart';
-import 'package:cs2dart/src/types/type_assist.dart';
 import 'package:cs2dart/src/types/variants/reference_type.dart';
 import 'package:cs2dart/tokens.dart';
 import 'package:cs2dart/expressions.dart';
@@ -446,8 +445,8 @@ class Parser {
           output.value.add(_tokens[_position]);
           _position++;
           //argument list - optional
-          if (_tokens[_position] == '<') {
-            while (_tokens[_position] != '>') {
+          if (_tokens[_position].value == '<') {
+            while (_tokens[_position].value != '>') {
               output.value.add(_tokens[_position]);
               _position++;
             }
@@ -461,8 +460,8 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       //argument list - optional
-      if (_tokens[_position] == '(') {
-        while (_tokens[_position] != ')') {
+      if (_tokens[_position].value == '(') {
+        while (_tokens[_position].value != ')') {
           output.value.add(_tokens[_position]);
           _position++;
         }
@@ -485,8 +484,8 @@ class Parser {
         output.value.add(_tokens[_position]);
         _position++;
         //argument list - optional
-        if (_tokens[_position] == '(') {
-          while (_tokens[_position] != ')') {
+        if (_tokens[_position].value == '(') {
+          while (_tokens[_position].value != ')') {
             output.value.add(_tokens[_position]);
             _position++;
           }
@@ -499,14 +498,14 @@ class Parser {
         _tokens[_position] is KeywordToken) {
       output.value.add(_tokens[_position]);
       _position++;
-      if (_tokens[_position] == '(') {
+      if (_tokens[_position].value == '(') {
         output.value.add(_tokens[_position]);
         _position++;
-        if (_tokens[_position] == "void" ||
+        if (_tokens[_position].value == "void" ||
             _tokens[_position] is IdentifierToken) {
           output.value.add(_tokens[_position]);
           _position++;
-          if (_tokens[_position] == ')') {
+          if (_tokens[_position].value == ')') {
             output.value.add(_tokens[_position]);
             _position++;
             return output;
