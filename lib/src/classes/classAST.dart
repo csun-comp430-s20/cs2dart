@@ -5,6 +5,7 @@ enum ClassKind{
   classModifier,
   classBody
 }
+
 class ClassAST{
 
   ClassAST(this._value);
@@ -14,7 +15,4 @@ class ClassAST{
   List get value {
     return _value;
   }
-
-
-
 }
