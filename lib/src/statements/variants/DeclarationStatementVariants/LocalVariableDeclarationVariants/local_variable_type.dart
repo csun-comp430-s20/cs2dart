@@ -1,5 +1,5 @@
 import '../local_variable_declaration.dart';
-import '../../../statement.dart';
+// import '../../../statement.dart';
 
 class LocalVariableType implements LocalVariableDeclaration {
 
@@ -21,8 +21,8 @@ class LocalVariableType implements LocalVariableDeclaration {
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == LocalVariableDeclarationTypes.local_variable_type;
-  }
+  // @override
+  // bool equals(Statement token){
+  //  return token.type == LocalVariableDeclarationTypes.local_variable_type;
+  // }
 }

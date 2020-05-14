@@ -1,5 +1,5 @@
 import '../embedded_statement.dart';
-import '../../statement.dart';
+// import '../../statement.dart';
 class EmptyStatement implements EmbeddedStatement{
 
   EmptyStatement(
@@ -20,8 +20,8 @@ class EmptyStatement implements EmbeddedStatement{
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == EmbeddedStatementType.empty_statement;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == EmbeddedStatementType.empty_statement;
+ // }
 }

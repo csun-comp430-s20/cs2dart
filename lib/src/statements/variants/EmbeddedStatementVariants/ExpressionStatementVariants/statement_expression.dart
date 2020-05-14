@@ -1,5 +1,5 @@
 import '../expression_statement.dart';
-import '../../../statement.dart';
+// import '../../../statement.dart';
 
 enum StatementExpressionType {
   invocation_expression,
@@ -33,8 +33,8 @@ class StatementExpression implements ExpressionStatement{
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == Statementype.labeled_statement;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == Statementype.labeled_statement;
+ // }
 }

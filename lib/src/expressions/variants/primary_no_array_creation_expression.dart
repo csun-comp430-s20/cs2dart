@@ -34,7 +34,7 @@ class PrimaryNoArrayCreationExpression implements PrimaryExpression {
   final List _value;
 
   @override
-  PrimaryExpressionType get type {
+  Object get type {
     assert(_type == PrimaryExpressionType.primary_no_array_creation_expression);
     return _type;
   }
@@ -44,8 +44,8 @@ class PrimaryNoArrayCreationExpression implements PrimaryExpression {
     return _value;
   }
 
-  @override
-  bool equals(PrimaryExpression token) {
-    return token.type == PrimaryExpressionType.primary_no_array_creation_expression;
-  }
+  // @override
+  // bool equals(PrimaryExpression token) {
+  //   return token.type == PrimaryExpressionType.primary_no_array_creation_expression;
+  // }
 }

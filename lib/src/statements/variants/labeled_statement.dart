@@ -9,7 +9,6 @@ class LabeledStatement implements Statement {
   static final Statementype _type = Statementype.labeled_statement;
   final List _value;
 
-  @override
   Statementype get type {
     assert(_type == Statementype.labeled_statement);
     return _type;
@@ -20,9 +19,9 @@ class LabeledStatement implements Statement {
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == Statementype.labeled_statement;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == Statementype.labeled_statement;
+ // }
 
 }

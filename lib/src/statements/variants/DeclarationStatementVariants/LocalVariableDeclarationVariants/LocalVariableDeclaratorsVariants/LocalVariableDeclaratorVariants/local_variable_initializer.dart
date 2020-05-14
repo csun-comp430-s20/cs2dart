@@ -1,5 +1,5 @@
 import '../local_variable_declarator.dart';
-import '../../../../../statement.dart';
+// import '../../../../../statement.dart';
 
 class LocalVariableInitializer implements LocalVariableDeclarator {
 
@@ -21,8 +21,8 @@ class LocalVariableInitializer implements LocalVariableDeclarator {
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == LocalVariableDeclaratorTypes.local_variable_initializer;
-  }
+  // @override
+  // bool equals(Statement token){
+  //  return token.type == LocalVariableDeclaratorTypes.local_variable_initializer;
+  // }
 }
