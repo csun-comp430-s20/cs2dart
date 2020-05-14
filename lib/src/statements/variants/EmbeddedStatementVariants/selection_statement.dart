@@ -1,9 +1,6 @@
 import '../embedded_statement.dart';
 // import '../../statement.dart';
-enum SelectionStatementType {
-  if_statement,
-  switch_statement,
-}
+
 
 class SelectionStatement implements EmbeddedStatement{
 

@@ -383,9 +383,329 @@ class Parser {
     // return output;
   }
 
+  //Done
+  Block parseBlockStatement(){
+    var startPos = _position;
+    var output = Block(new List());
+    if(_tokens[_position].value == '{'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      var temp;
+      while(_tokens[_position].value != '}'){
+        if(_position > _tokens.length){
+          _position = startPos;
+          return null;
+        }
+        temp = parseStatements();
+        if (temp != null){
+          output.value.add(temp);
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+      if(_tokens[_position].value == '}'){
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      }
+      else{
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
+
+  //Done
+  EmptyStatement parseEmptyStatement(){
+    if(_tokens[_position].value == ';'){
+      var output = EmptyStatement(new List());
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    }
+    else{
+      return null;
+    }
+  }
+
+  //To-Do when expression methods are made
+  ExpressionStatement parseExpressionStatement(){
+
+  }
+
+  //Finished when ExpressionStatement Finished
+  ForStatement parseForStatement(){
+    var startPos = _position;
+    var output = ForStatement(new List());
+    if(_tokens[_position].value == 'for'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position].value == '('){
+         output.value.add(_tokens[_position]);
+         _position++;
+         //IMPORTANT: using Statement here might be a bad idea, look here first for bugs in for loop
+         Statement initializer = parseLocalVariableDeclaration();
+         if(initializer == null){
+           initializer = parseExpressionStatement();
+         }
+         if(initializer != null){
+           output.value.add(initializer);
+           if(_tokens[_position].value == ';'){
+             output.value.add(_tokens[_position]);
+             _position++;
+             var condition = parseBooleanExpression();
+             if(condition != null){
+               output.value.add(condition);
+               if(_tokens[_position].value == ';'){
+                 output.value.add(_tokens[_position]);
+                 _position++;
+                 var iterator = parseExpressionStatement();
+                 if(iterator != null){
+                   output.value.add(iterator);
+                   if(_tokens[_position].value == ')'){
+                     output.value.add(_tokens[_position]);
+                     _position++;
+                     var embedded = parseEmbeddedStatement();
+                     if(embedded != null){
+                       output.value.add(embedded);
+                       return output;
+                     }
+                     else{
+                       _position = startPos;
+                       return null;
+                     }
+                   }
+                   else{
+                     _position = startPos;
+                     return null;
+                   }
+                 }
+                 else{
+                   _position = startPos;
+                   return null;
+                 }
+               }
+               else{
+                 _position = startPos;
+                 return null;
+               }
+             }
+             else{
+               _position = startPos;
+               return null;
+             }
+           }
+         }
+         else{
+           _position = startPos;
+           return null;
+         }
+
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
+
+  //Finishe when Expression methods are created
+  WhileStatement parseWhileStatement(){
+    var startPos = _position;
+    var output = WhileStatement(new List());
+    if(_tokens[_position].value == 'while'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position].value == '('){
+        output.value.add(_tokens[_position]);
+        _position++;
+        var boolean = parseBooleanExpression();
+        if(boolean != null){
+          output.value.add(boolean);
+          if(_tokens[_position].value == ')'){
+            output.value.add(_tokens[_position]);
+            _position++;
+            var embeded = parseEmbeddedStatement();
+            if(embeded != null){
+              output.value.add(embeded);
+              return output;
+            }
+            else{
+              _position = startPos;
+              return null;
+            }
+          }
+          else{
+            _position = startPos;
+            return null;
+          }
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
+
+  //finished when expression methods are created
+  IterationStatement parseIterationStatement(){
+    IterationStatement output = parseForStatement();
+    if(output != null){
+      return output;
+    }
+    else{
+      output = parseWhileStatement();
+      if (output != null){
+        return output;
+      }
+      else{
+        return null;
+      }
+    }
+  }
+
+
+  JumpStatement parseJumpStatement(){
+    var startPos = _position;
+    var output = JumpStatement(new List());
+    if(_tokens[_position].value == 'return'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      var expression = parseExpression();
+      if(expression != null){
+        output.value.add(expression);
+      }
+      if(_tokens[_position].value == ';'){
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
+
+  //finished when expression methods are created
+  SelectionStatement parseSelectionStatement(){
+    var startPos = _position;
+    var output = SelectionStatement(new List());
+    if(_tokens[_position].value == 'if'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position].value == '('){
+        var boolean = parseBooleanExpression();
+        if(boolean != null){
+          output.value.add(boolean);
+          if(_tokens[_position].value == ')'){
+            output.value.add(_tokens[_position]);
+            _position++;
+            var embeded = parseEmbeddedStatement();
+            if(embeded != null){
+              output.value.add(embeded);
+              if(_tokens[_position].value == 'else'){
+                output.value.add(_tokens[_position]);
+                _position++;
+                var embeded2 = parseEmbeddedStatement();
+                if(embeded2 != null){
+                  output.value.add(embeded2);
+                  return output;
+                }
+                else{
+                  _position = startPos;
+                  return null;
+                }
+              }
+              else{
+                return output;
+              }
+            }
+            else{
+              _position = startPos;
+              return null;
+            }
+          }
+          else{
+            _position = startPos;
+            return null;
+          }
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
+
+  //need to finish methods
   EmbeddedStatement parseEmbeddedStatement()
   {
-    int startPos = _position;
+    //var startPos = _position;
+    //IMPORTANT: When doing typecheck, make sure doing inheritance like this doesnt screw up type
+    EmbeddedStatement output = parseBlockStatement();
+    if(output != null){
+      return output;
+    }
+    else{
+      output = parseEmptyStatement();
+      if(output != null){
+        return output;
+      }
+      else{
+        output = parseExpressionStatement();
+        if(output != null){
+          return output;
+        }
+        else{
+          output = parseIterationStatement();
+          if(output != null){
+            return output;
+          }
+          else{
+            output = parseJumpStatement();
+            if(output != null){
+              return output;
+            }
+            else{
+              output = parseSelectionStatement();
+              if(output != null){
+                return output;
+              }
+              else{
+                return null;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   //====================================================================
@@ -524,7 +844,7 @@ class Parser {
     }
   }
 
-  PrimaryExpression ParseExpression() {
+  PrimaryExpression parseExpression() {
     /*
       NOT SUPPORTED:
       alias
