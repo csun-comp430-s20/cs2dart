@@ -3,7 +3,8 @@
 enum ClassKind{
   classDeclaration,
   classModifier,
-  classBody
+  classBody,
+  classBase
 }
 class ClassAST{
 

@@ -1,7 +1,7 @@
 import 'package:cs2dart/src/types/type.dart';
 
-class ReferenceType implements Type {
-  ReferenceType(this._value);
+class TypeParameter implements Type {
+  TypeParameter(this._value);
 
   final List _value;
 
@@ -12,5 +12,5 @@ class ReferenceType implements Type {
   TypeKind get type{
     return _type;
   }
- static final TypeKind _type = TypeKind.referenceType;
+ static final TypeKind _type = TypeKind.typeParameter;
 }
