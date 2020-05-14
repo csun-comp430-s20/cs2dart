@@ -1,5 +1,5 @@
 import '../embedded_statement.dart';
-import '../../statement.dart';
+// import '../../statement.dart';
 class Block implements EmbeddedStatement{
 
   Block(
@@ -20,8 +20,8 @@ class Block implements EmbeddedStatement{
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == EmbeddedStatementType.block;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == EmbeddedStatementType.block;
+ // }
 }

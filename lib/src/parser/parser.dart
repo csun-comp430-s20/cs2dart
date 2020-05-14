@@ -16,6 +16,7 @@ import '../interfaces/variants/InterfaceBase.dart';
 import '../interfaces/variants/InterfaceBody.dart';
 import '../interfaces/variants/InterfaceDeclaration.dart';
 import '../interfaces/variants/InterfaceModifier.dart';
+import '../../statement.dart';
 import '../classes/classAST.dart';
 import '../classes/variants/ClassBody.dart';
 import '../classes/variants/variants/ConstantDeclaration.dart';
@@ -294,6 +295,131 @@ class Parser {
       return null;
     }
   }
+  //=================================================================================
+  //=================================================================================
+  //Start of parsers for Statements==================================================
+  //=================================================================================
+  //=================================================================================
+
+
+  LocalVariableType parseLocalVariableType()
+  {
+    int startPos = _position;
+    LocalVariableType output = LocalVariableType(List());
+    output.value.add(parseType());
+    return output;
+  }
+
+  LocalVariableDeclarator parseLocalVariableDeclarator()
+  {
+
+  }
+
+  LocalVariableDeclaration parseLocalVariableDeclaration()
+  {
+    int startPos = _position;
+    LocalVariableDeclaration output = LocalVariableDeclaration(List());
+    LocalVariableType newLocalVarType = parseLocalVariableType();
+    if (LocalVariableType != null)
+    {
+      output.value.add(newLocalVarType);
+      _position++;
+      LocalVariableDeclarator newLocalVarDec = parseLocalVariableDeclarator();
+      output.value.add(newLocalVarDec);
+    }
+    _position++;
+    return null;
+  }
+
+  parseConstantDeclaration
+//====================================================================
+//top level parsers for Statements====================================
+//====================================================================
+
+  LabeledStatement parseLabeledStatement()
+  {
+    int startPos = _position;
+    LabeledStatement output = LabeledStatement(List());
+    if (_tokens[_position].type == TokenType.identifier)
+    {
+      output.value.add(_tokens[_position]);
+      _position++;
+      if (_tokens[_position].value == ':')
+      {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var newStat = parseStatements();
+        if (newStat != null)
+        {
+          output.value.add(_tokens[_position]);
+          _position++;
+          return output;
+        }
+      }
+    }
+    return null;
+  }
+
+  DeclarationStatement parseDeclarationStatement()
+  {
+    // DeclarationStatement output;
+    // var tmp = parseLocalVariableDeclaration();
+    // if (tmp != null  && _tokens[_position + 1].value == ';')
+    // {
+    //   output.value.add(tmp);
+    //   _position++;
+    //   output.value.add(_tokens[_position]);
+    //   _position++;
+    // }
+    // else
+    // {
+    //   var tmp = parseConstantDeclaration();
+    //   if ()
+    //   output.value.add(parseLocalVariableDeclaration());
+    //   _position++;
+    //   output.value.add(_tokens[_position]);
+    //   _position++;
+    // }
+    // return output;
+  }
+
+  EmbeddedStatement parseEmbeddedStatement()
+  {
+    int startPos = _position;
+  }
+
+  //====================================================================
+  //Main parser for Statements==========================================
+  //====================================================================
+
+  Statement parseStatements()
+  {
+    Statement output;
+    output = parseLabeledStatement();
+    if(output != null)
+    {
+      return output;
+    }
+    else
+    {
+      output = parseDeclarationStatement();
+      if (output != null)
+      {
+        return output;
+      }
+      else
+      {
+        output = parseEmbeddedStatement();
+        return output;
+      }
+    }
+  }
+
+  //=================================================================================
+  //=================================================================================
+  //end of parsers for Statements====================================================
+  //=================================================================================
+  //=================================================================================
 
   IntegralType parseIntegralType() {
     var output = IntegralType(new List());
@@ -325,6 +451,7 @@ class Parser {
       return null;
     }
   }
+
 
   ValueType parseValueType() {
     //var startPos = _position;

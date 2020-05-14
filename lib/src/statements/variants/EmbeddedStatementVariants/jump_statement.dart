@@ -1,5 +1,5 @@
 import '../embedded_statement.dart';
-import '../../statement.dart';
+// import '../../statement.dart';
 enum JumpStatementType {
   break_statement,
   continue_statement,
@@ -26,8 +26,8 @@ class JumpStatement implements EmbeddedStatement{
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == EmbeddedStatementType.jump_statement;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == EmbeddedStatementType.jump_statement;
+ // }
 }

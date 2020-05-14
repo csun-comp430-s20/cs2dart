@@ -1,5 +1,5 @@
 import '../iteration_statement.dart';
-import '../../../statement.dart';
+// import '../../../statement.dart';
 
 class DoStatement implements IterationStatement{
 
@@ -21,8 +21,8 @@ class DoStatement implements IterationStatement{
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == IterationStatementType.do_statement;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == IterationStatementType.do_statement;
+ // }
 }

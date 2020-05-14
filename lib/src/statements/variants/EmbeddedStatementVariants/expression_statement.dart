@@ -1,5 +1,5 @@
 import '../embedded_statement.dart';
-import '../../statement.dart';
+// import '../../statement.dart';
 enum ExpressionStatementType {
   statement_expression,
 }
@@ -24,8 +24,8 @@ class ExpressionStatement implements EmbeddedStatement{
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == EmbeddedStatementType.expression_statement;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == EmbeddedStatementType.expression_statement;
+ // }
 }

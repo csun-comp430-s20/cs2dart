@@ -1,5 +1,5 @@
 import '../selection_statement.dart';
-import '../../../statement.dart';
+// import '../../../statement.dart';
 
 enum SwitchStatementType {
   switch_block,
@@ -25,8 +25,8 @@ class SwitchStatement implements SelectionStatement{
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == SelectionStatementType.switch_statement;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == SelectionStatementType.switch_statement;
+ // }
 }

@@ -1,5 +1,5 @@
 import '../embedded_statement.dart';
-import '../../statement.dart';
+// import '../../statement.dart';
 enum IterationStatementType {
   while_statement,
   do_statement,
@@ -26,8 +26,8 @@ class IterationStatement implements EmbeddedStatement{
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == EmbeddedStatementType.iteration_statement;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == EmbeddedStatementType.iteration_statement;
+ // }
 }

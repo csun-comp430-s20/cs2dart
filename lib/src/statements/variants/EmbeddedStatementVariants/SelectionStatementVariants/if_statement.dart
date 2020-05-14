@@ -1,5 +1,5 @@
 import '../selection_statement.dart';
-import '../../../statement.dart';
+// import '../../../statement.dart';
 
 class IfStatement implements SelectionStatement{
 
@@ -21,8 +21,8 @@ class IfStatement implements SelectionStatement{
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == SelectionStatementType.if_statement;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == SelectionStatementType.if_statement;
+ // }
 }
