@@ -1,6 +1,8 @@
 import 'package:cs2dart/parser.dart';
 import 'package:cs2dart/src/classes/classAST.dart';
 import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
+import 'package:cs2dart/src/expressions/primary_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/parenthesized_expression.dart';
 import 'package:cs2dart/src/types/type_assist.dart';
 import 'package:cs2dart/src/types/variants/reference_type.dart';
 import 'package:cs2dart/tokens.dart';
@@ -34,14 +36,11 @@ import '../tokens/variants/integer_literal_token.dart';
 import '../tokens/variants/keyword_token.dart';
 import '../tokens/variants/operator_or_punctuator_token.dart';
 
-
 class Parser {
   Parser(this._tokens);
 
   final List<Token> _tokens;
   int _position = 0;
-
-
 
   void checkTokenIs(int position, Token input) {
     // equals written, need to test, unsure why error
@@ -52,9 +51,6 @@ class Parser {
           _tokens[position].toString());
     }
   }
-
-
-
 
   //dump this into parser_assist later
   bool _isInterfaceModifier(KeywordToken input) {
@@ -70,8 +66,8 @@ class Parser {
     }
   }
 
-  bool _isType(KeywordToken input){
-    if (input.value =='bool' ||
+  bool _isType(KeywordToken input) {
+    if (input.value == 'bool' ||
         input.value == 'byte' ||
         input.value == 'char' ||
         input.value == 'double' ||
@@ -83,105 +79,90 @@ class Parser {
         input.value == 'string' ||
         input.value == 'uint' ||
         input.value == 'ulong' ||
-        input.value == 'ushort'){
-          return true;
-        }
-        else{
-          return false;
-        }
+        input.value == 'ushort') {
+      return true;
+    } else {
+      return false;
+    }
   }
   //end interface helper functions
-
 
   //seems done
   ClassBase parseClassBase() {
     var startPos = _position;
     var output = ClassBase(new List());
-    if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == ':'){
+    if (_tokens[_position] is OperatorOrPunctuatorToken &&
+        _tokens[_position].value == ':') {
       output.value.add(_tokens[_position]);
       _position++;
-      if(_tokens[_position] is IdentifierToken){
+      if (_tokens[_position] is IdentifierToken) {
         output.value.add(_tokens[_position]);
         _position++;
         return output;
-      }
-      else{
+      } else {
         _position = startPos;
         return null;
       }
-    }
-    else{
+    } else {
       _position = startPos;
       return null;
     }
-    
   }
 
   //wait for others to finish to finish class+interface methods
-  ConstantDeclaration parseConstDeclaration(){
+  ConstantDeclaration parseConstDeclaration() {
     var startPos = _position;
     var output = ConstantDeclaration(new List());
-    if(_tokens[_position].value == 'const'){
+    if (_tokens[_position].value == 'const') {
       output.value.add(_tokens[_position]);
       _position++;
-      if(_tokens[_position] is KeywordToken){
+      if (_tokens[_position] is KeywordToken) {
         //if(isType())
-      }
-      else{
+      } else {
         _position = startPos;
         return null;
       }
-    }
-    else{
+    } else {
       return null;
     }
   }
 
-  FieldDeclaration parseFieldDeclaration(){
+  FieldDeclaration parseFieldDeclaration() {}
 
-  }
+  MethodDeclaration parseMethodDeclaration() {}
 
-  MethodDeclaration parseMethodDeclaration(){
-
-  }
-
-  ConstructorDeclaration parseConstructorDeclaration(){
-
-  }
+  ConstructorDeclaration parseConstructorDeclaration() {}
 
   //done, need to finish helper methods
-  ClassBody parseClassBody(){
+  ClassBody parseClassBody() {
     var startPos = _position;
     var output = ClassBody(new List());
-    if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == '{'){
+    if (_tokens[_position] is OperatorOrPunctuatorToken &&
+        _tokens[_position].value == '{') {
       output.value.add(_tokens[_position]);
       _position++;
-      while(_tokens[_position].value != '}'){
+      while (_tokens[_position].value != '}') {
         //if end of list without braket return null
-        if(_position > _tokens.length){
+        if (_position > _tokens.length) {
           _position = startPos;
           return null;
         }
         var constDecl = parseConstDeclaration();
-        if(constDecl != null){
+        if (constDecl != null) {
           output.value.add(constDecl);
-        }
-        else{
+        } else {
           var fieldDecl = parseFieldDeclaration();
-          if (fieldDecl != null){
+          if (fieldDecl != null) {
             output.value.add(fieldDecl);
-          }
-          else{
+          } else {
             var methodDecl = parseMethodDeclaration();
-            if (methodDecl != null){
+            if (methodDecl != null) {
               output.value.add(methodDecl);
-            }
-            else{
+            } else {
               var constructorDecl = parseConstructorDeclaration();
-              if (constructorDecl != null){
+              if (constructorDecl != null) {
                 output.value.add(constructorDecl);
-              }
-              else{
+              } else {
                 _position = startPos;
                 return null;
               }
@@ -192,101 +173,95 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       return output;
-    }
-    else{
+    } else {
       _position = startPos;
       return null;
     }
-    
   }
 
-
-  ClassDeclaration parseClass(){
+  ClassDeclaration parseClass() {
     var startPos = _position;
-    var  output = ClassDeclaration(new List());
+    var output = ClassDeclaration(new List());
     //class modifier COME BACK TO THIS
     // if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'class'){
 
     // }
     //class keyword
-    if(_tokens[_position] is KeywordToken && _tokens[_position].value == 'class'){
+    if (_tokens[_position] is KeywordToken &&
+        _tokens[_position].value == 'class') {
       output.value.add(_tokens[_position]);
       _position++;
       //identifier
-      if(_tokens[_position] is IdentifierToken){
+      if (_tokens[_position] is IdentifierToken) {
         output.value.add(_tokens[_position]);
         _position++;
-        
+
         //class base
-        if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == ':'){
+        if (_tokens[_position] is OperatorOrPunctuatorToken &&
+            _tokens[_position].value == ':') {
           var classBase = parseClassBase();
-          if(classBase == null){
+          if (classBase == null) {
             _position = startPos;
             return null;
-          }
-          else{
+          } else {
             output.value.add(classBase);
           }
         }
         //class body
         var body = parseClassBody();
-        if(body != null){
+        if (body != null) {
           output.value.add(body);
-          if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == ';' ){
+          if (_tokens[_position] is OperatorOrPunctuatorToken &&
+              _tokens[_position].value == ';') {
             output.value.add(_tokens[_position]);
           }
           return output;
-        }
-        else{
+        } else {
           _position = startPos;
           return null;
         }
-      }
-      else{
+      } else {
         _position = startPos;
         return null;
       }
-    }
-    else{
+    } else {
       _position = startPos;
       return null;
     }
   }
 
   //finish
-  InterfaceBody parseInterfaceBody(){
+  InterfaceBody parseInterfaceBody() {
     return null;
   }
 
   // InterfaceModifier parseInterfaceModifier(){
   //   return null;
   // }
-    //seems done
-    InterfaceBase parseInterfaceBase(){
+  //seems done
+  InterfaceBase parseInterfaceBase() {
     var startPos = _position;
     var output = InterfaceBase(new List());
-    if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == ':'){
+    if (_tokens[_position] is OperatorOrPunctuatorToken &&
+        _tokens[_position].value == ':') {
       output.value.add(_tokens[_position]);
       _position++;
-      if(_tokens[_position] is IdentifierToken){
+      if (_tokens[_position] is IdentifierToken) {
         output.value.add(_tokens[_position]);
         _position++;
         return output;
-      }
-      else{
+      } else {
         _position = startPos;
         return null;
       }
-    }
-    else{
+    } else {
       _position = startPos;
       return null;
     }
-    
   }
 
   //Seems done
-  InterfaceDeclaration parseInterface(){
+  InterfaceDeclaration parseInterface() {
     var startPos = _position;
     var output = InterfaceDeclaration(new List());
     //interface modifier COMEBACK TO THIS
@@ -294,94 +269,87 @@ class Parser {
 
     // }
     //interface keyword
-    if(_tokens[_position] is KeywordToken && _tokens[_position].value == 'interface'){
+    if (_tokens[_position] is KeywordToken &&
+        _tokens[_position].value == 'interface') {
       output.value.add(_tokens[_position]);
       _position++;
       var body = parseInterfaceBody();
       //interface Body
-      if(body != null){
-       output.value.add(body);
-       _position++;
-       if(_tokens[_position] is OperatorOrPunctuatorToken && _tokens[_position].value == ';'){
-         output.value.add(_tokens[_position]);
-         _position++;
-         return output;
-       }
-       else{
-         return output;
-       }
-      }
-      else{
+      if (body != null) {
+        output.value.add(body);
+        _position++;
+        if (_tokens[_position] is OperatorOrPunctuatorToken &&
+            _tokens[_position].value == ';') {
+          output.value.add(_tokens[_position]);
+          _position++;
+          return output;
+        } else {
+          return output;
+        }
+      } else {
         _position = startPos;
         return null;
       }
-    }
-    else{
+    } else {
       _position = startPos;
       return null;
     }
   }
 
-  IntegralType parseIntegralType(){
+  IntegralType parseIntegralType() {
     var output = IntegralType(new List());
-    if(_tokens[_position].value == 'sbyte' ||
-       _tokens[_position].value == 'byte' ||
-       _tokens[_position].value == 'short' ||
-       _tokens[_position].value == 'ushort' ||
-       _tokens[_position].value == 'int' ||
-       _tokens[_position].value == 'uint' ||
-       _tokens[_position].value == 'long' ||
-       _tokens[_position].value == 'ulong' ||
-       _tokens[_position].value == 'char'){
-         output.value.add(_tokens[_position]);
-         _position++;
-         return output;
-    }
-    else{
-      return null;
-    }
-  }
-
-  FloatingPointType parseFloatingPointType(){
-    var output = FloatingPointType(new List());
-    if(_tokens[_position].value == 'float' ||
-       _tokens[_position].value == 'double' ){
-         output.value.add(_tokens[_position]);
-         _position++;
-         return output;
-    }
-    else{
-      return null;
-    }    
-
-  }
-  ValueType parseValueType(){
-    //var startPos = _position;
-    var output = ValueType(new List());
-    if(_tokens[_position].value == 'bool'){
+    if (_tokens[_position].value == 'sbyte' ||
+        _tokens[_position].value == 'byte' ||
+        _tokens[_position].value == 'short' ||
+        _tokens[_position].value == 'ushort' ||
+        _tokens[_position].value == 'int' ||
+        _tokens[_position].value == 'uint' ||
+        _tokens[_position].value == 'long' ||
+        _tokens[_position].value == 'ulong' ||
+        _tokens[_position].value == 'char') {
       output.value.add(_tokens[_position]);
       _position++;
       return output;
+    } else {
+      return null;
     }
-    else{
-      if(_tokens[_position].value == 'decimal'){
+  }
+
+  FloatingPointType parseFloatingPointType() {
+    var output = FloatingPointType(new List());
+    if (_tokens[_position].value == 'float' ||
+        _tokens[_position].value == 'double') {
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    } else {
+      return null;
+    }
+  }
+
+  ValueType parseValueType() {
+    //var startPos = _position;
+    var output = ValueType(new List());
+    if (_tokens[_position].value == 'bool') {
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    } else {
+      if (_tokens[_position].value == 'decimal') {
         output.value.add(_tokens[_position]);
         _position++;
         return output;
-      }
-      else{
+      } else {
         var integralType = parseIntegralType();
-        if(integralType != null){
+        if (integralType != null) {
           output.value.add(integralType);
           return output;
-        }
-        else{
+        } else {
           var floatingType = parseFloatingPointType();
-          if (floatingType != null){
+          if (floatingType != null) {
             output.value.add(floatingType);
             return output;
-          }
-          else{
+          } else {
             return null;
           }
         }
@@ -389,51 +357,155 @@ class Parser {
     }
   }
 
-  ReferenceType parseReferenceType(){
+  ReferenceType parseReferenceType() {
     var output = ReferenceType(new List());
-    if(_tokens[_position].value == 'object'){
+    if (_tokens[_position].value == 'object') {
       output.value.add(_tokens[_position]);
       _position++;
       return output;
-    }
-    else if(_tokens[_position].value == 'dynamic'){
+    } else if (_tokens[_position].value == 'dynamic') {
       output.value.add(_tokens[_position]);
       _position++;
       return output;
-    }
-    else if(_tokens[_position].value == 'string'){
+    } else if (_tokens[_position].value == 'string') {
       output.value.add(_tokens[_position]);
       _position++;
       return output;
     }
     //maybe change handling of custom types
-    else if(_tokens[_position] is IdentifierToken){
+    else if (_tokens[_position] is IdentifierToken) {
       output.value.add(_tokens[_position]);
       _position++;
       return output;
-    }
-    else{
+    } else {
       return null;
     }
   }
 
-  Type parseType(){
+  Type parseType() {
     //var startPos = _position;
     var output;
     output = parseValueType();
-    if(output != null){
+    if (output != null) {
       return output;
-    }
-    else{
+    } else {
       output = parseReferenceType();
-      if(output != null){
+      if (output != null) {
         return output;
-      }
-      else{
+      } else {
         return null;
       }
     }
   }
- 
 
+  PrimaryExpression ParseExpression() {
+    /*
+      NOT SUPPORTED:
+      alias
+      element access not supported because there is no array support
+      'base' keyword 
+      post decrement and increment
+      anonymous object creation
+      delegate
+      checked vs unchecked - tentative
+      default values -  tentative
+      nameof - tentative
+    */
+    //TODO: make proper fail states and add returns and fix compile error with parstyle paramater
+    int startPos = _position;
+    PrimaryExpression output = PrimaryExpression(List());
+    //literals
+    if (_tokens[_position] == TokenType.characterLiteral ||
+        _tokens[_position] == TokenType.integerLiteral ||
+        _tokens[_position] == TokenType.stringLiteral) {
+      output.value.add(_tokens[_position]);
+      _position++;
+    }
+    //parenthesized expression
+    if (_tokens[_position] == '(') {
+      _position++;
+      ParenthesizedExpression parenExpression = ParseParenthesizedExpression();
+      if (_tokens[_position] == ')') {
+        output.value.add(_tokens[_position]);
+        _position++;
+      }
+    }
+    //member access
+    //may need a helper method
+    if (_tokens[_position] is PrimaryExpression ||
+        parseType(_position) != null) {
+      output.value.add(_tokens[_position]);
+      _position++;
+      if (_tokens[_position] == '.') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        if (_tokens[_position] is IdentifierToken) {
+          output.value.add(_tokens[_position]);
+          _position++;
+          //argument list - optional
+          if (_tokens[_position] == '<') {
+            while (_tokens[_position] != '>') {
+              output.value.add(_tokens[_position]);
+              _position++;
+            }
+          }
+        }
+      }
+    }
+    //invocation expression
+    if (_tokens[_position] is PrimaryExpression) {
+      output.value.add(_tokens[_position]);
+      _position++;
+      //argument list - optional
+      if (_tokens[_position] == '(') {
+        while (_tokens[_position] != ')') {
+          output.value.add(_tokens[_position]);
+          _position++;
+        }
+      }
+    }
+    //'this' access
+    if (_tokens[_position] == "this" && _tokens[_position] is KeywordToken) {
+      output.value.add(_tokens[_position]);
+      _position++;
+    }
+    //object creation
+    if (_tokens[_position] == "new" && _tokens[_position] is KeywordToken) {
+      output.value.add(_tokens[_position]);
+      _position++;
+      if (parseType(_position) != null) {
+        output.value.add(_tokens[_position]);
+        _position++;
+        //argument list - optional
+        if (_tokens[_position] == '(') {
+          while (_tokens[_position] != ')') {
+            output.value.add(_tokens[_position]);
+            _position++;
+          }
+        }
+      }
+    }
+    //typof
+    if (_tokens[_position] == "typeof" && _tokens[_position] is KeywordToken) {
+      output.value.add(_tokens[_position]);
+      _position++;
+      if (_tokens[_position] == '(') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        if (_tokens[_position] == "void" ||
+            _tokens[_position] is IdentifierToken) {
+          output.value.add(_tokens[_position]);
+          _position++;
+          if (_tokens[_position] == ')') {
+            output.value.add(_tokens[_position]);
+            _position++;
+          }
+        }
+      }
+    }
+  }
+
+  ParenthesizedExpression ParseParenthesizedExpression() {
+    return null;
+  }
 }
