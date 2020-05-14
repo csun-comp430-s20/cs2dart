@@ -510,10 +510,12 @@ class Parser {
         }
       }
     }
+    _position = startPos;
     return null;
   }
 
   ParenthesizedExpression ParseParenthesizedExpression() {
+    //TODO
     return null;
   }
 }
