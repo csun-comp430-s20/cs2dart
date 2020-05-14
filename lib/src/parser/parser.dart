@@ -844,7 +844,7 @@ class Parser {
     }
   }
 
-  PrimaryExpression parseExpression() {
+    PrimaryExpression ParseExpression() {
     /*
       NOT SUPPORTED:
       alias
@@ -868,21 +868,29 @@ class Parser {
       _position++;
       return output;
     }
+    _position = startPos;
     //parenthesized expression
     if (_tokens[_position].value == '(') {
       output.value.add(_tokens[_position]);
       _position++;
-      output.value.add(ParseExpression());
+      //output.value.add(ParseExpression());
+    var tmp3 = ParseExpression();
+    if (tmp3 != null){
+      output.value.add(tmp3);
+      _position++;
+    }
       if (_tokens[_position].value == ')') {
         output.value.add(_tokens[_position]);
         _position++;
         return output;
       }
+      _position = startPos;
+      return null;
     }
+    _position = startPos;
     //member access
     //may need a helper method
-    if (_tokens[_position] is PrimaryExpression ||
-        parseType() != null) {
+    if (_tokens[_position] is PrimaryExpression || parseType() != null) {
       output.value.add(_tokens[_position]);
       _position++;
       if (_tokens[_position].value == '.') {
@@ -900,21 +908,20 @@ class Parser {
           }
           return output;
         }
+        _position = startPos;
+        return null;
       }
+      _position = startPos;
     }
-    //invocation expression
-    if (_tokens[_position] is PrimaryExpression) {
-      output.value.add(_tokens[_position]);
+    _position = startPos;
+
+    var tmp = ParseInvocationExpression();
+    if (tmp != null){
+      output.value.add(tmp);
       _position++;
-      //argument list - optional
-      if (_tokens[_position].value == '(') {
-        while (_tokens[_position].value != ')') {
-          output.value.add(_tokens[_position]);
-          _position++;
-        }
-      }
       return output;
     }
+    _position = startPos;
     //'this' access
     if (_tokens[_position].value == "this" &&
         _tokens[_position] is KeywordToken) {
@@ -922,24 +929,13 @@ class Parser {
       _position++;
       return output;
     }
-    //object creation
-    if (_tokens[_position].value == "new" &&
-        _tokens[_position] is KeywordToken) {
-      output.value.add(_tokens[_position]);
-      _position++;
-      if (parseType() != null) {
-        output.value.add(_tokens[_position]);
-        _position++;
-        //argument list - optional
-        if (_tokens[_position].value == '(') {
-          while (_tokens[_position].value != ')') {
-            output.value.add(_tokens[_position]);
-            _position++;
-          }
-        }
-        return output;
-      }
+
+    var tmp2 = ParseObjectCreationExpression();
+    if (tmp != null){
+      output.value.add(tmp2);
     }
+    _position = startPos;
+
     //typof
     if (_tokens[_position].value == "typeof" &&
         _tokens[_position] is KeywordToken) {
@@ -959,6 +955,84 @@ class Parser {
           }
         }
       }
+    }
+    _position = startPos;
+    return null;
+  }
+
+  //helper methods for ParseExpression()
+  PrimaryExpression ParseInvocationExpression() {
+    PrimaryExpression output = PrimaryExpression(List());
+    int startPos = _position;
+    if (_tokens[_position] is PrimaryExpression) {
+      output.value.add(_tokens[_position]);
+      _position++;
+      //argument list - optional
+      if (_tokens[_position].value == '(') {
+        while (_tokens[_position].value != ')') {
+          output.value.add(_tokens[_position]);
+          _position++;
+        }
+      }
+      return output;
+    }
+    _position = startPos;
+
+  }
+
+  PrimaryExpression ParseObjectCreationExpression() {
+    PrimaryExpression output = PrimaryExpression(List());
+    int startPos = _position;
+    if (_tokens[_position].value == "new" &&
+        _tokens[_position] is KeywordToken) {
+      output.value.add(_tokens[_position]);
+      _position++;
+      if (parseType() != null) {
+        output.value.add(_tokens[_position]);
+        _position++;
+        //argument list - optional
+        if (_tokens[_position].value == '(') {
+          while (_tokens[_position].value != ')') {
+            output.value.add(_tokens[_position]);
+            _position++;
+          }
+        }
+        return output;
+      }
+      _position = startPos;
+    }
+    _position = startPos;
+    return null;
+  }
+
+  PrimaryExpression ParseAssignmentExpression() {
+    PrimaryExpression output = PrimaryExpression(List());
+    int startPos = _position;
+    var tmpexp = ParseExpression();
+    if (tmpexp != null) {
+      output.value.add(tmpexp);
+      _position++;
+      if (_tokens[_position].value == '=' ||
+          _tokens[_position].value == '+=' ||
+          _tokens[_position].value == '-=' ||
+          _tokens[_position].value == '*=' ||
+          _tokens[_position].value == '/=' ||
+          _tokens[_position].value == '%=' ||
+          _tokens[_position].value == '&=' ||
+          _tokens[_position].value == '|=' ||
+          _tokens[_position].value == '^=' ||
+          _tokens[_position].value == '<<=') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var tmpexp2 = ParseExpression();
+        if (tmpexp2 != null) {
+          output.value.add(tmpexp2);
+          _position++;
+          return output;
+        }
+        _position = startPos;
+      }
+      _position = startPos;
     }
     _position = startPos;
     return null;
