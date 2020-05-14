@@ -2,6 +2,7 @@ import 'package:cs2dart/parser.dart';
 import 'package:cs2dart/src/classes/classAST.dart';
 import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
 import 'package:cs2dart/src/types/type_assist.dart';
+import 'package:cs2dart/src/types/variants/reference_type.dart';
 import 'package:cs2dart/tokens.dart';
 import 'package:cs2dart/expressions.dart';
 
@@ -23,6 +24,11 @@ import '../classes/variants/variants/MethodDeclaration.dart';
 import '../classes/variants/ClassDeclaration.dart';
 import '../classes/variants/ClassBase.dart';
 import '../classes/variants/ClassModifier.dart';
+import '../types/type.dart';
+import '../types/variants/reference_type.dart';
+import '../types/variants/value_type.dart';
+import '../types/variants/variants/floating_point_type.dart';
+import '../types/variants/variants/integral_type.dart';
 import '../tokens/variants/identifier_token.dart';
 import '../tokens/variants/integer_literal_token.dart';
 import '../tokens/variants/keyword_token.dart';
@@ -35,13 +41,7 @@ class Parser {
   final List<Token> _tokens;
   int _position = 0;
 
-  // Token peek(int offset) {
-  //   var index = _position + offset;
-  //   if (index >= _tokens.length) {
-  //     return _tokens[_tokens.length - 1];
-  //   }
-  //   return _tokens[index];
-  // }
+
 
   void checkTokenIs(int position, Token input) {
     // equals written, need to test, unsure why error
@@ -53,26 +53,8 @@ class Parser {
     }
   }
 
-  // ParseResult parseAdditiveExpHelper(final int startPos){
-  //   final List<Exp> resultList  = new List<Exp>;
-  //   int curPos = startPos;
-  //   while(curPos < _tokens.length){
-  //     try{
-  //       checkTokenIs(curPos, new PlusToken)
-  //     }
-  //   }
-  // }
 
-  ParseResult<Exp> parseAdditiveExp(final int startPos) {
-    final ParseResult<Exp> starting = parsePrimary(startPos);
-    return null;
-  }
 
-  ParseResult parsePrimary(int startPos) {
-    return null;
-  }
-
-  ParseResult<Exp> _parseType(final int startPos) {}
 
   //dump this into parser_assist later
   bool _isInterfaceModifier(KeywordToken input) {
@@ -110,26 +92,6 @@ class Parser {
   }
   //end interface helper functions
 
-  //start class helper functions
-  // bool _isClassModifier(KeywordToken input) {
-  //   //modify to check for repeats
-  //   if (input.value == 'new' ||
-  //       input.value == 'public' ||
-  //       input.value == 'protected' ||
-  //       input.value == 'internal' ||
-  //       input.value == 'private' ||
-  //       input.value == 'abstract' ||
-  //       input.value == 'static') {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-  //end class helper functions
-
-  //start Expressions helper funtions
-
-  //end Expressions helper funtions
 
   //seems done
   ClassBase parseClassBase() {
@@ -163,7 +125,7 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       if(_tokens[_position] is KeywordToken){
-        if(isType())
+        //if(isType())
       }
       else{
         _position = startPos;
@@ -360,115 +322,118 @@ class Parser {
     }
   }
 
-  ParseResult<Exp> parseExp(final int startPos) {
-    var currPos = startPos;
-    /*
-    array_creation_expression
-    examples:
-    new int[3]
-    new int[3] { 10, 20, 30 }
-    new int[] { 10, 20, 30 }
-    new[] { 10, 20, 30 }
+  IntegralType parseIntegralType(){
+    var output = IntegralType(new List());
+    if(_tokens[_position].value == 'sbyte' ||
+       _tokens[_position].value == 'byte' ||
+       _tokens[_position].value == 'short' ||
+       _tokens[_position].value == 'ushort' ||
+       _tokens[_position].value == 'int' ||
+       _tokens[_position].value == 'uint' ||
+       _tokens[_position].value == 'long' ||
+       _tokens[_position].value == 'ulong' ||
+       _tokens[_position].value == 'char'){
+         output.value.add(_tokens[_position]);
+         _position++;
+         return output;
+    }
+    else{
+      return null;
+    }
+  }
 
-    currently supports array creation in the form of: new _datatype_ [_sizeinteger_]
-    our current documentation doesn't detail array creation that much and the c# docs i feel contain features we don't need
-    */
-    if (_tokens[currPos].value == 'new' && _tokens[currPos] is KeywordToken) {
-      currPos++;
-      if (_tokens[currPos] is KeywordToken ||
-          _tokens[currPos] is IdentifierToken) {
-        //using keyword token and identifierToken bc the array could be of ANY data type
-        //Todo maybe make an isClass or classToken bc currently this will pass keywords that aren't data types
-        currPos++;
-        if (_tokens[currPos].value == '[') {
-          currPos++;
-          if (_tokens[currPos].value == ']') {
-            currPos++;
-            if (_tokens[currPos].value == '{') {
-              currPos++;
-              while (_tokens[currPos].value != '}') {
-                //TODO: make the expression fail if the elements do not match the type. currently this only works for integers
-                if (_tokens[currPos] is IntegerLiteralToken) {
-                  currPos++;
-                  if (_tokens[currPos].value == ',') {
-                    currPos++;
-                  }
-                }
-              }
-            }
+  FloatingPointType parseFloatingPointType(){
+    var output = FloatingPointType(new List());
+    if(_tokens[_position].value == 'float' ||
+       _tokens[_position].value == 'double' ){
+         output.value.add(_tokens[_position]);
+         _position++;
+         return output;
+    }
+    else{
+      return null;
+    }    
+
+  }
+  ValueType parseValueType(){
+    //var startPos = _position;
+    var output = ValueType(new List());
+    if(_tokens[_position].value == 'bool'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    }
+    else{
+      if(_tokens[_position].value == 'decimal'){
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      }
+      else{
+        var integralType = parseIntegralType();
+        if(integralType != null){
+          output.value.add(integralType);
+          return output;
+        }
+        else{
+          var floatingType = parseFloatingPointType();
+          if (floatingType != null){
+            output.value.add(floatingType);
+            return output;
           }
-          if (_tokens[currPos] is IntegerLiteralToken) {
-            int array_declared_size = _tokens[currPos].value as int;
-            currPos++;
-            if (_tokens[currPos].value == ']') {
-              currPos++;
-              if (_tokens[currPos].value == '{') {
-                currPos++;
-                int array_size = 0;
-                while (_tokens[currPos].value != '}') {
-                  //TODO: make the expression fail if the elements do not match the type. currently this only works for integers
-                  if (_tokens[currPos] is IntegerLiteralToken) {
-                    currPos++;
-                    array_size++;
-                    if (_tokens[currPos].value == ',') {
-                      currPos++;
-                    }
-                  }
-                }
-                if (array_declared_size != array_size || array_size != 0) {
-                  return null;
-                }
-              }
-            }
-
-          } else {
+          else{
             return null;
           }
         }
       }
-    } else {
+    }
+  }
+
+  ReferenceType parseReferenceType(){
+    var output = ReferenceType(new List());
+    if(_tokens[_position].value == 'object'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    }
+    else if(_tokens[_position].value == 'dynamic'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    }
+    else if(_tokens[_position].value == 'string'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    }
+    //maybe change handling of custom types
+    else if(_tokens[_position] is IdentifierToken){
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    }
+    else{
       return null;
     }
-    // if (_tokens[startPos] is IdentifierToken) {
+  }
 
-    // } else if (_tokens[startPos] is KeywordToken) {
-
-    // } else if (_tokens[startPos] is RealLiteralToken) {
-
-    // } else if (_tokens[startPos] is IntegerLiteralToken) {
-
-    // } else if (_tokens[startPos] is InterpolatedStringLiteralToken) {
-
-    // } else if (_tokens[startPos] is StringLiteralToken) {
-
-    // } else if (_tokens[startPos] is CharacterLiteralToken) {
-
-    // } else if (_tokens[startPos] is OperatorOrPunctuatorToken) {
-
-    // }
-    var result = _parseType(startPos);
-
-    if (result != null) {
-      return result;
-    } else {
-      throw ParseException('Unrecognized token in parser.');
+  Type parseType(){
+    //var startPos = _position;
+    var output;
+    output = parseValueType();
+    if(output != null){
+      return output;
+    }
+    else{
+      output = parseReferenceType();
+      if(output != null){
+        return output;
+      }
+      else{
+        return null;
+      }
     }
   }
-
-  // Top level expressions file entrance
-  Exp parseToplevelExp() {
-    // try {
-    //   final result = parseExp(0);
-    //
-    //   if (result.nextPos == _tokens.length) {
-    //     return result.result;
-    //   } else {
-    //     throw ParseException('Extra tokens at end');
-    //   }
-    // } on ParseException catch (e) {
-    //   stdout.writeln('$e');
-    //   exit(1);
-    // }
-  }
+ 
 
 }

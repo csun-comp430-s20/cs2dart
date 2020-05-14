@@ -1,16 +1,16 @@
 enum TypeKind {
-  ReferenceType,
-  TypeParameter,
-  ValueType,
+  referenceType,
+  typeParameter,
+  valueType,
 }
 
 abstract class Type {
 
   Type(this._value);
 
-  final String _value;
+  final List _value;
 
-  String get value {
+  List get value {
     return _value;
   }
 }
