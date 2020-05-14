@@ -420,6 +420,7 @@ class Parser {
         _tokens[_position] == TokenType.stringLiteral) {
       output.value.add(_tokens[_position]);
       _position++;
+      return output;
     }
     //parenthesized expression
     if (_tokens[_position] == '(') {
@@ -428,6 +429,7 @@ class Parser {
       if (_tokens[_position] == ')') {
         output.value.add(_tokens[_position]);
         _position++;
+        return output;
       }
     }
     //member access
@@ -449,6 +451,7 @@ class Parser {
               _position++;
             }
           }
+          return output;
         }
       }
     }
@@ -463,11 +466,13 @@ class Parser {
           _position++;
         }
       }
+      return output;
     }
     //'this' access
     if (_tokens[_position] == "this" && _tokens[_position] is KeywordToken) {
       output.value.add(_tokens[_position]);
       _position++;
+      return output;
     }
     //object creation
     if (_tokens[_position] == "new" && _tokens[_position] is KeywordToken) {
@@ -483,6 +488,7 @@ class Parser {
             _position++;
           }
         }
+        return output;
       }
     }
     //typof
@@ -499,10 +505,12 @@ class Parser {
           if (_tokens[_position] == ')') {
             output.value.add(_tokens[_position]);
             _position++;
+            return output;
           }
         }
       }
     }
+    return null;
   }
 
   ParenthesizedExpression ParseParenthesizedExpression() {
