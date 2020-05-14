@@ -23,6 +23,9 @@ export 'src/statements/variants/DeclarationStatementVariants/LocalVariableDeclar
 //src/statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/LocalVariableDeclaratorsVariants/
 export 'src/statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/LocalVariableDeclaratorsVariants/local_variable_declarator.dart';
 
+//src/statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/LocalVariableDeclaratorsVariants/LocalVariableDeclaratorVariants
+export 'src/statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/LocalVariableDeclaratorsVariants/LocalVariableDeclaratorVariants/local_variable_initializer.dart';
+
 /////=====================================================================================
 /////======================EMBEDDEDSTATEMENTS==========================================
 /// /////=====================================================================================
