@@ -23,8 +23,8 @@ class AnonymousMethodExpression implements PrimaryNoArrayCreationExpression {
     return _value;
   }
 
-  @override
-  bool equals(PrimaryExpression token) {
-    return token.type == PrimaryNoArrayCreationExpressionType.anonymous_method_expression;
-  }
+  // @override
+  // bool equals(PrimaryExpression token) {
+  //   return token.type == PrimaryNoArrayCreationExpressionType.anonymous_method_expression;
+  // }
 }

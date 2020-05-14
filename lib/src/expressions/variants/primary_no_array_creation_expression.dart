@@ -44,8 +44,8 @@ class PrimaryNoArrayCreationExpression implements PrimaryExpression {
     return _value;
   }
 
-  @override
-  bool equals(PrimaryExpression token) {
-    return token.type == PrimaryExpressionType.primary_no_array_creation_expression;
-  }
+  // @override
+  // bool equals(PrimaryExpression token) {
+  //   return token.type == PrimaryExpressionType.primary_no_array_creation_expression;
+  // }
 }

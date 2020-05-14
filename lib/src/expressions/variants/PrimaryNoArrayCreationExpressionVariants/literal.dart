@@ -23,8 +23,8 @@ class Literal implements PrimaryNoArrayCreationExpression {
     return _value;
   }
 
-  @override
-  bool equals(PrimaryExpression token) {
-    return token.type == PrimaryNoArrayCreationExpressionType.literal;
-  }
+  // @override
+  // bool equals(PrimaryExpression token) {
+  //   return token.type == PrimaryNoArrayCreationExpressionType.literal;
+  // }
 }

@@ -23,8 +23,8 @@ class BaseAccess implements PrimaryNoArrayCreationExpression {
     return _value;
   }
 
-  @override
-  bool equals(PrimaryExpression token) {
-    return token.type == PrimaryNoArrayCreationExpressionType.base_access;
-  }
+  // @override
+  // bool equals(PrimaryExpression token) {
+  //   return token.type == PrimaryNoArrayCreationExpressionType.base_access;
+  // }
 }

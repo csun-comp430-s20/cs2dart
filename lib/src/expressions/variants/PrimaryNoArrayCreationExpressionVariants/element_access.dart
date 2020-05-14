@@ -23,8 +23,8 @@ class ElemenAccess implements PrimaryNoArrayCreationExpression {
     return _value;
   }
 
-  @override
-  bool equals(PrimaryExpression token) {
-    return token.type == PrimaryNoArrayCreationExpressionType.element_access;
-  }
+  // @override
+  // bool equals(PrimaryExpression token) {
+  //   return token.type == PrimaryNoArrayCreationExpressionType.element_access;
+  // }
 }

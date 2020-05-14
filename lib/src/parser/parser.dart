@@ -415,18 +415,19 @@ class Parser {
     int startPos = _position;
     PrimaryExpression output = PrimaryExpression(List());
     //literals
-    if (_tokens[_position] == TokenType.characterLiteral ||
-        _tokens[_position] == TokenType.integerLiteral ||
-        _tokens[_position] == TokenType.stringLiteral) {
+    if (_tokens[_position].type == TokenType.characterLiteral ||
+        _tokens[_position].type == TokenType.integerLiteral ||
+        _tokens[_position].type == TokenType.stringLiteral) {
       output.value.add(_tokens[_position]);
       _position++;
       return output;
     }
     //parenthesized expression
-    if (_tokens[_position] == '(') {
+    if (_tokens[_position].value == '(') {
+      output.value.add(_tokens[_position]);
       _position++;
-      ParenthesizedExpression parenExpression = ParseParenthesizedExpression();
-      if (_tokens[_position] == ')') {
+      output.value.add(ParseExpression());
+      if (_tokens[_position].value == ')') {
         output.value.add(_tokens[_position]);
         _position++;
         return output;
@@ -435,10 +436,10 @@ class Parser {
     //member access
     //may need a helper method
     if (_tokens[_position] is PrimaryExpression ||
-        parseType(_position) != null) {
+        parseType() != null) {
       output.value.add(_tokens[_position]);
       _position++;
-      if (_tokens[_position] == '.') {
+      if (_tokens[_position].value == '.') {
         output.value.add(_tokens[_position]);
         _position++;
         if (_tokens[_position] is IdentifierToken) {
@@ -469,16 +470,18 @@ class Parser {
       return output;
     }
     //'this' access
-    if (_tokens[_position] == "this" && _tokens[_position] is KeywordToken) {
+    if (_tokens[_position].value == "this" &&
+        _tokens[_position] is KeywordToken) {
       output.value.add(_tokens[_position]);
       _position++;
       return output;
     }
     //object creation
-    if (_tokens[_position] == "new" && _tokens[_position] is KeywordToken) {
+    if (_tokens[_position].value == "new" &&
+        _tokens[_position] is KeywordToken) {
       output.value.add(_tokens[_position]);
       _position++;
-      if (parseType(_position) != null) {
+      if (parseType() != null) {
         output.value.add(_tokens[_position]);
         _position++;
         //argument list - optional
@@ -492,7 +495,8 @@ class Parser {
       }
     }
     //typof
-    if (_tokens[_position] == "typeof" && _tokens[_position] is KeywordToken) {
+    if (_tokens[_position].value == "typeof" &&
+        _tokens[_position] is KeywordToken) {
       output.value.add(_tokens[_position]);
       _position++;
       if (_tokens[_position] == '(') {
@@ -511,11 +515,6 @@ class Parser {
       }
     }
     _position = startPos;
-    return null;
-  }
-
-  ParenthesizedExpression ParseParenthesizedExpression() {
-    //TODO
     return null;
   }
 }

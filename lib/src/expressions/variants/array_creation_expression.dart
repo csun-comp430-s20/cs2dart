@@ -20,9 +20,9 @@ class ArrayCreationExpression implements PrimaryExpression {
     return _value;
   }
 
-  @override
-  bool equals(PrimaryExpression token){
-   return token.type == PrimaryExpressionType.array_creation_expression;
- }
+//   @override
+//   bool equals(PrimaryExpression token){
+//    return token.type == PrimaryExpressionType.array_creation_expression;
+//  }
 
 }
