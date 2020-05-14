@@ -1,5 +1,5 @@
 import '../iteration_statement.dart';
-import '../../../statement.dart';
+// import '../../../statement.dart';
 // enum ForStatementType {
 //   for_initializer,
 //   for_condition,
@@ -25,8 +25,8 @@ class ForStatement implements IterationStatement{
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == IterationStatementType.for_statement;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == IterationStatementType.for_statement;
+ // }
 }

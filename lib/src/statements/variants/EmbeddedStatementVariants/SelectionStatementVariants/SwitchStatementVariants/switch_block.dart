@@ -1,5 +1,5 @@
 import '../switch_statement.dart';
-import '../../../../statement.dart';
+// import '../../../../statement.dart';
 
 enum SwitchBlockType {
   switch_section,
@@ -25,8 +25,8 @@ class SwitchBlock implements SwitchStatement{
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == SwitchStatementType.switch_block;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == SwitchStatementType.switch_block;
+ // }
 }

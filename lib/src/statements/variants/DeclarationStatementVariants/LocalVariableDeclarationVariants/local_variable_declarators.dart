@@ -1,5 +1,5 @@
 import '../local_variable_declaration.dart';
-import '../../../statement.dart';
+// import '../../../statement.dart';
 
 enum LocalVariableDeclaratorsTypes {
   local_variable_declarator,
@@ -25,8 +25,8 @@ class LocalVariableDeclarators implements LocalVariableDeclaration {
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == LocalVariableDeclarationTypes.local_variable_declarators;
-  }
+  // @override
+  // bool equals(Statement token){
+  //  return token.type == LocalVariableDeclarationTypes.local_variable_declarators;
+  // }
 }

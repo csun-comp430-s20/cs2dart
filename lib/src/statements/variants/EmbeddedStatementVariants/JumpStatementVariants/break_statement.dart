@@ -1,5 +1,5 @@
 import '../jump_statement.dart';
-import '../../../statement.dart';
+// import '../../../statement.dart';
 
 class BreakStatement implements JumpStatement{
 
@@ -21,8 +21,8 @@ class BreakStatement implements JumpStatement{
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == JumpStatementType.break_statement;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == JumpStatementType.break_statement;
+ // }
 }

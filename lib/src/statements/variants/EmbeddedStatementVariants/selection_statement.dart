@@ -1,5 +1,5 @@
 import '../embedded_statement.dart';
-import '../../statement.dart';
+// import '../../statement.dart';
 enum SelectionStatementType {
   if_statement,
   switch_statement,
@@ -25,8 +25,8 @@ class SelectionStatement implements EmbeddedStatement{
       return _value;
     }
 
-    @override
-    bool equals(Statement token){
-     return token.type == EmbeddedStatementType.selection_statement;
-   }
+   //  @override
+   //  bool equals(Statement token){
+   //   return token.type == EmbeddedStatementType.selection_statement;
+   // }
   }

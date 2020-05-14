@@ -18,7 +18,6 @@ class EmbeddedStatement implements Statement {
   static final Statementype _type = Statementype.embedded_statement;
   final List _value;
 
-  @override
   Object get type {
     assert(_type == Statementype.embedded_statement);
     return _type;
@@ -29,9 +28,9 @@ class EmbeddedStatement implements Statement {
     return _value;
   }
 
-  @override
-  bool equals(Statement token){
-   return token.type == Statementype.embedded_statement;
- }
+ //  @override
+ //  bool equals(Statement token){
+ //   return token.type == Statementype.embedded_statement;
+ // }
 
 }
