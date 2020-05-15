@@ -1,6 +1,9 @@
 import '../ClassBody.dart';
 import '../../classAST.dart';
 
+enum MethodKind{
+  fixedParam
+}
 class MethodDeclaration implements ClassAST{
   MethodDeclaration(this._value);
   List _value;
