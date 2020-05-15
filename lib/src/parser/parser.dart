@@ -345,6 +345,7 @@ class Parser {
           if (_tokens[_position] is OperatorOrPunctuatorToken &&
               _tokens[_position].value == ';') {
             output.value.add(_tokens[_position]);
+            _position++;
           }
           return output;
         } else {
@@ -453,11 +454,14 @@ class Parser {
   
    LocalVariableDeclarator parseLocalVariableDeclarator()
   {
+    //print(_position);
+    //print(_tokens.length);
     var startPos = _position;
     var output = LocalVariableDeclarator(List());
     if (_tokens[_position].type == TokenType.identifier) {
       output.value.add(_tokens[_position]);
       _position++;
+      //print("here449");
       if (_tokens[_position].value == '=') {
         output.value.add(_tokens[_position]);
         _position++;
@@ -486,21 +490,8 @@ class Parser {
     var tmpVarDec = parseLocalVariableDeclarator();
     if (tmpVarDec != null) {
       output.value.add(tmpVarDec);
-      _position++;
-      if (_tokens[_position].value == ',') {
-        output.value.add(_tokens[_position]);
-        _position++;
-        var moretmpVarDec = parseLocalVariableDeclarators();
-        if (moretmpVarDec != null) {
-          output.value.add(moretmpVarDec);
-          _position++;
-          return output;
-        }
-        _position = startPos;
-        return null;
-      } else {
-        return output;
-      }
+      //_position++;
+      return output;
     }
     _position = startPos;
     return null;
@@ -512,7 +503,7 @@ class Parser {
     var tmpType = parseType();
     if (tmpType != null) {
       output.value.add(tmpType);
-      _position++;
+      //_position++;
       return output;
     }
     _position = startPos;
@@ -520,16 +511,22 @@ class Parser {
   }
 
   LocalVariableDeclaration parseLocalVariableDeclaration() {
+    
     var startPos = _position;
     var output = LocalVariableDeclaration(List());
     var newLocalVarType = parseLocalVariableType();
     if (newLocalVarType != null) {
+      //print("here506");
       output.value.add(newLocalVarType);
-      _position++;
+      //_position++;
+      
       var newLocalVarDec = parseLocalVariableDeclarators();
+      
       if (newLocalVarDec != null) {
+        //print("here513");
         output.value.add(newLocalVarDec);
-        _position++;
+        //_position++;
+        
         return output;
       }
       _position = startPos;
@@ -555,7 +552,7 @@ class Parser {
           if (tmpExpr != null)
           {
             output.value.add(tmpExpr);
-            _position++;
+            //_position++;
             return output;
           }
           _position = startPos;
@@ -574,30 +571,30 @@ class Parser {
 //top level parsers for Statements====================================
 //====================================================================
 
-  LabeledStatement parseLabeledStatement() {
-    var startPos = _position;
-    var output = LabeledStatement(List());
-    if (_tokens[_position].type == TokenType.identifier) {
-      output.value.add(_tokens[_position]);
-      _position++;
-      if (_tokens[_position].value == ':') {
-        output.value.add(_tokens[_position]);
-        _position++;
-        var newStat = parseStatements();
-        if (newStat != null) {
-          output.value.add(_tokens[_position]);
-          _position++;
-          return output;
-        }
-        _position = startPos;
-        return null;
-      }
-      _position = startPos;
-      return null;
-    }
-    _position = startPos;
-    return null;
-  }
+  // LabeledStatement parseLabeledStatement() {
+  //   var startPos = _position;
+  //   var output = LabeledStatement(List());
+  //   if (_tokens[_position].type == TokenType.identifier) {
+  //     output.value.add(_tokens[_position]);
+  //     _position++;
+  //     if (_tokens[_position].value == ':') {
+  //       output.value.add(_tokens[_position]);
+  //       _position++;
+  //       var newStat = parseStatements();
+  //       if (newStat != null) {
+  //         output.value.add(_tokens[_position]);
+  //         _position++;
+  //         return output;
+  //       }
+  //       _position = startPos;
+  //       return null;
+  //     }
+  //     _position = startPos;
+  //     return null;
+  //   }
+  //   _position = startPos;
+  //   return null;
+  // }
 
   DeclarationStatement parseDeclarationStatement() {
     var startPos = _position;
@@ -945,10 +942,6 @@ class Parser {
 
   Statement parseStatements() {
     Statement output;
-    output = parseLabeledStatement();
-    if (output != null) {
-      return output;
-    } else {
       output = parseDeclarationStatement();
       if (output != null) {
         return output;
@@ -956,7 +949,6 @@ class Parser {
         output = parseEmbeddedStatement();
         return output;
       }
-    }
   }
 
   //=================================================================================
@@ -1032,11 +1024,8 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       return output;
-    } else if (_tokens[_position].value == 'dynamic') {
-      output.value.add(_tokens[_position]);
-      _position++;
-      return output;
-    } else if (_tokens[_position].value == 'string') {
+    } 
+     else if (_tokens[_position].value == 'string') {
       output.value.add(_tokens[_position]);
       _position++;
       return output;
@@ -1101,7 +1090,7 @@ class Parser {
       var tmp3 = parseExpression();
       if (tmp3 != null) {
         output.value.add(tmp3);
-        _position++;
+        //_position++;
       }
       if (_tokens[_position].value == ')') {
         output.value.add(_tokens[_position]);
@@ -1142,7 +1131,7 @@ class Parser {
     var tmp = parseInvocationExpression();
     if (tmp != null) {
       output.value.add(tmp);
-      _position++;
+      //_position++;
       return output;
     }
     _position = startPos;
@@ -1240,7 +1229,7 @@ class Parser {
     var tmpexp = parseExpression();
     if (tmpexp != null) {
       output.value.add(tmpexp);
-      _position++;
+      //_position++;
       if (_tokens[_position].value == '=' ||
           _tokens[_position].value == '+=' ||
           _tokens[_position].value == '-=' ||
@@ -1256,7 +1245,7 @@ class Parser {
         var tmpexp2 = parseExpression();
         if (tmpexp2 != null) {
           output.value.add(tmpexp2);
-          _position++;
+          //_position++;
           return output;
         }
         _position = startPos;
