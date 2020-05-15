@@ -562,30 +562,30 @@ class Parser {
 //top level parsers for Statements====================================
 //====================================================================
 
-  LabeledStatement parseLabeledStatement() {
-    var startPos = _position;
-    var output = LabeledStatement(List());
-    if (_tokens[_position].type == TokenType.identifier) {
-      output.value.add(_tokens[_position]);
-      _position++;
-      if (_tokens[_position].value == ':') {
-        output.value.add(_tokens[_position]);
-        _position++;
-        var newStat = parseStatements();
-        if (newStat != null) {
-          output.value.add(_tokens[_position]);
-          _position++;
-          return output;
-        }
-        _position = startPos;
-        return null;
-      }
-      _position = startPos;
-      return null;
-    }
-    _position = startPos;
-    return null;
-  }
+  // LabeledStatement parseLabeledStatement() {
+  //   var startPos = _position;
+  //   var output = LabeledStatement(List());
+  //   if (_tokens[_position].type == TokenType.identifier) {
+  //     output.value.add(_tokens[_position]);
+  //     _position++;
+  //     if (_tokens[_position].value == ':') {
+  //       output.value.add(_tokens[_position]);
+  //       _position++;
+  //       var newStat = parseStatements();
+  //       if (newStat != null) {
+  //         output.value.add(_tokens[_position]);
+  //         _position++;
+  //         return output;
+  //       }
+  //       _position = startPos;
+  //       return null;
+  //     }
+  //     _position = startPos;
+  //     return null;
+  //   }
+  //   _position = startPos;
+  //   return null;
+  // }
 
   DeclarationStatement parseDeclarationStatement() {
     var startPos = _position;
@@ -933,10 +933,6 @@ class Parser {
 
   Statement parseStatements() {
     Statement output;
-    output = parseLabeledStatement();
-    if (output != null) {
-      return output;
-    } else {
       output = parseDeclarationStatement();
       if (output != null) {
         return output;
@@ -944,7 +940,6 @@ class Parser {
         output = parseEmbeddedStatement();
         return output;
       }
-    }
   }
 
   //=================================================================================
@@ -1020,11 +1015,8 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       return output;
-    } else if (_tokens[_position].value == 'dynamic') {
-      output.value.add(_tokens[_position]);
-      _position++;
-      return output;
-    } else if (_tokens[_position].value == 'string') {
+    } 
+     else if (_tokens[_position].value == 'string') {
       output.value.add(_tokens[_position]);
       _position++;
       return output;

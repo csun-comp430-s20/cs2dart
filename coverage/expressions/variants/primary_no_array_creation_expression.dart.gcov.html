@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - lcov.info - expressions/variants/primary_no_array_creation_expression.dart</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">expressions/variants</a> - primary_no_array_creation_expression.dart<span style="font-size: 80%;"> (source / <a href="primary_no_array_creation_expression.dart.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">lcov.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">23</td>
+            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntryLo">74.2 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-05-15 12:32:00</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntryHi">-</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : import '../primary_expression.dart';</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span><span class="lineCov">          1 : enum PrimaryNoArrayCreationExpressionType {</span>
+<span class="lineNum">       4 </span><span class="lineCov">          1 :   literal,</span>
+<span class="lineNum">       5 </span><span class="lineCov">          1 :   interpolated_string_expression,</span>
+<span class="lineNum">       6 </span><span class="lineCov">          1 :   simple_name,</span>
+<span class="lineNum">       7 </span><span class="lineCov">          1 :   parenthesized_expression,</span>
+<span class="lineNum">       8 </span><span class="lineCov">          1 :   member_access,</span>
+<span class="lineNum">       9 </span><span class="lineCov">          1 :   invocation_expression,</span>
+<span class="lineNum">      10 </span><span class="lineCov">          1 :   element_access,</span>
+<span class="lineNum">      11 </span><span class="lineCov">          1 :   this_access,</span>
+<span class="lineNum">      12 </span><span class="lineCov">          1 :   base_access,</span>
+<span class="lineNum">      13 </span><span class="lineCov">          1 :   post_increment_expression,</span>
+<span class="lineNum">      14 </span><span class="lineCov">          1 :   post_decrement_expression,</span>
+<span class="lineNum">      15 </span><span class="lineCov">          1 :   object_creation_expression,</span>
+<span class="lineNum">      16 </span><span class="lineCov">          1 :   delegate_creation_expression,</span>
+<span class="lineNum">      17 </span><span class="lineCov">          1 :   anonymous_object_creation_expression,</span>
+<span class="lineNum">      18 </span><span class="lineCov">          1 :   typeof_expression,</span>
+<span class="lineNum">      19 </span><span class="lineCov">          1 :   checked_expression,</span>
+<span class="lineNum">      20 </span><span class="lineCov">          1 :   unchecked_expression,</span>
+<span class="lineNum">      21 </span><span class="lineCov">          1 :   default_value_expression,</span>
+<span class="lineNum">      22 </span><span class="lineCov">          1 :   nameof_expression,</span>
+<span class="lineNum">      23 </span><span class="lineCov">          1 :   anonymous_method_expression,</span>
+<span class="lineNum">      24 </span><span class="lineCov">          1 :   primary_no_array_creation_expression_unsafe,</span>
+<span class="lineNum">      25 </span><span class="lineCov">          1 :   assignment_expression</span>
+<span class="lineNum">      26 </span>            : }
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : class PrimaryNoArrayCreationExpression implements PrimaryExpression {
+<span class="lineNum">      29 </span><span class="lineNoCov">          0 :   PrimaryNoArrayCreationExpression(</span>
+<span class="lineNum">      30 </span>            :     this._value,
+<span class="lineNum">      31 </span><span class="lineNoCov">          0 :   ) : super();</span>
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span><span class="lineNoCov">          0 :   static final PrimaryExpressionType _type =</span>
+<span class="lineNum">      34 </span>            :       PrimaryExpressionType.primary_no_array_creation_expression;
+<span class="lineNum">      35 </span>            :   final List _value;
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span><span class="lineNoCov">          0 :   @override</span>
+<span class="lineNum">      38 </span>            :   Object get type {
+<span class="lineNum">      39 </span><span class="lineNoCov">          0 :     assert(_type == PrimaryExpressionType.primary_no_array_creation_expression);</span>
+<span class="lineNum">      40 </span><span class="lineNoCov">          0 :     return _type;</span>
+<span class="lineNum">      41 </span>            :   }
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span><span class="lineNoCov">          0 :   @override</span>
+<span class="lineNum">      44 </span>            :   List get value {
+<span class="lineNum">      45 </span><span class="lineNoCov">          0 :     return _value;</span>
+<span class="lineNum">      46 </span>            :   }
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            :   // @override
+<span class="lineNum">      49 </span>            :   // bool equals(PrimaryExpression token) {
+<span class="lineNum">      50 </span>            :   //   return token.type == PrimaryExpressionType.primary_no_array_creation_expression;
+<span class="lineNum">      51 </span>            :   // }
+<span class="lineNum">      52 </span>            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
