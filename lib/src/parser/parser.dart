@@ -26,6 +26,7 @@ import '../classes/variants/variants/MethodDeclaration.dart';
 import '../classes/variants/ClassDeclaration.dart';
 import '../classes/variants/ClassBase.dart';
 import '../classes/variants/ClassModifier.dart';
+import '../statements/variants/EmbeddedStatementVariants/expression_statement.dart';
 import '../types/type.dart';
 import '../types/variants/reference_type.dart';
 import '../types/variants/value_type.dart';
@@ -432,9 +433,29 @@ class Parser {
     }
   }
 
-  //To-Do when expression methods are made
+  //done
   ExpressionStatement parseExpressionStatement(){
-
+    var startPos = _position;
+    var output = ExpressionStatement(new List());
+    var expression = parseInvocationExpression();
+    if(expression == null){
+      expression = parseObjectCreationExpression();
+      if(expression == null){
+        expression = parseAssignmentExpression();
+        if (expression == null){
+          return null;
+        }
+      }
+    }
+    output.value.add(expression);
+    if(_tokens[_position].value == ';'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    }
+    else{
+      return null;
+    }
   }
 
   //Finished when ExpressionStatement Finished
@@ -457,7 +478,7 @@ class Parser {
            if(_tokens[_position].value == ';'){
              output.value.add(_tokens[_position]);
              _position++;
-             var condition = parseBooleanExpression();
+             var condition = parseExpression();
              if(condition != null){
                output.value.add(condition);
                if(_tokens[_position].value == ';'){
@@ -526,7 +547,7 @@ class Parser {
       if(_tokens[_position].value == '('){
         output.value.add(_tokens[_position]);
         _position++;
-        var boolean = parseBooleanExpression();
+        var boolean = parseExpression();
         if(boolean != null){
           output.value.add(boolean);
           if(_tokens[_position].value == ')'){
@@ -613,7 +634,7 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       if(_tokens[_position].value == '('){
-        var boolean = parseBooleanExpression();
+        var boolean = parseExpression();
         if(boolean != null){
           output.value.add(boolean);
           if(_tokens[_position].value == ')'){
@@ -844,7 +865,7 @@ class Parser {
     }
   }
 
-    PrimaryExpression ParseExpression() {
+    PrimaryExpression parseExpression() {
     /*
       NOT SUPPORTED:
       alias
@@ -874,7 +895,7 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       //output.value.add(ParseExpression());
-    var tmp3 = ParseExpression();
+    var tmp3 = parseExpression();
     if (tmp3 != null){
       output.value.add(tmp3);
       _position++;
@@ -915,7 +936,7 @@ class Parser {
     }
     _position = startPos;
 
-    var tmp = ParseInvocationExpression();
+    var tmp = parseInvocationExpression();
     if (tmp != null){
       output.value.add(tmp);
       _position++;
@@ -930,7 +951,7 @@ class Parser {
       return output;
     }
 
-    var tmp2 = ParseObjectCreationExpression();
+    var tmp2 = parseObjectCreationExpression();
     if (tmp != null){
       output.value.add(tmp2);
     }
@@ -961,7 +982,7 @@ class Parser {
   }
 
   //helper methods for ParseExpression()
-  PrimaryExpression ParseInvocationExpression() {
+  PrimaryExpression parseInvocationExpression() {
     PrimaryExpression output = PrimaryExpression(List());
     int startPos = _position;
     if (_tokens[_position] is PrimaryExpression) {
@@ -980,7 +1001,7 @@ class Parser {
 
   }
 
-  PrimaryExpression ParseObjectCreationExpression() {
+  PrimaryExpression parseObjectCreationExpression() {
     PrimaryExpression output = PrimaryExpression(List());
     int startPos = _position;
     if (_tokens[_position].value == "new" &&
@@ -1005,10 +1026,10 @@ class Parser {
     return null;
   }
 
-  PrimaryExpression ParseAssignmentExpression() {
+  PrimaryExpression parseAssignmentExpression() {
     PrimaryExpression output = PrimaryExpression(List());
     int startPos = _position;
-    var tmpexp = ParseExpression();
+    var tmpexp = parseExpression();
     if (tmpexp != null) {
       output.value.add(tmpexp);
       _position++;
@@ -1024,7 +1045,7 @@ class Parser {
           _tokens[_position].value == '<<=') {
         output.value.add(_tokens[_position]);
         _position++;
-        var tmpexp2 = ParseExpression();
+        var tmpexp2 = parseExpression();
         if (tmpexp2 != null) {
           output.value.add(tmpexp2);
           _position++;

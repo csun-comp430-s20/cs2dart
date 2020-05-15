@@ -16,7 +16,6 @@ class ConstantDeclarator implements ConstantDeclaration {
 
   @override
   Object get type {
-    assert(_type == ConstantDeclarationTypes.constant_declaration);
     return _type;
   }
 
