@@ -21,7 +21,8 @@ enum PrimaryNoArrayCreationExpressionType {
   default_value_expression,
   nameof_expression,
   anonymous_method_expression,
-  primary_no_array_creation_expression_unsafe
+  primary_no_array_creation_expression_unsafe,
+  assignment_expression
 }
 
 class PrimaryNoArrayCreationExpression implements PrimaryExpression {

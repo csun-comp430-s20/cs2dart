@@ -2,6 +2,9 @@ import 'package:cs2dart/parser.dart';
 import 'package:cs2dart/src/classes/classAST.dart';
 import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
 import 'package:cs2dart/src/expressions/primary_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/assignment_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/invocation_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/object_creation_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/parenthesized_expression.dart';
 import 'package:cs2dart/src/types/variants/reference_type.dart';
 import 'package:cs2dart/tokens.dart';
@@ -332,7 +335,7 @@ class Parser {
     return null;
   }
 
-  parseConstantDeclaration
+  //parseConstantDeclaration
 //====================================================================
 //top level parsers for Statements====================================
 //====================================================================
@@ -981,9 +984,9 @@ class Parser {
     return null;
   }
 
-  //helper methods for ParseExpression()
+  //helper methods for parseExpression()
   PrimaryExpression parseInvocationExpression() {
-    PrimaryExpression output = PrimaryExpression(List());
+    InvocationExpression output = InvocationExpression(List());
     int startPos = _position;
     if (_tokens[_position] is PrimaryExpression) {
       output.value.add(_tokens[_position]);
@@ -1002,7 +1005,7 @@ class Parser {
   }
 
   PrimaryExpression parseObjectCreationExpression() {
-    PrimaryExpression output = PrimaryExpression(List());
+    ObjectCreationExpression output = ObjectCreationExpression(List());
     int startPos = _position;
     if (_tokens[_position].value == "new" &&
         _tokens[_position] is KeywordToken) {
@@ -1027,7 +1030,7 @@ class Parser {
   }
 
   PrimaryExpression parseAssignmentExpression() {
-    PrimaryExpression output = PrimaryExpression(List());
+    AssignmentExpression output = AssignmentExpression(List());
     int startPos = _position;
     var tmpexp = parseExpression();
     if (tmpexp != null) {
