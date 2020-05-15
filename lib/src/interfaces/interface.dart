@@ -13,6 +13,4 @@ class InterfaceAST{
   List get value {
     return _value;
   }
-
-
 }
