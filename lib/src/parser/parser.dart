@@ -304,46 +304,156 @@ class Parser {
   //Start of parsers for Statements==================================================
   //=================================================================================
   //=================================================================================
+  //
+  LocalVariableInitializer parseLocalVariableInitializer()
+  {
+    var tmpExp = ParseExpression();
+    var output = LocalVariableInitializer(List());
+    if (tmpExp != null)
+    {
+      output.value.add(tmpExp);
+      _position++;
+    }
+  }
+  LocalVariableDeclarator parseLocalVariableDeclarator()
+  {
+    var startPos = _position;
+    var output = LocalVariableDeclarator(List());
+    if (_tokens[_position].type == TokenType.identifier)
+    {
+      output.value.add(_tokens[_position]);
+      _position++;
+      if (_tokens[_position].value == '=')
+      {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var tmpLocVarInit = parseLocalVariableInitializer();
+      }
+      else
+      {
+        return output;
+      }
+    }
+    _position = startPos;
+    return null;
+  }
+
+  LocalVariableDeclarators parseLocalVariableDeclarators()
+  {
+    var startPos = _position;
+    var output = LocalVariableDeclarators(List());
+    var tmpVarDec = parseLocalVariableDeclarator();
+    if (tmpVarDec != null)
+    {
+      output.value.add(tmpVarDec);
+      _position++;
+      if (_tokens[_position].value == ',')
+      {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var moretmpVarDec = parseLocalVariableDeclarators();
+        if (moretmpVarDec != null)
+        {
+          output.value.add(moretmpVarDec);
+          _position++;
+          return output;
+        }
+        _position = startPos;
+        return null;
+      }
+      else
+      {
+        return output;
+      }
+    }
+    _position = startPos;
+    return null;
+  }
 
 
   LocalVariableType parseLocalVariableType()
   {
-    int startPos = _position;
-    LocalVariableType output = LocalVariableType(List());
-    output.value.add(parseType());
-    return output;
-  }
-
-  LocalVariableDeclarator parseLocalVariableDeclarator()
-  {
-
+    var startPos = _position;
+    var output = LocalVariableType(List());
+    var tmpType = parseType();
+    if (tmpType != null)
+    {
+      output.value.add(tmpType);
+      _position++;
+      return output;
+    }
+    _position = startPos;
+    return null;
   }
 
   LocalVariableDeclaration parseLocalVariableDeclaration()
   {
-    int startPos = _position;
-    LocalVariableDeclaration output = LocalVariableDeclaration(List());
-    LocalVariableType newLocalVarType = parseLocalVariableType();
-    if (LocalVariableType != null)
+    var startPos = _position;
+    var output = LocalVariableDeclaration(List());
+    var newLocalVarType = parseLocalVariableType();
+    if (newLocalVarType != null)
     {
       output.value.add(newLocalVarType);
       _position++;
-      LocalVariableDeclarator newLocalVarDec = parseLocalVariableDeclarator();
-      output.value.add(newLocalVarDec);
+      var newLocalVarDec = parseLocalVariableDeclarators();
+      if (newLocalVarDec != null)
+      {
+        output.value.add(newLocalVarDec);
+        _position++;
+        return output;
+      }
+      _position = startPos;
+      return null;
     }
-    _position++;
+    _position = startPos;
     return null;
   }
 
-  parseConstantDeclaration
+  ConstantDeclaration parseConstantDeclaration()
+  {
+    var startPos = _position;
+    var output = ConstantDeclaration(List());
+    if (_tokens[_position].value == "const")
+    {
+      output.value.add(_tokens[_position]);
+      _position++;
+      if (_tokens[_position].type == TokenType.identifier)
+      {
+        output.value.add(_tokens[_position]);
+        _position++;
+        if (_tokens[_position].value == "=")
+        {
+          output.value.add(_tokens[_position]);
+          _position++;
+          var tmpExpr = ParseExpression();
+          if (tmpExpr != null)
+          {
+            output.value.add(tmpExpr);
+            _position++;
+            return output;
+          }
+          _position = startPos;
+          return null;
+        }
+        _position = startPos;
+        return null;
+      }
+      _position = startPos;
+      return null;
+    }
+    _position = startPos;
+    return null;
+  }
+
+
 //====================================================================
 //top level parsers for Statements====================================
 //====================================================================
 
   LabeledStatement parseLabeledStatement()
   {
-    int startPos = _position;
-    LabeledStatement output = LabeledStatement(List());
+    var startPos = _position;
+    var output = LabeledStatement(List());
     if (_tokens[_position].type == TokenType.identifier)
     {
       output.value.add(_tokens[_position]);
@@ -359,32 +469,41 @@ class Parser {
           _position++;
           return output;
         }
+        _position = startPos;
+        return null;
       }
+      _position = startPos;
+      return null;
     }
+    _position = startPos;
     return null;
   }
 
   DeclarationStatement parseDeclarationStatement()
   {
-    // DeclarationStatement output;
-    // var tmp = parseLocalVariableDeclaration();
-    // if (tmp != null  && _tokens[_position + 1].value == ';')
-    // {
-    //   output.value.add(tmp);
-    //   _position++;
-    //   output.value.add(_tokens[_position]);
-    //   _position++;
-    // }
-    // else
-    // {
-    //   var tmp = parseConstantDeclaration();
-    //   if ()
-    //   output.value.add(parseLocalVariableDeclaration());
-    //   _position++;
-    //   output.value.add(_tokens[_position]);
-    //   _position++;
-    // }
-    // return output;
+    var startPos = _position;
+    var output = DeclarationStatement(List());
+    var tmp = parseLocalVariableDeclaration();
+    if (tmp != null  && _tokens[_position].value == ';')
+    {
+      output.value.add(tmp);
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    }
+    else
+    {
+      var tmp = parseConstantDeclaration();
+      if (tmp != null  && _tokens[_position].value == ';')
+      {
+        output.value.add(tmp);
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      }
+    }
+    _position = startPos;
+    return null;
   }
 
   //Done
@@ -710,6 +829,7 @@ class Parser {
         }
       }
     }
+
   }
 
   //====================================================================
@@ -853,7 +973,7 @@ class Parser {
       NOT SUPPORTED:
       alias
       element access not supported because there is no array support
-      'base' keyword 
+      'base' keyword
       post decrement and increment
       anonymous object creation
       delegate
