@@ -30,6 +30,8 @@ import '../classes/variants/variants/MethodDeclaration.dart';
 import '../classes/variants/ClassDeclaration.dart';
 import '../classes/variants/ClassBase.dart';
 import '../classes/variants/ClassModifier.dart';
+import '../statements/variants/EmbeddedStatementVariants/expression_statement.dart';
+import '../statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/LocalVariableDeclaratorsVariants/LocalVariableDeclaratorVariants/local_variable_initializer.dart';
 import '../types/type.dart';
 import '../types/variants/reference_type.dart';
 import '../types/variants/value_type.dart';
@@ -305,17 +307,27 @@ class Parser {
   //Start of parsers for Statements==================================================
   //=================================================================================
   //=================================================================================
+  
   //
-  LocalVariableInitializer parseLocalVariableInitializer() {
-    var tmpExp = ParseExpression();
+
+  LocalVariableInitializer parseLocalVariableInitializer()
+  {
+    var tmpExp = parseExpression();
+
     var output = LocalVariableInitializer(List());
     if (tmpExp != null) {
       output.value.add(tmpExp);
-      _position++;
+      return output;
+    }
+    else{
+      return null;
     }
   }
 
-  LocalVariableDeclarator parseLocalVariableDeclarator() {
+
+  
+   LocalVariableDeclarator parseLocalVariableDeclarator()
+  {
     var startPos = _position;
     var output = LocalVariableDeclarator(List());
     if (_tokens[_position].type == TokenType.identifier) {
@@ -325,7 +337,17 @@ class Parser {
         output.value.add(_tokens[_position]);
         _position++;
         var tmpLocVarInit = parseLocalVariableInitializer();
-      } else {
+        if(tmpLocVarInit != null){
+          output.value.add(tmpLocVarInit);
+          return output;
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+      else
+      {
         return output;
       }
     }
@@ -392,7 +414,7 @@ class Parser {
     return null;
   }
 
-  ConstantDeclaration parseConstantDeclaration() {
+   ConstantDeclaration parseConstantDeclaration() {
     var startPos = _position;
     var output = ConstantDeclaration(List());
     if (_tokens[_position].value == "const") {
@@ -404,8 +426,9 @@ class Parser {
         if (_tokens[_position].value == "=") {
           output.value.add(_tokens[_position]);
           _position++;
-          var tmpExpr = ParseExpression();
-          if (tmpExpr != null) {
+          var tmpExpr = parseExpression();
+          if (tmpExpr != null)
+          {
             output.value.add(tmpExpr);
             _position++;
             return output;
@@ -422,7 +445,6 @@ class Parser {
     _position = startPos;
     return null;
   }
-
 //====================================================================
 //top level parsers for Statements====================================
 //====================================================================
@@ -519,71 +541,105 @@ class Parser {
     }
   }
 
-  //To-Do when expression methods are made
-  ExpressionStatement parseExpressionStatement() {}
+  ExpressionStatement parseExpressionStatement(){
+    var startPos = _position;
+    var output = ExpressionStatement(new List());
+    var expression = parseInvocationExpression();
+    if(expression == null){
+      expression = parseObjectCreationExpression();
+      if(expression == null){
+        expression = parseAssignmentExpression();
+        if (expression == null){
+          return null;
+        }
+      }
+    }
+    output.value.add(expression);
+    if(_tokens[_position].value == ';'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    }
+    else{
+      return null;
+    }
+  }
 
-  //Finished when ExpressionStatement Finished
+
+  
   ForStatement parseForStatement() {
     var startPos = _position;
     var output = ForStatement(new List());
     if (_tokens[_position].value == 'for') {
       output.value.add(_tokens[_position]);
       _position++;
-      if (_tokens[_position].value == '(') {
-        output.value.add(_tokens[_position]);
-        _position++;
-        //IMPORTANT: using Statement here might be a bad idea, look here first for bugs in for loop
-        Statement initializer = parseLocalVariableDeclaration();
-        if (initializer == null) {
-          initializer = parseExpressionStatement();
-        }
-        if (initializer != null) {
-          output.value.add(initializer);
-          if (_tokens[_position].value == ';') {
-            output.value.add(_tokens[_position]);
-            _position++;
-            var condition = parseBooleanExpression();
-            if (condition != null) {
-              output.value.add(condition);
-              if (_tokens[_position].value == ';') {
-                output.value.add(_tokens[_position]);
-                _position++;
-                var iterator = parseExpressionStatement();
-                if (iterator != null) {
-                  output.value.add(iterator);
-                  if (_tokens[_position].value == ')') {
-                    output.value.add(_tokens[_position]);
-                    _position++;
-                    var embedded = parseEmbeddedStatement();
-                    if (embedded != null) {
-                      output.value.add(embedded);
-                      return output;
-                    } else {
-                      _position = startPos;
-                      return null;
-                    }
-                  } else {
-                    _position = startPos;
-                    return null;
-                  }
-                } else {
-                  _position = startPos;
-                  return null;
-                }
-              } else {
-                _position = startPos;
-                return null;
-              }
-            } else {
-              _position = startPos;
-              return null;
-            }
-          }
-        } else {
-          _position = startPos;
-          return null;
-        }
-      } else {
+      if(_tokens[_position].value == '('){
+         output.value.add(_tokens[_position]);
+         _position++;
+         //IMPORTANT: using Statement here might be a bad idea, look here first for bugs in for loop
+         Statement initializer = parseLocalVariableDeclaration();
+         if(initializer == null){
+           initializer = parseExpressionStatement();
+         }
+         if(initializer != null){
+           output.value.add(initializer);
+           if(_tokens[_position].value == ';'){
+             output.value.add(_tokens[_position]);
+             _position++;
+             var condition = parseExpression();
+             if(condition != null){
+               output.value.add(condition);
+               if(_tokens[_position].value == ';'){
+                 output.value.add(_tokens[_position]);
+                 _position++;
+                 var iterator = parseExpressionStatement();
+                 if(iterator != null){
+                   output.value.add(iterator);
+                   if(_tokens[_position].value == ')'){
+                     output.value.add(_tokens[_position]);
+                     _position++;
+                     var embedded = parseEmbeddedStatement();
+                     if(embedded != null){
+                       output.value.add(embedded);
+                       return output;
+                     }
+                     else{
+                       _position = startPos;
+                       return null;
+                     }
+                   }
+                   else{
+                     _position = startPos;
+                     return null;
+                   }
+                 }
+                 else{
+                   _position = startPos;
+                   return null;
+                 }
+               }
+               else{
+                 _position = startPos;
+                 return null;
+               }
+             }
+             else{
+               _position = startPos;
+               return null;
+             }
+           }
+           else{
+            _position = startPos;
+            return null;
+           }
+         }
+         else{
+           _position = startPos;
+           return null;
+         }
+
+      }
+      else{
         _position = startPos;
         return null;
       }
@@ -591,8 +647,7 @@ class Parser {
       return null;
     }
   }
-
-  //Finishe when Expression methods are created
+   
   WhileStatement parseWhileStatement() {
     var startPos = _position;
     var output = WhileStatement(new List());
@@ -602,8 +657,8 @@ class Parser {
       if (_tokens[_position].value == '(') {
         output.value.add(_tokens[_position]);
         _position++;
-        var boolean = parseBooleanExpression();
-        if (boolean != null) {
+        var boolean = parseExpression();
+        if(boolean != null){
           output.value.add(boolean);
           if (_tokens[_position].value == ')') {
             output.value.add(_tokens[_position]);
@@ -671,16 +726,15 @@ class Parser {
     }
   }
 
-  //finished when expression methods are created
   SelectionStatement parseSelectionStatement() {
     var startPos = _position;
     var output = SelectionStatement(new List());
     if (_tokens[_position].value == 'if') {
       output.value.add(_tokens[_position]);
       _position++;
-      if (_tokens[_position].value == '(') {
-        var boolean = parseBooleanExpression();
-        if (boolean != null) {
+      if(_tokens[_position].value == '('){
+        var boolean = parseExpression();
+        if(boolean != null){
           output.value.add(boolean);
           if (_tokens[_position].value == ')') {
             output.value.add(_tokens[_position]);
@@ -722,8 +776,8 @@ class Parser {
       return null;
     }
   }
+  
 
-  //need to finish methods
   EmbeddedStatement parseEmbeddedStatement() {
     //var startPos = _position;
     //IMPORTANT: When doing typecheck, make sure doing inheritance like this doesnt screw up type

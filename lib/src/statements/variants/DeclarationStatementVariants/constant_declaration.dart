@@ -1,9 +1,9 @@
 import '../declaration_statement.dart';
 // import '../../statement.dart';
 
-// enum ConstantDeclarationTypes {
-//   constant_declarator,
-// }
+enum ConstantDeclarationTypes {
+  constant_declarator,
+}
 
 class ConstantDeclaration implements DeclarationStatement {
 
