@@ -6,6 +6,7 @@ import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressio
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/invocation_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/object_creation_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/parenthesized_expression.dart';
+import 'package:cs2dart/src/expressions/variants/primary_no_array_creation_expression.dart';
 import 'package:cs2dart/src/types/variants/reference_type.dart';
 import 'package:cs2dart/tokens.dart';
 import 'package:cs2dart/expressions.dart';
@@ -862,7 +863,7 @@ class Parser {
     */
     //TODO: make proper fail states and add returns and fix compile error with parstyle paramater
     int startPos = _position;
-    PrimaryExpression output = PrimaryExpression(List());
+    PrimaryNoArrayCreationExpression output = PrimaryNoArrayCreationExpression(List());
     //literals
     if (_tokens[_position].type == TokenType.characterLiteral ||
         _tokens[_position].type == TokenType.integerLiteral ||
