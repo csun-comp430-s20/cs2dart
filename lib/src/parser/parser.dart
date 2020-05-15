@@ -309,9 +309,11 @@ class Parser {
   //=================================================================================
   
   //
+
   LocalVariableInitializer parseLocalVariableInitializer()
   {
     var tmpExp = parseExpression();
+
     var output = LocalVariableInitializer(List());
     if (tmpExp != null) {
       output.value.add(tmpExp);
@@ -322,8 +324,9 @@ class Parser {
     }
   }
 
-  //figure out what the fuck to finish here
-  LocalVariableDeclarator parseLocalVariableDeclarator()
+
+  
+   LocalVariableDeclarator parseLocalVariableDeclarator()
   {
     var startPos = _position;
     var output = LocalVariableDeclarator(List());
@@ -411,7 +414,7 @@ class Parser {
     return null;
   }
 
-  ConstantDeclaration parseConstantDeclaration() {
+   ConstantDeclaration parseConstantDeclaration() {
     var startPos = _position;
     var output = ConstantDeclaration(List());
     if (_tokens[_position].value == "const") {
@@ -442,7 +445,6 @@ class Parser {
     _position = startPos;
     return null;
   }
-
 //====================================================================
 //top level parsers for Statements====================================
 //====================================================================
@@ -539,7 +541,6 @@ class Parser {
     }
   }
 
-  //done
   ExpressionStatement parseExpressionStatement(){
     var startPos = _position;
     var output = ExpressionStatement(new List());
@@ -564,7 +565,8 @@ class Parser {
     }
   }
 
-  //Finished when ExpressionStatement Finished
+
+  
   ForStatement parseForStatement() {
     var startPos = _position;
     var output = ForStatement(new List());
@@ -626,6 +628,10 @@ class Parser {
                return null;
              }
            }
+           else{
+            _position = startPos;
+            return null;
+           }
          }
          else{
            _position = startPos;
@@ -641,8 +647,7 @@ class Parser {
       return null;
     }
   }
-
-  //Finishe when Expression methods are created
+   
   WhileStatement parseWhileStatement() {
     var startPos = _position;
     var output = WhileStatement(new List());
@@ -721,7 +726,6 @@ class Parser {
     }
   }
 
-  //finished when expression methods are created
   SelectionStatement parseSelectionStatement() {
     var startPos = _position;
     var output = SelectionStatement(new List());
@@ -772,8 +776,8 @@ class Parser {
       return null;
     }
   }
+  
 
-  //need to finish methods
   EmbeddedStatement parseEmbeddedStatement() {
     //var startPos = _position;
     //IMPORTANT: When doing typecheck, make sure doing inheritance like this doesnt screw up type
