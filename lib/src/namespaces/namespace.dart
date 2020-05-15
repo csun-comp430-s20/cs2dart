@@ -4,17 +4,15 @@ enum NamespaceKind {
   TypeDeclaration,
 }
 
-abstract class Namespace {
-  Namespace(this._value, this._kind);
+class Namespace {
+  Namespace(this._value);
 
-  final String _value;
-  final NamespaceKind _kind;
+  List _value;
+  
 
-  String get value {
+  List get value {
     return _value;
   }
 
-  NamespaceKind get kind {
-    return _kind;
-  }
+ 
 }

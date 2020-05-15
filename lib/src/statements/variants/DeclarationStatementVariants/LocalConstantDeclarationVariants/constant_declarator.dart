@@ -1,9 +1,11 @@
 import '../constant_declaration.dart';
+import '../constant_declaration.dart';
+import '../constant_declaration.dart';
 // import '../../statement.dart';
 
-enum ConstantDeclaratorTypes {
-  constant_declarators,
-}
+// enum ConstantDeclaratorTypes {
+//   constant_declarators,
+// }
 
 class ConstantDeclarator implements ConstantDeclaration {
 
@@ -11,12 +13,11 @@ class ConstantDeclarator implements ConstantDeclaration {
     this._value,
   ): super();
 
-  static final ConstantDeclarationTypes _type = ConstantDeclarationTypes.constant_declaration;
-  final List _value;
+  static final ConstantDeclarationTypes _type = ConstantDeclarationTypes.constant_declarator;
+  List _value;
 
   @override
   Object get type {
-    assert(_type == ConstantDeclarationTypes.constant_declaration);
     return _type;
   }
 

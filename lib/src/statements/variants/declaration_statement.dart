@@ -5,7 +5,7 @@ enum DeclarationStatementType {
   constant_declaration,
 }
 
-abstract class DeclarationStatement implements Statement {
+class DeclarationStatement implements Statement {
 
   DeclarationStatement(
     this._value,

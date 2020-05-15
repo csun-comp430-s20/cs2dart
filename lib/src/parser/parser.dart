@@ -6,12 +6,15 @@ import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressio
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/invocation_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/object_creation_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/parenthesized_expression.dart';
+import 'package:cs2dart/src/expressions/variants/primary_no_array_creation_expression.dart';
 import 'package:cs2dart/src/types/variants/reference_type.dart';
 import 'package:cs2dart/tokens.dart';
 import 'package:cs2dart/expressions.dart';
-
+import '../classes/variants/variants/variants/FixedParam.dart';
 import 'dart:io';
 
+import '../namespaces/namespace.dart';
+import '../namespaces/namespace.dart';
 import '../parser/parser_ast2.dart';
 import '../../parser.dart';
 import '../interfaces/interface.dart';
@@ -22,13 +25,19 @@ import '../interfaces/variants/InterfaceModifier.dart';
 import '../../statement.dart';
 import '../classes/classAST.dart';
 import '../classes/variants/ClassBody.dart';
-import '../classes/variants/variants/ConstantDeclaration.dart';
+//import '../classes/variants/variants/ConstantDeclaration.dart';
 import '../classes/variants/variants/ConstructorDeclaration.dart';
 import '../classes/variants/variants/FieldDeclaration.dart';
 import '../classes/variants/variants/MethodDeclaration.dart';
 import '../classes/variants/ClassDeclaration.dart';
 import '../classes/variants/ClassBase.dart';
 import '../classes/variants/ClassModifier.dart';
+import '../statements/variants/DeclarationStatementVariants/constant_declaration.dart';
+import '../statements/variants/EmbeddedStatementVariants/expression_statement.dart';
+import '../statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/LocalVariableDeclaratorsVariants/LocalVariableDeclaratorVariants/local_variable_initializer.dart';
+import '../tokens/variants/identifier_token.dart';
+import '../tokens/variants/identifier_token.dart';
+import '../tokens/variants/identifier_token.dart';
 import '../types/type.dart';
 import '../types/variants/reference_type.dart';
 import '../types/variants/value_type.dart';
@@ -112,29 +121,135 @@ class Parser {
     }
   }
 
-  //wait for others to finish to finish class+interface methods
-  ConstantDeclaration parseConstDeclaration() {
-    var startPos = _position;
-    var output = ConstantDeclaration(new List());
-    if (_tokens[_position].value == 'const') {
-      output.value.add(_tokens[_position]);
-      _position++;
-      if (_tokens[_position] is KeywordToken) {
-        //if(isType())
-      } else {
-        _position = startPos;
+  
+
+ 
+
+  FixedParam parseFixedParam(){
+    //var startPos = _position;
+    var output = FixedParam(new List());
+    var type = parseType();
+    if(type != null){
+      output.value.add(type);
+      if(_tokens[_position] is IdentifierToken){
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      }
+      else{
         return null;
       }
-    } else {
+    }
+    else{
       return null;
     }
   }
 
-  FieldDeclaration parseFieldDeclaration() {}
+  MethodDeclaration parseMethodDeclaration() {
+    var startPos = _position;
+    var output = MethodDeclaration(new List());
+    var returnType = parseType();
+    if (returnType != null){
+      output.value.add(returnType);
+    }
+    else{
+      if(_tokens[_position].value == 'void'){
+        output.value.add(_tokens[_position]);
+        _position++;
+      }
+      else{
+        return null;
+      }
+    }
+    if(_tokens[_position] is IdentifierToken){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position].value == '('){
+        output.value.add(_tokens[_position]);
+        _position++;
+        var param;
+        while(_tokens[_position].value != ')'){
+          if(_position > _tokens.length){
+            _position = startPos;
+            return null;
+          }
+          param = parseFixedParam();
+          if(param!=null){
+            output.value.add(param);
+          }
+          else{
+            _position = startPos;
+            return null;
+          }
+        }
+        output.value.add(_tokens[_position]);
+        _position++;
+        var block = parseBlockStatement();
+        if(block != null){
+          output.value.add(block);
+          return output;
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      _position = startPos;
+      return null;
+    }
+  }
 
-  MethodDeclaration parseMethodDeclaration() {}
-
-  ConstructorDeclaration parseConstructorDeclaration() {}
+  ConstructorDeclaration parseConstructorDeclaration() {
+    var startPos = _position;
+    var output = ConstructorDeclaration(new List());
+    if(_tokens[_position] is IdentifierToken){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position].value == '('){
+        output.value.add(_tokens[_position]);
+        _position++;
+        var param;
+        while(_tokens[_position].value != ')'){
+          if(_position > _tokens.length){
+            _position = startPos;
+            return null;
+          }
+          param = parseFixedParam();
+          if(param!=null){
+            output.value.add(param);
+          }
+          else{
+            _position = startPos;
+            return null;
+          }
+        }
+        output.value.add(_tokens[_position]);
+        _position++;
+        var block = parseBlockStatement();
+        if(block != null){
+          output.value.add(block);
+          return output;
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
 
   //done, need to finish helper methods
   ClassBody parseClassBody() {
@@ -150,11 +265,12 @@ class Parser {
           _position = startPos;
           return null;
         }
-        var constDecl = parseConstDeclaration();
+        var constDecl = parseConstantDeclaration();
+        
         if (constDecl != null) {
           output.value.add(constDecl);
         } else {
-          var fieldDecl = parseFieldDeclaration();
+          var fieldDecl = parseLocalVariableDeclaration();
           if (fieldDecl != null) {
             output.value.add(fieldDecl);
           } else {
@@ -233,199 +349,326 @@ class Parser {
     }
   }
 
-  //finish
-  InterfaceBody parseInterfaceBody() {
-    return null;
-  }
+  // //finish
+  // InterfaceBody parseInterfaceBody() {
+  //   return null;
+  // }
 
   // InterfaceModifier parseInterfaceModifier(){
   //   return null;
   // }
   //seems done
-  InterfaceBase parseInterfaceBase() {
-    var startPos = _position;
-    var output = InterfaceBase(new List());
-    if (_tokens[_position] is OperatorOrPunctuatorToken &&
-        _tokens[_position].value == ':') {
-      output.value.add(_tokens[_position]);
-      _position++;
-      if (_tokens[_position] is IdentifierToken) {
-        output.value.add(_tokens[_position]);
-        _position++;
-        return output;
-      } else {
-        _position = startPos;
-        return null;
-      }
-    } else {
-      _position = startPos;
-      return null;
-    }
-  }
+  // InterfaceBase parseInterfaceBase() {
+  //   var startPos = _position;
+  //   var output = InterfaceBase(new List());
+  //   if (_tokens[_position] is OperatorOrPunctuatorToken &&
+  //       _tokens[_position].value == ':') {
+  //     output.value.add(_tokens[_position]);
+  //     _position++;
+  //     if (_tokens[_position] is IdentifierToken) {
+  //       output.value.add(_tokens[_position]);
+  //       _position++;
+  //       return output;
+  //     } else {
+  //       _position = startPos;
+  //       return null;
+  //     }
+  //   } else {
+  //     _position = startPos;
+  //     return null;
+  //   }
+  // }
 
-  //Seems done
-  InterfaceDeclaration parseInterface() {
-    var startPos = _position;
-    var output = InterfaceDeclaration(new List());
-    //interface modifier COMEBACK TO THIS
-    // if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'interface'){
+  // //Seems done
+  // InterfaceDeclaration parseInterface() {
+  //   var startPos = _position;
+  //   var output = InterfaceDeclaration(new List());
+  //   //interface modifier COMEBACK TO THIS
+  //   // if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'interface'){
 
-    // }
-    //interface keyword
-    if (_tokens[_position] is KeywordToken &&
-        _tokens[_position].value == 'interface') {
-      output.value.add(_tokens[_position]);
-      _position++;
-      var body = parseInterfaceBody();
-      //interface Body
-      if (body != null) {
-        output.value.add(body);
-        _position++;
-        if (_tokens[_position] is OperatorOrPunctuatorToken &&
-            _tokens[_position].value == ';') {
-          output.value.add(_tokens[_position]);
-          _position++;
-          return output;
-        } else {
-          return output;
-        }
-      } else {
-        _position = startPos;
-        return null;
-      }
-    } else {
-      _position = startPos;
-      return null;
-    }
-  }
+  //   // }
+  //   //interface keyword
+  //   if (_tokens[_position] is KeywordToken &&
+  //       _tokens[_position].value == 'interface') {
+  //     output.value.add(_tokens[_position]);
+  //     _position++;
+  //     var body = parseInterfaceBody();
+  //     //interface Body
+  //     if (body != null) {
+  //       output.value.add(body);
+  //       _position++;
+  //       if (_tokens[_position] is OperatorOrPunctuatorToken &&
+  //           _tokens[_position].value == ';') {
+  //         output.value.add(_tokens[_position]);
+  //         _position++;
+  //         return output;
+  //       } else {
+  //         return output;
+  //       }
+  //     } else {
+  //       _position = startPos;
+  //       return null;
+  //     }
+  //   } else {
+  //     _position = startPos;
+  //     return null;
+  //   }
+  //}
+
   //=================================================================================
   //=================================================================================
   //Start of parsers for Statements==================================================
   //=================================================================================
   //=================================================================================
+  
+  //
 
-
-  LocalVariableType parseLocalVariableType()
+  LocalVariableInitializer parseLocalVariableInitializer()
   {
-    int startPos = _position;
-    LocalVariableType output = LocalVariableType(List());
-    output.value.add(parseType());
-    return output;
-  }
+    var tmpExp = parseExpression();
 
-  LocalVariableDeclarator parseLocalVariableDeclarator()
-  {
-
-  }
-
-  LocalVariableDeclaration parseLocalVariableDeclaration()
-  {
-    int startPos = _position;
-    LocalVariableDeclaration output = LocalVariableDeclaration(List());
-    LocalVariableType newLocalVarType = parseLocalVariableType();
-    if (LocalVariableType != null)
-    {
-      output.value.add(newLocalVarType);
-      _position++;
-      LocalVariableDeclarator newLocalVarDec = parseLocalVariableDeclarator();
-      output.value.add(newLocalVarDec);
-    }
-    _position++;
-    return null;
-  }
-
-  parseConstantDeclaration
-//====================================================================
-//top level parsers for Statements====================================
-//====================================================================
-
-  LabeledStatement parseLabeledStatement()
-  {
-    int startPos = _position;
-    LabeledStatement output = LabeledStatement(List());
-    if (_tokens[_position].type == TokenType.identifier)
-    {
-      output.value.add(_tokens[_position]);
-      _position++;
-      if (_tokens[_position].value == ':')
-      {
-        output.value.add(_tokens[_position]);
-        _position++;
-        var newStat = parseStatements();
-        if (newStat != null)
-        {
-          output.value.add(_tokens[_position]);
-          _position++;
-          return output;
-        }
-      }
-    }
-    return null;
-  }
-
-  DeclarationStatement parseDeclarationStatement()
-  {
-    // DeclarationStatement output;
-    // var tmp = parseLocalVariableDeclaration();
-    // if (tmp != null  && _tokens[_position + 1].value == ';')
-    // {
-    //   output.value.add(tmp);
-    //   _position++;
-    //   output.value.add(_tokens[_position]);
-    //   _position++;
-    // }
-    // else
-    // {
-    //   var tmp = parseConstantDeclaration();
-    //   if ()
-    //   output.value.add(parseLocalVariableDeclaration());
-    //   _position++;
-    //   output.value.add(_tokens[_position]);
-    //   _position++;
-    // }
-    // return output;
-  }
-
-  //Done
-  Block parseBlockStatement(){
-    var startPos = _position;
-    var output = Block(new List());
-    if(_tokens[_position].value == '{'){
-      output.value.add(_tokens[_position]);
-      _position++;
-      var temp;
-      while(_tokens[_position].value != '}'){
-        if(_position > _tokens.length){
-          _position = startPos;
-          return null;
-        }
-        temp = parseStatements();
-        if (temp != null){
-          output.value.add(temp);
-        }
-        else{
-          _position = startPos;
-          return null;
-        }
-      }
-      if(_tokens[_position].value == '}'){
-        output.value.add(_tokens[_position]);
-        _position++;
-        return output;
-      }
-      else{
-        return null;
-      }
+    var output = LocalVariableInitializer(List());
+    if (tmpExp != null) {
+      output.value.add(tmpExp);
+      return output;
     }
     else{
       return null;
     }
   }
 
+
+  
+   LocalVariableDeclarator parseLocalVariableDeclarator()
+  {
+    var startPos = _position;
+    var output = LocalVariableDeclarator(List());
+    if (_tokens[_position].type == TokenType.identifier) {
+      output.value.add(_tokens[_position]);
+      _position++;
+      if (_tokens[_position].value == '=') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var tmpLocVarInit = parseLocalVariableInitializer();
+        if(tmpLocVarInit != null){
+          output.value.add(tmpLocVarInit);
+          return output;
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+      else
+      {
+        return output;
+      }
+    }
+    _position = startPos;
+    return null;
+  }
+
+  LocalVariableDeclarators parseLocalVariableDeclarators() {
+    var startPos = _position;
+    var output = LocalVariableDeclarators(List());
+    var tmpVarDec = parseLocalVariableDeclarator();
+    if (tmpVarDec != null) {
+      output.value.add(tmpVarDec);
+      _position++;
+      if (_tokens[_position].value == ',') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var moretmpVarDec = parseLocalVariableDeclarators();
+        if (moretmpVarDec != null) {
+          output.value.add(moretmpVarDec);
+          _position++;
+          return output;
+        }
+        _position = startPos;
+        return null;
+      } else {
+        return output;
+      }
+    }
+    _position = startPos;
+    return null;
+  }
+
+  LocalVariableType parseLocalVariableType() {
+    var startPos = _position;
+    var output = LocalVariableType(List());
+    var tmpType = parseType();
+    if (tmpType != null) {
+      output.value.add(tmpType);
+      _position++;
+      return output;
+    }
+    _position = startPos;
+    return null;
+  }
+
+  LocalVariableDeclaration parseLocalVariableDeclaration() {
+    var startPos = _position;
+    var output = LocalVariableDeclaration(List());
+    var newLocalVarType = parseLocalVariableType();
+    if (newLocalVarType != null) {
+      output.value.add(newLocalVarType);
+      _position++;
+      var newLocalVarDec = parseLocalVariableDeclarators();
+      if (newLocalVarDec != null) {
+        output.value.add(newLocalVarDec);
+        _position++;
+        return output;
+      }
+      _position = startPos;
+      return null;
+    }
+    _position = startPos;
+    return null;
+  }
+
+   ConstantDeclaration parseConstantDeclaration() {
+    var startPos = _position;
+    var output = ConstantDeclaration(List());
+    if (_tokens[_position].value == "const") {
+      output.value.add(_tokens[_position]);
+      _position++;
+      if (_tokens[_position].type == TokenType.identifier) {
+        output.value.add(_tokens[_position]);
+        _position++;
+        if (_tokens[_position].value == "=") {
+          output.value.add(_tokens[_position]);
+          _position++;
+          var tmpExpr = parseExpression();
+          if (tmpExpr != null)
+          {
+            output.value.add(tmpExpr);
+            _position++;
+            return output;
+          }
+          _position = startPos;
+          return null;
+        }
+        _position = startPos;
+        return null;
+      }
+      _position = startPos;
+      return null;
+    }
+    _position = startPos;
+    return null;
+  }
+//====================================================================
+//top level parsers for Statements====================================
+//====================================================================
+
+  LabeledStatement parseLabeledStatement() {
+    var startPos = _position;
+    var output = LabeledStatement(List());
+    if (_tokens[_position].type == TokenType.identifier) {
+      output.value.add(_tokens[_position]);
+      _position++;
+      if (_tokens[_position].value == ':') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var newStat = parseStatements();
+        if (newStat != null) {
+          output.value.add(_tokens[_position]);
+          _position++;
+          return output;
+        }
+        _position = startPos;
+        return null;
+      }
+      _position = startPos;
+      return null;
+    }
+    _position = startPos;
+    return null;
+  }
+
+  DeclarationStatement parseDeclarationStatement() {
+    var startPos = _position;
+    var output = DeclarationStatement(List());
+    var tmp = parseLocalVariableDeclaration();
+    if (tmp != null && _tokens[_position].value == ';') {
+      output.value.add(tmp);
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    } else {
+      var tmp = parseConstantDeclaration();
+      if (tmp != null && _tokens[_position].value == ';') {
+        output.value.add(tmp);
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      }
+    }
+    _position = startPos;
+    return null;
+  }
+
   //Done
-  EmptyStatement parseEmptyStatement(){
-    if(_tokens[_position].value == ';'){
+  Block parseBlockStatement() {
+    var startPos = _position;
+    var output = Block(new List());
+    if (_tokens[_position].value == '{') {
+      output.value.add(_tokens[_position]);
+      _position++;
+      var temp;
+      while (_tokens[_position].value != '}') {
+        if (_position > _tokens.length) {
+          _position = startPos;
+          return null;
+        }
+        temp = parseStatements();
+        if (temp != null) {
+          output.value.add(temp);
+        } else {
+          _position = startPos;
+          return null;
+        }
+      }
+      if (_tokens[_position].value == '}') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  //Done
+  EmptyStatement parseEmptyStatement() {
+    if (_tokens[_position].value == ';') {
       var output = EmptyStatement(new List());
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    } else {
+      return null;
+    }
+  }
+
+  ExpressionStatement parseExpressionStatement(){
+    var startPos = _position;
+    var output = ExpressionStatement(new List());
+    var expression = parseInvocationExpression();
+    if(expression == null){
+      expression = parseObjectCreationExpression();
+      if(expression == null){
+        expression = parseAssignmentExpression();
+        if (expression == null){
+          return null;
+        }
+      }
+    }
+    output.value.add(expression);
+    if(_tokens[_position].value == ';'){
       output.value.add(_tokens[_position]);
       _position++;
       return output;
@@ -435,16 +678,12 @@ class Parser {
     }
   }
 
-  //To-Do when expression methods are made
-  ExpressionStatement parseExpressionStatement(){
-    
-  }
 
-  //Finished when ExpressionStatement Finished
-  ForStatement parseForStatement(){
+  
+  ForStatement parseForStatement() {
     var startPos = _position;
     var output = ForStatement(new List());
-    if(_tokens[_position].value == 'for'){
+    if (_tokens[_position].value == 'for') {
       output.value.add(_tokens[_position]);
       _position++;
       if(_tokens[_position].value == '('){
@@ -460,7 +699,7 @@ class Parser {
            if(_tokens[_position].value == ';'){
              output.value.add(_tokens[_position]);
              _position++;
-             var condition = parseBooleanExpression();
+             var condition = parseExpression();
              if(condition != null){
                output.value.add(condition);
                if(_tokens[_position].value == ';'){
@@ -502,6 +741,10 @@ class Parser {
                return null;
              }
            }
+           else{
+            _position = startPos;
+            return null;
+           }
          }
          else{
            _position = startPos;
@@ -513,195 +756,168 @@ class Parser {
         _position = startPos;
         return null;
       }
-    }
-    else{
+    } else {
       return null;
     }
   }
-
-  //Finishe when Expression methods are created
-  WhileStatement parseWhileStatement(){
+   
+  WhileStatement parseWhileStatement() {
     var startPos = _position;
     var output = WhileStatement(new List());
-    if(_tokens[_position].value == 'while'){
+    if (_tokens[_position].value == 'while') {
       output.value.add(_tokens[_position]);
       _position++;
-      if(_tokens[_position].value == '('){
+      if (_tokens[_position].value == '(') {
         output.value.add(_tokens[_position]);
         _position++;
-        var boolean = parseBooleanExpression();
+        var boolean = parseExpression();
         if(boolean != null){
           output.value.add(boolean);
-          if(_tokens[_position].value == ')'){
+          if (_tokens[_position].value == ')') {
             output.value.add(_tokens[_position]);
             _position++;
             var embeded = parseEmbeddedStatement();
-            if(embeded != null){
+            if (embeded != null) {
               output.value.add(embeded);
               return output;
-            }
-            else{
+            } else {
               _position = startPos;
               return null;
             }
-          }
-          else{
+          } else {
             _position = startPos;
             return null;
           }
-        }
-        else{
+        } else {
           _position = startPos;
           return null;
         }
-      }
-      else{
+      } else {
         _position = startPos;
         return null;
       }
-    }
-    else{
+    } else {
       return null;
     }
   }
 
   //finished when expression methods are created
-  IterationStatement parseIterationStatement(){
+  IterationStatement parseIterationStatement() {
     IterationStatement output = parseForStatement();
-    if(output != null){
+    if (output != null) {
       return output;
-    }
-    else{
+    } else {
       output = parseWhileStatement();
-      if (output != null){
+      if (output != null) {
         return output;
-      }
-      else{
+      } else {
         return null;
       }
     }
   }
 
-
-  JumpStatement parseJumpStatement(){
+  JumpStatement parseJumpStatement() {
     var startPos = _position;
     var output = JumpStatement(new List());
-    if(_tokens[_position].value == 'return'){
+    if (_tokens[_position].value == 'return') {
       output.value.add(_tokens[_position]);
       _position++;
       var expression = parseExpression();
-      if(expression != null){
+      if (expression != null) {
         output.value.add(expression);
       }
-      if(_tokens[_position].value == ';'){
+      if (_tokens[_position].value == ';') {
         output.value.add(_tokens[_position]);
         _position++;
         return output;
-      }
-      else{
+      } else {
         _position = startPos;
         return null;
       }
-    }
-    else{
+    } else {
       return null;
     }
   }
 
-  //finished when expression methods are created
-  SelectionStatement parseSelectionStatement(){
+  SelectionStatement parseSelectionStatement() {
     var startPos = _position;
     var output = SelectionStatement(new List());
-    if(_tokens[_position].value == 'if'){
+    if (_tokens[_position].value == 'if') {
       output.value.add(_tokens[_position]);
       _position++;
       if(_tokens[_position].value == '('){
-        var boolean = parseBooleanExpression();
+        var boolean = parseExpression();
         if(boolean != null){
           output.value.add(boolean);
-          if(_tokens[_position].value == ')'){
+          if (_tokens[_position].value == ')') {
             output.value.add(_tokens[_position]);
             _position++;
             var embeded = parseEmbeddedStatement();
-            if(embeded != null){
+            if (embeded != null) {
               output.value.add(embeded);
-              if(_tokens[_position].value == 'else'){
+              if (_tokens[_position].value == 'else') {
                 output.value.add(_tokens[_position]);
                 _position++;
                 var embeded2 = parseEmbeddedStatement();
-                if(embeded2 != null){
+                if (embeded2 != null) {
                   output.value.add(embeded2);
                   return output;
-                }
-                else{
+                } else {
                   _position = startPos;
                   return null;
                 }
-              }
-              else{
+              } else {
                 return output;
               }
-            }
-            else{
+            } else {
               _position = startPos;
               return null;
             }
-          }
-          else{
+          } else {
             _position = startPos;
             return null;
           }
-        }
-        else{
+        } else {
           _position = startPos;
           return null;
         }
-      }
-      else{
+      } else {
         _position = startPos;
         return null;
       }
-    }
-    else{
+    } else {
       return null;
     }
   }
+  
 
-  //need to finish methods
-  EmbeddedStatement parseEmbeddedStatement()
-  {
+  EmbeddedStatement parseEmbeddedStatement() {
     //var startPos = _position;
     //IMPORTANT: When doing typecheck, make sure doing inheritance like this doesnt screw up type
     EmbeddedStatement output = parseBlockStatement();
-    if(output != null){
+    if (output != null) {
       return output;
-    }
-    else{
+    } else {
       output = parseEmptyStatement();
-      if(output != null){
+      if (output != null) {
         return output;
-      }
-      else{
+      } else {
         output = parseExpressionStatement();
-        if(output != null){
+        if (output != null) {
           return output;
-        }
-        else{
+        } else {
           output = parseIterationStatement();
-          if(output != null){
+          if (output != null) {
             return output;
-          }
-          else{
+          } else {
             output = parseJumpStatement();
-            if(output != null){
+            if (output != null) {
               return output;
-            }
-            else{
+            } else {
               output = parseSelectionStatement();
-              if(output != null){
+              if (output != null) {
                 return output;
-              }
-              else{
+              } else {
                 return null;
               }
             }
@@ -715,23 +931,16 @@ class Parser {
   //Main parser for Statements==========================================
   //====================================================================
 
-  Statement parseStatements()
-  {
+  Statement parseStatements() {
     Statement output;
     output = parseLabeledStatement();
-    if(output != null)
-    {
+    if (output != null) {
       return output;
-    }
-    else
-    {
+    } else {
       output = parseDeclarationStatement();
-      if (output != null)
-      {
+      if (output != null) {
         return output;
-      }
-      else
-      {
+      } else {
         output = parseEmbeddedStatement();
         return output;
       }
@@ -774,7 +983,6 @@ class Parser {
       return null;
     }
   }
-
 
   ValueType parseValueType() {
     //var startPos = _position;
@@ -847,7 +1055,7 @@ class Parser {
     }
   }
 
-    PrimaryExpression parseExpression() {
+  PrimaryExpression parseExpression() {
     /*
       NOT SUPPORTED:
       alias
@@ -862,7 +1070,8 @@ class Parser {
     */
     //TODO: make proper fail states and add returns and fix compile error with parstyle paramater
     int startPos = _position;
-    PrimaryExpression output = PrimaryExpression(List());
+    PrimaryNoArrayCreationExpression output =
+        PrimaryNoArrayCreationExpression(List());
     //literals
     if (_tokens[_position].type == TokenType.characterLiteral ||
         _tokens[_position].type == TokenType.integerLiteral ||
@@ -877,11 +1086,11 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       //output.value.add(ParseExpression());
-    var tmp3 = parseExpression();
-    if (tmp3 != null){
-      output.value.add(tmp3);
-      _position++;
-    }
+      var tmp3 = parseExpression();
+      if (tmp3 != null) {
+        output.value.add(tmp3);
+        _position++;
+      }
       if (_tokens[_position].value == ')') {
         output.value.add(_tokens[_position]);
         _position++;
@@ -919,7 +1128,7 @@ class Parser {
     _position = startPos;
 
     var tmp = parseInvocationExpression();
-    if (tmp != null){
+    if (tmp != null) {
       output.value.add(tmp);
       _position++;
       return output;
@@ -934,7 +1143,7 @@ class Parser {
     }
 
     var tmp2 = parseObjectCreationExpression();
-    if (tmp != null){
+    if (tmp != null) {
       output.value.add(tmp2);
     }
     _position = startPos;
@@ -957,7 +1166,11 @@ class Parser {
             return output;
           }
         }
+        _position = startPos;
+        return null;
       }
+      _position = startPos;
+      return null;
     }
     _position = startPos;
     return null;
@@ -980,7 +1193,7 @@ class Parser {
       return output;
     }
     _position = startPos;
-
+    return null;
   }
 
   PrimaryExpression parseObjectCreationExpression() {
@@ -1003,6 +1216,7 @@ class Parser {
         return output;
       }
       _position = startPos;
+      return null;
     }
     _position = startPos;
     return null;
@@ -1040,4 +1254,20 @@ class Parser {
     _position = startPos;
     return null;
   }
+
+  Namespace parse(){
+    var output = Namespace(new List());
+    while(_position <= _tokens.length ){
+      var temp = parseClass();
+      if(temp != null){
+        output.value.add(temp);
+      }
+      else{
+        return null;
+      }
+    }
+    return output;
+  }
+
+
 }

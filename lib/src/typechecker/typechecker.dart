@@ -38,6 +38,4 @@ class Typechecker {
     typecheckClassDeclaration();
   }
 
-  void 
-
 }
