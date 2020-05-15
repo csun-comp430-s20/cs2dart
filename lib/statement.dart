@@ -11,7 +11,7 @@ export 'src/statements/variants/declaration_statement.dart';
 
 /////=====================================================================================
 /////======================DECLARATIONSTATEMENTS==========================================
-/// /////=====================================================================================
+/////=====================================================================================
 
 //src/statements/variants/DeclarationStatementVariants/
 export 'src/statements/variants/DeclarationStatementVariants/local_variable_declaration.dart';
@@ -25,7 +25,7 @@ export 'src/statements/variants/DeclarationStatementVariants/LocalVariableDeclar
 
 /////=====================================================================================
 /////======================EMBEDDEDSTATEMENTS==========================================
-/// /////=====================================================================================
+/////=====================================================================================
 
 //src/statements/variants/EmbeddedStatementVariants/
 export 'src/statements/variants/EmbeddedStatementVariants/block.dart';
