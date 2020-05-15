@@ -2,6 +2,9 @@ import 'package:cs2dart/parser.dart';
 import 'package:cs2dart/src/classes/classAST.dart';
 import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
 import 'package:cs2dart/src/expressions/primary_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/assignment_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/invocation_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/object_creation_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/parenthesized_expression.dart';
 import 'package:cs2dart/src/types/variants/reference_type.dart';
 import 'package:cs2dart/tokens.dart';
@@ -844,7 +847,7 @@ class Parser {
     }
   }
 
-    PrimaryExpression ParseExpression() {
+    PrimaryExpression parseExpression() {
     /*
       NOT SUPPORTED:
       alias
@@ -874,7 +877,7 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       //output.value.add(ParseExpression());
-    var tmp3 = ParseExpression();
+    var tmp3 = parseExpression();
     if (tmp3 != null){
       output.value.add(tmp3);
       _position++;
@@ -915,7 +918,7 @@ class Parser {
     }
     _position = startPos;
 
-    var tmp = ParseInvocationExpression();
+    var tmp = parseInvocationExpression();
     if (tmp != null){
       output.value.add(tmp);
       _position++;
@@ -930,7 +933,7 @@ class Parser {
       return output;
     }
 
-    var tmp2 = ParseObjectCreationExpression();
+    var tmp2 = parseObjectCreationExpression();
     if (tmp != null){
       output.value.add(tmp2);
     }
@@ -960,9 +963,9 @@ class Parser {
     return null;
   }
 
-  //helper methods for ParseExpression()
-  PrimaryExpression ParseInvocationExpression() {
-    PrimaryExpression output = PrimaryExpression(List());
+  //helper methods for parseExpression()
+  PrimaryExpression parseInvocationExpression() {
+    InvocationExpression output = InvocationExpression(List());
     int startPos = _position;
     if (_tokens[_position] is PrimaryExpression) {
       output.value.add(_tokens[_position]);
@@ -980,8 +983,8 @@ class Parser {
 
   }
 
-  PrimaryExpression ParseObjectCreationExpression() {
-    PrimaryExpression output = PrimaryExpression(List());
+  PrimaryExpression parseObjectCreationExpression() {
+    ObjectCreationExpression output = ObjectCreationExpression(List());
     int startPos = _position;
     if (_tokens[_position].value == "new" &&
         _tokens[_position] is KeywordToken) {
@@ -1005,10 +1008,10 @@ class Parser {
     return null;
   }
 
-  PrimaryExpression ParseAssignmentExpression() {
-    PrimaryExpression output = PrimaryExpression(List());
+  PrimaryExpression parseAssignmentExpression() {
+    AssignmentExpression output = AssignmentExpression(List());
     int startPos = _position;
-    var tmpexp = ParseExpression();
+    var tmpexp = parseExpression();
     if (tmpexp != null) {
       output.value.add(tmpexp);
       _position++;
@@ -1024,7 +1027,7 @@ class Parser {
           _tokens[_position].value == '<<=') {
         output.value.add(_tokens[_position]);
         _position++;
-        var tmpexp2 = ParseExpression();
+        var tmpexp2 = parseExpression();
         if (tmpexp2 != null) {
           output.value.add(tmpexp2);
           _position++;
