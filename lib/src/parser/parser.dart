@@ -99,7 +99,10 @@ class Parser {
   }
   //end interface helper functions
 
-  //seems done
+  // parseClassBase Breakdown
+  // first in the list is the extends
+  // second in the list is the base class identifier
+  // seems done
   ClassBase parseClassBase() {
     var startPos = _position;
     var output = ClassBase(new List());
@@ -251,7 +254,10 @@ class Parser {
     }
   }
 
-  //done, need to finish helper methods
+  // parseClassBody Breakdown
+  // first is always '{'
+  // second 
+  // done, need to finish helper methods
   ClassBody parseClassBody() {
     var startPos = _position;
     var output = ClassBody(new List());
@@ -260,7 +266,7 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       while (_tokens[_position].value != '}') {
-        //if end of list without braket return null
+        // if end of list without braket return null
         if (_position > _tokens.length) {
           _position = startPos;
           return null;
@@ -298,6 +304,12 @@ class Parser {
     }
   }
 
+  // parseClass Breakdown
+  // first in list is the keyword: class
+  // second in list is the identifier of the class
+  // third (or not present) in the list is the class' base class (extends or implements)
+  // fourth (or third) is the body of the class
+  // fifth (or fourth or not present) can be a semi-colon
   ClassDeclaration parseClass() {
     var startPos = _position;
     var output = ClassDeclaration(new List());
@@ -305,17 +317,17 @@ class Parser {
     // if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'class'){
 
     // }
-    //class keyword
+    // class keyword
     if (_tokens[_position] is KeywordToken &&
         _tokens[_position].value == 'class') {
       output.value.add(_tokens[_position]);
       _position++;
-      //identifier
+      // identifier
       if (_tokens[_position] is IdentifierToken) {
         output.value.add(_tokens[_position]);
         _position++;
 
-        //class base
+        // class base
         if (_tokens[_position] is OperatorOrPunctuatorToken &&
             _tokens[_position].value == ':') {
           var classBase = parseClassBase();
@@ -1255,7 +1267,8 @@ class Parser {
     return null;
   }
 
-  Namespace parse(){
+  // All of the classes exist in a Namespace the root of a program
+  Namespace parse() {
     var output = Namespace(new List());
     while(_position <= _tokens.length ){
       var temp = parseClass();
@@ -1268,6 +1281,4 @@ class Parser {
     }
     return output;
   }
-
-
 }

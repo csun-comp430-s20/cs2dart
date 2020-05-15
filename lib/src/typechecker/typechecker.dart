@@ -15,12 +15,12 @@ class Typechecker {
 
   // Constructor for the typechecker, get all of the high level typedeclarations
   Typechecker(final Namespace namespace) {
-    _classDeclarations = HashMap<String, ClassDeclarations>();
-    for (ClassDeclaration classDec in namespace.classDeclarations) {
-      if (!_classDeclarations.containsKey(classDec.name)) {
-        _classDeclarations.putIfAbsent(classDec.name, classDec);
+    _classDeclarations = HashMap<String, ClassDeclaration>();
+    for (ClassDeclaration classDec in namespace.value) {
+      if (!_classDeclarations.containsKey(classDec.value[0])) {
+        _classDeclarations[classDec.value[0]] = classDec;
       } else {
-        throw IllTypedException('Duplicate type declaration name: ' + classDec.name);
+        throw IllTypedException('Duplicate type declaration name: ' + classDec.value[0]);
       }
     }
   } // Typechecker
@@ -28,7 +28,7 @@ class Typechecker {
   // Typechecks the namespace's contents which should be classDeclarations
   void typecheckNamespace(final Namespace namespace) {
 
-    for (ClassDeclaration classDec in namespace.classDeclarations) {
+    for (ClassDeclaration classDec in namespace.value) {
       typecheckClassDeclaration(classDec);
     }
   } // typecheckNamespace
