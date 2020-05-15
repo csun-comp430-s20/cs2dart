@@ -112,6 +112,13 @@ test('integral type test', () {
 
   });
 
+  test('Local Variable Declaration test', () {
+    var token = Lexer('int x;').lexify();
+    
+    print(Parser(token).parseStatements().runtimeType.toString());
+
+  });
+
   //expression tests
 
   //class tests

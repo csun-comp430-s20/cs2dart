@@ -31,13 +31,13 @@
             <td class="headerValue">lcov.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">97</td>
-            <td class="headerCovTableEntry">536</td>
-            <td class="headerCovTableEntryLo">18.1 %</td>
+            <td class="headerCovTableEntry">91</td>
+            <td class="headerCovTableEntry">520</td>
+            <td class="headerCovTableEntryLo">17.5 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2020-05-15 12:32:00</td>
+            <td class="headerValue">2020-05-15 12:48:58</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -624,30 +624,30 @@
 <span class="lineNum">     562 </span>            : //top level parsers for Statements====================================
 <span class="lineNum">     563 </span>            : //====================================================================
 <span class="lineNum">     564 </span>            : 
-<span class="lineNum">     565 </span><span class="lineCov">          1 :   LabeledStatement parseLabeledStatement() {</span>
-<span class="lineNum">     566 </span><span class="lineCov">          1 :     var startPos = _position;</span>
-<span class="lineNum">     567 </span><span class="lineCov">          2 :     var output = LabeledStatement(List());</span>
-<span class="lineNum">     568 </span><span class="lineCov">          5 :     if (_tokens[_position].type == TokenType.identifier) {</span>
-<span class="lineNum">     569 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">     570 </span><span class="lineNoCov">          0 :       _position++;</span>
-<span class="lineNum">     571 </span><span class="lineNoCov">          0 :       if (_tokens[_position].value == ':') {</span>
-<span class="lineNum">     572 </span><span class="lineNoCov">          0 :         output.value.add(_tokens[_position]);</span>
-<span class="lineNum">     573 </span><span class="lineNoCov">          0 :         _position++;</span>
-<span class="lineNum">     574 </span><span class="lineNoCov">          0 :         var newStat = parseStatements();</span>
-<span class="lineNum">     575 </span>            :         if (newStat != null) {
-<span class="lineNum">     576 </span><span class="lineNoCov">          0 :           output.value.add(_tokens[_position]);</span>
-<span class="lineNum">     577 </span><span class="lineNoCov">          0 :           _position++;</span>
-<span class="lineNum">     578 </span>            :           return output;
-<span class="lineNum">     579 </span>            :         }
-<span class="lineNum">     580 </span><span class="lineNoCov">          0 :         _position = startPos;</span>
-<span class="lineNum">     581 </span>            :         return null;
-<span class="lineNum">     582 </span>            :       }
-<span class="lineNum">     583 </span><span class="lineNoCov">          0 :       _position = startPos;</span>
-<span class="lineNum">     584 </span>            :       return null;
-<span class="lineNum">     585 </span>            :     }
-<span class="lineNum">     586 </span><span class="lineCov">          1 :     _position = startPos;</span>
-<span class="lineNum">     587 </span>            :     return null;
-<span class="lineNum">     588 </span>            :   }
+<span class="lineNum">     565 </span>            :   // LabeledStatement parseLabeledStatement() {
+<span class="lineNum">     566 </span>            :   //   var startPos = _position;
+<span class="lineNum">     567 </span>            :   //   var output = LabeledStatement(List());
+<span class="lineNum">     568 </span>            :   //   if (_tokens[_position].type == TokenType.identifier) {
+<span class="lineNum">     569 </span>            :   //     output.value.add(_tokens[_position]);
+<span class="lineNum">     570 </span>            :   //     _position++;
+<span class="lineNum">     571 </span>            :   //     if (_tokens[_position].value == ':') {
+<span class="lineNum">     572 </span>            :   //       output.value.add(_tokens[_position]);
+<span class="lineNum">     573 </span>            :   //       _position++;
+<span class="lineNum">     574 </span>            :   //       var newStat = parseStatements();
+<span class="lineNum">     575 </span>            :   //       if (newStat != null) {
+<span class="lineNum">     576 </span>            :   //         output.value.add(_tokens[_position]);
+<span class="lineNum">     577 </span>            :   //         _position++;
+<span class="lineNum">     578 </span>            :   //         return output;
+<span class="lineNum">     579 </span>            :   //       }
+<span class="lineNum">     580 </span>            :   //       _position = startPos;
+<span class="lineNum">     581 </span>            :   //       return null;
+<span class="lineNum">     582 </span>            :   //     }
+<span class="lineNum">     583 </span>            :   //     _position = startPos;
+<span class="lineNum">     584 </span>            :   //     return null;
+<span class="lineNum">     585 </span>            :   //   }
+<span class="lineNum">     586 </span>            :   //   _position = startPos;
+<span class="lineNum">     587 </span>            :   //   return null;
+<span class="lineNum">     588 </span>            :   // }
 <span class="lineNum">     589 </span>            : 
 <span class="lineNum">     590 </span><span class="lineCov">          1 :   DeclarationStatement parseDeclarationStatement() {</span>
 <span class="lineNum">     591 </span><span class="lineCov">          1 :     var startPos = _position;</span>
@@ -995,341 +995,336 @@
 <span class="lineNum">     933 </span>            : 
 <span class="lineNum">     934 </span><span class="lineCov">          1 :   Statement parseStatements() {</span>
 <span class="lineNum">     935 </span>            :     Statement output;
-<span class="lineNum">     936 </span><span class="lineCov">          1 :     output = parseLabeledStatement();</span>
-<span class="lineNum">     937 </span>            :     if (output != null) {
-<span class="lineNum">     938 </span>            :       return output;
-<span class="lineNum">     939 </span>            :     } else {
-<span class="lineNum">     940 </span><span class="lineCov">          1 :       output = parseDeclarationStatement();</span>
-<span class="lineNum">     941 </span>            :       if (output != null) {
-<span class="lineNum">     942 </span>            :         return output;
-<span class="lineNum">     943 </span>            :       } else {
-<span class="lineNum">     944 </span><span class="lineCov">          1 :         output = parseEmbeddedStatement();</span>
-<span class="lineNum">     945 </span>            :         return output;
-<span class="lineNum">     946 </span>            :       }
-<span class="lineNum">     947 </span>            :     }
-<span class="lineNum">     948 </span>            :   }
-<span class="lineNum">     949 </span>            : 
-<span class="lineNum">     950 </span>            :   //=================================================================================
-<span class="lineNum">     951 </span>            :   //=================================================================================
-<span class="lineNum">     952 </span>            :   //end of parsers for Statements====================================================
-<span class="lineNum">     953 </span>            :   //=================================================================================
-<span class="lineNum">     954 </span>            :   //=================================================================================
-<span class="lineNum">     955 </span>            : 
-<span class="lineNum">     956 </span><span class="lineCov">          1 :   IntegralType parseIntegralType() {</span>
-<span class="lineNum">     957 </span><span class="lineCov">          2 :     var output = IntegralType(new List());</span>
-<span class="lineNum">     958 </span><span class="lineCov">          5 :     if (_tokens[_position].value == 'sbyte' ||</span>
-<span class="lineNum">     959 </span><span class="lineCov">          5 :         _tokens[_position].value == 'byte' ||</span>
-<span class="lineNum">     960 </span><span class="lineCov">          5 :         _tokens[_position].value == 'short' ||</span>
-<span class="lineNum">     961 </span><span class="lineCov">          5 :         _tokens[_position].value == 'ushort' ||</span>
-<span class="lineNum">     962 </span><span class="lineCov">          5 :         _tokens[_position].value == 'int' ||</span>
-<span class="lineNum">     963 </span><span class="lineCov">          5 :         _tokens[_position].value == 'uint' ||</span>
-<span class="lineNum">     964 </span><span class="lineCov">          5 :         _tokens[_position].value == 'long' ||</span>
-<span class="lineNum">     965 </span><span class="lineCov">          5 :         _tokens[_position].value == 'ulong' ||</span>
-<span class="lineNum">     966 </span><span class="lineCov">          5 :         _tokens[_position].value == 'char') {</span>
-<span class="lineNum">     967 </span><span class="lineCov">          5 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">     968 </span><span class="lineCov">          2 :       _position++;</span>
-<span class="lineNum">     969 </span>            :       return output;
-<span class="lineNum">     970 </span>            :     } else {
-<span class="lineNum">     971 </span>            :       return null;
-<span class="lineNum">     972 </span>            :     }
-<span class="lineNum">     973 </span>            :   }
-<span class="lineNum">     974 </span>            : 
-<span class="lineNum">     975 </span><span class="lineCov">          1 :   FloatingPointType parseFloatingPointType() {</span>
-<span class="lineNum">     976 </span><span class="lineCov">          2 :     var output = FloatingPointType(new List());</span>
-<span class="lineNum">     977 </span><span class="lineCov">          5 :     if (_tokens[_position].value == 'float' ||</span>
-<span class="lineNum">     978 </span><span class="lineCov">          5 :         _tokens[_position].value == 'double') {</span>
-<span class="lineNum">     979 </span><span class="lineCov">          5 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">     980 </span><span class="lineCov">          2 :       _position++;</span>
-<span class="lineNum">     981 </span>            :       return output;
-<span class="lineNum">     982 </span>            :     } else {
-<span class="lineNum">     983 </span>            :       return null;
-<span class="lineNum">     984 </span>            :     }
-<span class="lineNum">     985 </span>            :   }
-<span class="lineNum">     986 </span>            : 
-<span class="lineNum">     987 </span><span class="lineCov">          1 :   ValueType parseValueType() {</span>
-<span class="lineNum">     988 </span>            :     //var startPos = _position;
-<span class="lineNum">     989 </span><span class="lineCov">          2 :     var output = ValueType(new List());</span>
-<span class="lineNum">     990 </span><span class="lineCov">          5 :     if (_tokens[_position].value == 'bool') {</span>
-<span class="lineNum">     991 </span><span class="lineCov">          5 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">     992 </span><span class="lineCov">          2 :       _position++;</span>
-<span class="lineNum">     993 </span>            :       return output;
-<span class="lineNum">     994 </span>            :     } else {
-<span class="lineNum">     995 </span><span class="lineCov">          5 :       if (_tokens[_position].value == 'decimal') {</span>
-<span class="lineNum">     996 </span><span class="lineCov">          5 :         output.value.add(_tokens[_position]);</span>
-<span class="lineNum">     997 </span><span class="lineCov">          2 :         _position++;</span>
-<span class="lineNum">     998 </span>            :         return output;
-<span class="lineNum">     999 </span>            :       } else {
-<span class="lineNum">    1000 </span><span class="lineCov">          1 :         var integralType = parseIntegralType();</span>
-<span class="lineNum">    1001 </span>            :         if (integralType != null) {
-<span class="lineNum">    1002 </span><span class="lineCov">          2 :           output.value.add(integralType);</span>
-<span class="lineNum">    1003 </span>            :           return output;
-<span class="lineNum">    1004 </span>            :         } else {
-<span class="lineNum">    1005 </span><span class="lineCov">          1 :           var floatingType = parseFloatingPointType();</span>
-<span class="lineNum">    1006 </span>            :           if (floatingType != null) {
-<span class="lineNum">    1007 </span><span class="lineCov">          2 :             output.value.add(floatingType);</span>
-<span class="lineNum">    1008 </span>            :             return output;
-<span class="lineNum">    1009 </span>            :           } else {
-<span class="lineNum">    1010 </span>            :             return null;
-<span class="lineNum">    1011 </span>            :           }
-<span class="lineNum">    1012 </span>            :         }
-<span class="lineNum">    1013 </span>            :       }
-<span class="lineNum">    1014 </span>            :     }
-<span class="lineNum">    1015 </span>            :   }
-<span class="lineNum">    1016 </span>            : 
-<span class="lineNum">    1017 </span><span class="lineCov">          1 :   ReferenceType parseReferenceType() {</span>
-<span class="lineNum">    1018 </span><span class="lineCov">          2 :     var output = ReferenceType(new List());</span>
-<span class="lineNum">    1019 </span><span class="lineCov">          5 :     if (_tokens[_position].value == 'object') {</span>
+<span class="lineNum">     936 </span><span class="lineCov">          1 :       output = parseDeclarationStatement();</span>
+<span class="lineNum">     937 </span>            :       if (output != null) {
+<span class="lineNum">     938 </span>            :         return output;
+<span class="lineNum">     939 </span>            :       } else {
+<span class="lineNum">     940 </span><span class="lineCov">          1 :         output = parseEmbeddedStatement();</span>
+<span class="lineNum">     941 </span>            :         return output;
+<span class="lineNum">     942 </span>            :       }
+<span class="lineNum">     943 </span>            :   }
+<span class="lineNum">     944 </span>            : 
+<span class="lineNum">     945 </span>            :   //=================================================================================
+<span class="lineNum">     946 </span>            :   //=================================================================================
+<span class="lineNum">     947 </span>            :   //end of parsers for Statements====================================================
+<span class="lineNum">     948 </span>            :   //=================================================================================
+<span class="lineNum">     949 </span>            :   //=================================================================================
+<span class="lineNum">     950 </span>            : 
+<span class="lineNum">     951 </span><span class="lineCov">          1 :   IntegralType parseIntegralType() {</span>
+<span class="lineNum">     952 </span><span class="lineCov">          2 :     var output = IntegralType(new List());</span>
+<span class="lineNum">     953 </span><span class="lineCov">          5 :     if (_tokens[_position].value == 'sbyte' ||</span>
+<span class="lineNum">     954 </span><span class="lineCov">          5 :         _tokens[_position].value == 'byte' ||</span>
+<span class="lineNum">     955 </span><span class="lineCov">          5 :         _tokens[_position].value == 'short' ||</span>
+<span class="lineNum">     956 </span><span class="lineCov">          5 :         _tokens[_position].value == 'ushort' ||</span>
+<span class="lineNum">     957 </span><span class="lineCov">          5 :         _tokens[_position].value == 'int' ||</span>
+<span class="lineNum">     958 </span><span class="lineCov">          5 :         _tokens[_position].value == 'uint' ||</span>
+<span class="lineNum">     959 </span><span class="lineCov">          5 :         _tokens[_position].value == 'long' ||</span>
+<span class="lineNum">     960 </span><span class="lineCov">          5 :         _tokens[_position].value == 'ulong' ||</span>
+<span class="lineNum">     961 </span><span class="lineCov">          5 :         _tokens[_position].value == 'char') {</span>
+<span class="lineNum">     962 </span><span class="lineCov">          5 :       output.value.add(_tokens[_position]);</span>
+<span class="lineNum">     963 </span><span class="lineCov">          2 :       _position++;</span>
+<span class="lineNum">     964 </span>            :       return output;
+<span class="lineNum">     965 </span>            :     } else {
+<span class="lineNum">     966 </span>            :       return null;
+<span class="lineNum">     967 </span>            :     }
+<span class="lineNum">     968 </span>            :   }
+<span class="lineNum">     969 </span>            : 
+<span class="lineNum">     970 </span><span class="lineCov">          1 :   FloatingPointType parseFloatingPointType() {</span>
+<span class="lineNum">     971 </span><span class="lineCov">          2 :     var output = FloatingPointType(new List());</span>
+<span class="lineNum">     972 </span><span class="lineCov">          5 :     if (_tokens[_position].value == 'float' ||</span>
+<span class="lineNum">     973 </span><span class="lineCov">          5 :         _tokens[_position].value == 'double') {</span>
+<span class="lineNum">     974 </span><span class="lineCov">          5 :       output.value.add(_tokens[_position]);</span>
+<span class="lineNum">     975 </span><span class="lineCov">          2 :       _position++;</span>
+<span class="lineNum">     976 </span>            :       return output;
+<span class="lineNum">     977 </span>            :     } else {
+<span class="lineNum">     978 </span>            :       return null;
+<span class="lineNum">     979 </span>            :     }
+<span class="lineNum">     980 </span>            :   }
+<span class="lineNum">     981 </span>            : 
+<span class="lineNum">     982 </span><span class="lineCov">          1 :   ValueType parseValueType() {</span>
+<span class="lineNum">     983 </span>            :     //var startPos = _position;
+<span class="lineNum">     984 </span><span class="lineCov">          2 :     var output = ValueType(new List());</span>
+<span class="lineNum">     985 </span><span class="lineCov">          5 :     if (_tokens[_position].value == 'bool') {</span>
+<span class="lineNum">     986 </span><span class="lineCov">          5 :       output.value.add(_tokens[_position]);</span>
+<span class="lineNum">     987 </span><span class="lineCov">          2 :       _position++;</span>
+<span class="lineNum">     988 </span>            :       return output;
+<span class="lineNum">     989 </span>            :     } else {
+<span class="lineNum">     990 </span><span class="lineCov">          5 :       if (_tokens[_position].value == 'decimal') {</span>
+<span class="lineNum">     991 </span><span class="lineCov">          5 :         output.value.add(_tokens[_position]);</span>
+<span class="lineNum">     992 </span><span class="lineCov">          2 :         _position++;</span>
+<span class="lineNum">     993 </span>            :         return output;
+<span class="lineNum">     994 </span>            :       } else {
+<span class="lineNum">     995 </span><span class="lineCov">          1 :         var integralType = parseIntegralType();</span>
+<span class="lineNum">     996 </span>            :         if (integralType != null) {
+<span class="lineNum">     997 </span><span class="lineCov">          2 :           output.value.add(integralType);</span>
+<span class="lineNum">     998 </span>            :           return output;
+<span class="lineNum">     999 </span>            :         } else {
+<span class="lineNum">    1000 </span><span class="lineCov">          1 :           var floatingType = parseFloatingPointType();</span>
+<span class="lineNum">    1001 </span>            :           if (floatingType != null) {
+<span class="lineNum">    1002 </span><span class="lineCov">          2 :             output.value.add(floatingType);</span>
+<span class="lineNum">    1003 </span>            :             return output;
+<span class="lineNum">    1004 </span>            :           } else {
+<span class="lineNum">    1005 </span>            :             return null;
+<span class="lineNum">    1006 </span>            :           }
+<span class="lineNum">    1007 </span>            :         }
+<span class="lineNum">    1008 </span>            :       }
+<span class="lineNum">    1009 </span>            :     }
+<span class="lineNum">    1010 </span>            :   }
+<span class="lineNum">    1011 </span>            : 
+<span class="lineNum">    1012 </span><span class="lineCov">          1 :   ReferenceType parseReferenceType() {</span>
+<span class="lineNum">    1013 </span><span class="lineCov">          2 :     var output = ReferenceType(new List());</span>
+<span class="lineNum">    1014 </span><span class="lineCov">          5 :     if (_tokens[_position].value == 'object') {</span>
+<span class="lineNum">    1015 </span><span class="lineCov">          5 :       output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1016 </span><span class="lineCov">          2 :       _position++;</span>
+<span class="lineNum">    1017 </span>            :       return output;
+<span class="lineNum">    1018 </span>            :     } 
+<span class="lineNum">    1019 </span><span class="lineCov">          5 :      else if (_tokens[_position].value == 'string') {</span>
 <span class="lineNum">    1020 </span><span class="lineCov">          5 :       output.value.add(_tokens[_position]);</span>
 <span class="lineNum">    1021 </span><span class="lineCov">          2 :       _position++;</span>
 <span class="lineNum">    1022 </span>            :       return output;
-<span class="lineNum">    1023 </span>            :     } 
-<span class="lineNum">    1024 </span><span class="lineCov">          5 :      else if (_tokens[_position].value == 'string') {</span>
-<span class="lineNum">    1025 </span><span class="lineCov">          5 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1026 </span><span class="lineCov">          2 :       _position++;</span>
-<span class="lineNum">    1027 </span>            :       return output;
-<span class="lineNum">    1028 </span>            :     }
-<span class="lineNum">    1029 </span>            :     //maybe change handling of custom types
-<span class="lineNum">    1030 </span><span class="lineCov">          4 :     else if (_tokens[_position] is IdentifierToken) {</span>
-<span class="lineNum">    1031 </span><span class="lineCov">          5 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1032 </span><span class="lineCov">          2 :       _position++;</span>
-<span class="lineNum">    1033 </span>            :       return output;
-<span class="lineNum">    1034 </span>            :     } else {
-<span class="lineNum">    1035 </span>            :       return null;
-<span class="lineNum">    1036 </span>            :     }
-<span class="lineNum">    1037 </span>            :   }
-<span class="lineNum">    1038 </span>            : 
-<span class="lineNum">    1039 </span><span class="lineCov">          1 :   Type parseType() {</span>
-<span class="lineNum">    1040 </span>            :     //var startPos = _position;
-<span class="lineNum">    1041 </span>            :     var output;
-<span class="lineNum">    1042 </span><span class="lineCov">          1 :     output = parseValueType();</span>
-<span class="lineNum">    1043 </span>            :     if (output != null) {
-<span class="lineNum">    1044 </span>            :       return output;
-<span class="lineNum">    1045 </span>            :     } else {
-<span class="lineNum">    1046 </span><span class="lineCov">          1 :       output = parseReferenceType();</span>
-<span class="lineNum">    1047 </span>            :       if (output != null) {
-<span class="lineNum">    1048 </span>            :         return output;
-<span class="lineNum">    1049 </span>            :       } else {
-<span class="lineNum">    1050 </span>            :         return null;
-<span class="lineNum">    1051 </span>            :       }
-<span class="lineNum">    1052 </span>            :     }
-<span class="lineNum">    1053 </span>            :   }
-<span class="lineNum">    1054 </span>            : 
-<span class="lineNum">    1055 </span><span class="lineNoCov">          0 :   PrimaryExpression parseExpression() {</span>
-<span class="lineNum">    1056 </span>            :     /*
-<span class="lineNum">    1057 </span>            :       NOT SUPPORTED:
-<span class="lineNum">    1058 </span>            :       alias
-<span class="lineNum">    1059 </span>            :       element access not supported because there is no array support
-<span class="lineNum">    1060 </span>            :       'base' keyword 
-<span class="lineNum">    1061 </span>            :       post decrement and increment
-<span class="lineNum">    1062 </span>            :       anonymous object creation
-<span class="lineNum">    1063 </span>            :       delegate
-<span class="lineNum">    1064 </span>            :       checked vs unchecked - tentative
-<span class="lineNum">    1065 </span>            :       default values -  tentative
-<span class="lineNum">    1066 </span>            :       nameof - tentative
-<span class="lineNum">    1067 </span>            :     */
-<span class="lineNum">    1068 </span>            :     //TODO: make proper fail states and add returns and fix compile error with parstyle paramater
-<span class="lineNum">    1069 </span><span class="lineNoCov">          0 :     int startPos = _position;</span>
-<span class="lineNum">    1070 </span>            :     PrimaryNoArrayCreationExpression output =
-<span class="lineNum">    1071 </span><span class="lineNoCov">          0 :         PrimaryNoArrayCreationExpression(List());</span>
-<span class="lineNum">    1072 </span>            :     //literals
-<span class="lineNum">    1073 </span><span class="lineNoCov">          0 :     if (_tokens[_position].type == TokenType.characterLiteral ||</span>
-<span class="lineNum">    1074 </span><span class="lineNoCov">          0 :         _tokens[_position].type == TokenType.integerLiteral ||</span>
-<span class="lineNum">    1075 </span><span class="lineNoCov">          0 :         _tokens[_position].type == TokenType.stringLiteral) {</span>
-<span class="lineNum">    1076 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1077 </span><span class="lineNoCov">          0 :       _position++;</span>
-<span class="lineNum">    1078 </span>            :       return output;
-<span class="lineNum">    1079 </span>            :     }
-<span class="lineNum">    1080 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
-<span class="lineNum">    1081 </span>            :     //parenthesized expression
-<span class="lineNum">    1082 </span><span class="lineNoCov">          0 :     if (_tokens[_position].value == '(') {</span>
-<span class="lineNum">    1083 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1084 </span><span class="lineNoCov">          0 :       _position++;</span>
-<span class="lineNum">    1085 </span>            :       //output.value.add(ParseExpression());
-<span class="lineNum">    1086 </span><span class="lineNoCov">          0 :       var tmp3 = parseExpression();</span>
-<span class="lineNum">    1087 </span>            :       if (tmp3 != null) {
-<span class="lineNum">    1088 </span><span class="lineNoCov">          0 :         output.value.add(tmp3);</span>
-<span class="lineNum">    1089 </span><span class="lineNoCov">          0 :         _position++;</span>
+<span class="lineNum">    1023 </span>            :     }
+<span class="lineNum">    1024 </span>            :     //maybe change handling of custom types
+<span class="lineNum">    1025 </span><span class="lineCov">          4 :     else if (_tokens[_position] is IdentifierToken) {</span>
+<span class="lineNum">    1026 </span><span class="lineCov">          5 :       output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1027 </span><span class="lineCov">          2 :       _position++;</span>
+<span class="lineNum">    1028 </span>            :       return output;
+<span class="lineNum">    1029 </span>            :     } else {
+<span class="lineNum">    1030 </span>            :       return null;
+<span class="lineNum">    1031 </span>            :     }
+<span class="lineNum">    1032 </span>            :   }
+<span class="lineNum">    1033 </span>            : 
+<span class="lineNum">    1034 </span><span class="lineCov">          1 :   Type parseType() {</span>
+<span class="lineNum">    1035 </span>            :     //var startPos = _position;
+<span class="lineNum">    1036 </span>            :     var output;
+<span class="lineNum">    1037 </span><span class="lineCov">          1 :     output = parseValueType();</span>
+<span class="lineNum">    1038 </span>            :     if (output != null) {
+<span class="lineNum">    1039 </span>            :       return output;
+<span class="lineNum">    1040 </span>            :     } else {
+<span class="lineNum">    1041 </span><span class="lineCov">          1 :       output = parseReferenceType();</span>
+<span class="lineNum">    1042 </span>            :       if (output != null) {
+<span class="lineNum">    1043 </span>            :         return output;
+<span class="lineNum">    1044 </span>            :       } else {
+<span class="lineNum">    1045 </span>            :         return null;
+<span class="lineNum">    1046 </span>            :       }
+<span class="lineNum">    1047 </span>            :     }
+<span class="lineNum">    1048 </span>            :   }
+<span class="lineNum">    1049 </span>            : 
+<span class="lineNum">    1050 </span><span class="lineNoCov">          0 :   PrimaryExpression parseExpression() {</span>
+<span class="lineNum">    1051 </span>            :     /*
+<span class="lineNum">    1052 </span>            :       NOT SUPPORTED:
+<span class="lineNum">    1053 </span>            :       alias
+<span class="lineNum">    1054 </span>            :       element access not supported because there is no array support
+<span class="lineNum">    1055 </span>            :       'base' keyword 
+<span class="lineNum">    1056 </span>            :       post decrement and increment
+<span class="lineNum">    1057 </span>            :       anonymous object creation
+<span class="lineNum">    1058 </span>            :       delegate
+<span class="lineNum">    1059 </span>            :       checked vs unchecked - tentative
+<span class="lineNum">    1060 </span>            :       default values -  tentative
+<span class="lineNum">    1061 </span>            :       nameof - tentative
+<span class="lineNum">    1062 </span>            :     */
+<span class="lineNum">    1063 </span>            :     //TODO: make proper fail states and add returns and fix compile error with parstyle paramater
+<span class="lineNum">    1064 </span><span class="lineNoCov">          0 :     int startPos = _position;</span>
+<span class="lineNum">    1065 </span>            :     PrimaryNoArrayCreationExpression output =
+<span class="lineNum">    1066 </span><span class="lineNoCov">          0 :         PrimaryNoArrayCreationExpression(List());</span>
+<span class="lineNum">    1067 </span>            :     //literals
+<span class="lineNum">    1068 </span><span class="lineNoCov">          0 :     if (_tokens[_position].type == TokenType.characterLiteral ||</span>
+<span class="lineNum">    1069 </span><span class="lineNoCov">          0 :         _tokens[_position].type == TokenType.integerLiteral ||</span>
+<span class="lineNum">    1070 </span><span class="lineNoCov">          0 :         _tokens[_position].type == TokenType.stringLiteral) {</span>
+<span class="lineNum">    1071 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1072 </span><span class="lineNoCov">          0 :       _position++;</span>
+<span class="lineNum">    1073 </span>            :       return output;
+<span class="lineNum">    1074 </span>            :     }
+<span class="lineNum">    1075 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
+<span class="lineNum">    1076 </span>            :     //parenthesized expression
+<span class="lineNum">    1077 </span><span class="lineNoCov">          0 :     if (_tokens[_position].value == '(') {</span>
+<span class="lineNum">    1078 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1079 </span><span class="lineNoCov">          0 :       _position++;</span>
+<span class="lineNum">    1080 </span>            :       //output.value.add(ParseExpression());
+<span class="lineNum">    1081 </span><span class="lineNoCov">          0 :       var tmp3 = parseExpression();</span>
+<span class="lineNum">    1082 </span>            :       if (tmp3 != null) {
+<span class="lineNum">    1083 </span><span class="lineNoCov">          0 :         output.value.add(tmp3);</span>
+<span class="lineNum">    1084 </span><span class="lineNoCov">          0 :         _position++;</span>
+<span class="lineNum">    1085 </span>            :       }
+<span class="lineNum">    1086 </span><span class="lineNoCov">          0 :       if (_tokens[_position].value == ')') {</span>
+<span class="lineNum">    1087 </span><span class="lineNoCov">          0 :         output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1088 </span><span class="lineNoCov">          0 :         _position++;</span>
+<span class="lineNum">    1089 </span>            :         return output;
 <span class="lineNum">    1090 </span>            :       }
-<span class="lineNum">    1091 </span><span class="lineNoCov">          0 :       if (_tokens[_position].value == ')') {</span>
-<span class="lineNum">    1092 </span><span class="lineNoCov">          0 :         output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1093 </span><span class="lineNoCov">          0 :         _position++;</span>
-<span class="lineNum">    1094 </span>            :         return output;
-<span class="lineNum">    1095 </span>            :       }
-<span class="lineNum">    1096 </span><span class="lineNoCov">          0 :       _position = startPos;</span>
-<span class="lineNum">    1097 </span>            :       return null;
-<span class="lineNum">    1098 </span>            :     }
-<span class="lineNum">    1099 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
-<span class="lineNum">    1100 </span>            :     //member access
-<span class="lineNum">    1101 </span>            :     //may need a helper method
-<span class="lineNum">    1102 </span><span class="lineNoCov">          0 :     if (_tokens[_position] is PrimaryExpression || parseType() != null) {</span>
-<span class="lineNum">    1103 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1104 </span><span class="lineNoCov">          0 :       _position++;</span>
-<span class="lineNum">    1105 </span><span class="lineNoCov">          0 :       if (_tokens[_position].value == '.') {</span>
-<span class="lineNum">    1106 </span><span class="lineNoCov">          0 :         output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1107 </span><span class="lineNoCov">          0 :         _position++;</span>
-<span class="lineNum">    1108 </span><span class="lineNoCov">          0 :         if (_tokens[_position] is IdentifierToken) {</span>
-<span class="lineNum">    1109 </span><span class="lineNoCov">          0 :           output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1110 </span><span class="lineNoCov">          0 :           _position++;</span>
-<span class="lineNum">    1111 </span>            :           //argument list - optional
-<span class="lineNum">    1112 </span><span class="lineNoCov">          0 :           if (_tokens[_position].value == '&lt;') {</span>
-<span class="lineNum">    1113 </span><span class="lineNoCov">          0 :             while (_tokens[_position].value != '&gt;') {</span>
-<span class="lineNum">    1114 </span><span class="lineNoCov">          0 :               output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1115 </span><span class="lineNoCov">          0 :               _position++;</span>
-<span class="lineNum">    1116 </span>            :             }
-<span class="lineNum">    1117 </span>            :           }
-<span class="lineNum">    1118 </span>            :           return output;
-<span class="lineNum">    1119 </span>            :         }
-<span class="lineNum">    1120 </span><span class="lineNoCov">          0 :         _position = startPos;</span>
-<span class="lineNum">    1121 </span>            :         return null;
-<span class="lineNum">    1122 </span>            :       }
-<span class="lineNum">    1123 </span><span class="lineNoCov">          0 :       _position = startPos;</span>
-<span class="lineNum">    1124 </span>            :     }
-<span class="lineNum">    1125 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
-<span class="lineNum">    1126 </span>            : 
-<span class="lineNum">    1127 </span><span class="lineNoCov">          0 :     var tmp = parseInvocationExpression();</span>
-<span class="lineNum">    1128 </span>            :     if (tmp != null) {
-<span class="lineNum">    1129 </span><span class="lineNoCov">          0 :       output.value.add(tmp);</span>
-<span class="lineNum">    1130 </span><span class="lineNoCov">          0 :       _position++;</span>
-<span class="lineNum">    1131 </span>            :       return output;
-<span class="lineNum">    1132 </span>            :     }
-<span class="lineNum">    1133 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
-<span class="lineNum">    1134 </span>            :     //'this' access
-<span class="lineNum">    1135 </span><span class="lineNoCov">          0 :     if (_tokens[_position].value == &quot;this&quot; &amp;&amp;</span>
-<span class="lineNum">    1136 </span><span class="lineNoCov">          0 :         _tokens[_position] is KeywordToken) {</span>
-<span class="lineNum">    1137 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1138 </span><span class="lineNoCov">          0 :       _position++;</span>
-<span class="lineNum">    1139 </span>            :       return output;
+<span class="lineNum">    1091 </span><span class="lineNoCov">          0 :       _position = startPos;</span>
+<span class="lineNum">    1092 </span>            :       return null;
+<span class="lineNum">    1093 </span>            :     }
+<span class="lineNum">    1094 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
+<span class="lineNum">    1095 </span>            :     //member access
+<span class="lineNum">    1096 </span>            :     //may need a helper method
+<span class="lineNum">    1097 </span><span class="lineNoCov">          0 :     if (_tokens[_position] is PrimaryExpression || parseType() != null) {</span>
+<span class="lineNum">    1098 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1099 </span><span class="lineNoCov">          0 :       _position++;</span>
+<span class="lineNum">    1100 </span><span class="lineNoCov">          0 :       if (_tokens[_position].value == '.') {</span>
+<span class="lineNum">    1101 </span><span class="lineNoCov">          0 :         output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1102 </span><span class="lineNoCov">          0 :         _position++;</span>
+<span class="lineNum">    1103 </span><span class="lineNoCov">          0 :         if (_tokens[_position] is IdentifierToken) {</span>
+<span class="lineNum">    1104 </span><span class="lineNoCov">          0 :           output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1105 </span><span class="lineNoCov">          0 :           _position++;</span>
+<span class="lineNum">    1106 </span>            :           //argument list - optional
+<span class="lineNum">    1107 </span><span class="lineNoCov">          0 :           if (_tokens[_position].value == '&lt;') {</span>
+<span class="lineNum">    1108 </span><span class="lineNoCov">          0 :             while (_tokens[_position].value != '&gt;') {</span>
+<span class="lineNum">    1109 </span><span class="lineNoCov">          0 :               output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1110 </span><span class="lineNoCov">          0 :               _position++;</span>
+<span class="lineNum">    1111 </span>            :             }
+<span class="lineNum">    1112 </span>            :           }
+<span class="lineNum">    1113 </span>            :           return output;
+<span class="lineNum">    1114 </span>            :         }
+<span class="lineNum">    1115 </span><span class="lineNoCov">          0 :         _position = startPos;</span>
+<span class="lineNum">    1116 </span>            :         return null;
+<span class="lineNum">    1117 </span>            :       }
+<span class="lineNum">    1118 </span><span class="lineNoCov">          0 :       _position = startPos;</span>
+<span class="lineNum">    1119 </span>            :     }
+<span class="lineNum">    1120 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
+<span class="lineNum">    1121 </span>            : 
+<span class="lineNum">    1122 </span><span class="lineNoCov">          0 :     var tmp = parseInvocationExpression();</span>
+<span class="lineNum">    1123 </span>            :     if (tmp != null) {
+<span class="lineNum">    1124 </span><span class="lineNoCov">          0 :       output.value.add(tmp);</span>
+<span class="lineNum">    1125 </span><span class="lineNoCov">          0 :       _position++;</span>
+<span class="lineNum">    1126 </span>            :       return output;
+<span class="lineNum">    1127 </span>            :     }
+<span class="lineNum">    1128 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
+<span class="lineNum">    1129 </span>            :     //'this' access
+<span class="lineNum">    1130 </span><span class="lineNoCov">          0 :     if (_tokens[_position].value == &quot;this&quot; &amp;&amp;</span>
+<span class="lineNum">    1131 </span><span class="lineNoCov">          0 :         _tokens[_position] is KeywordToken) {</span>
+<span class="lineNum">    1132 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1133 </span><span class="lineNoCov">          0 :       _position++;</span>
+<span class="lineNum">    1134 </span>            :       return output;
+<span class="lineNum">    1135 </span>            :     }
+<span class="lineNum">    1136 </span>            : 
+<span class="lineNum">    1137 </span><span class="lineNoCov">          0 :     var tmp2 = parseObjectCreationExpression();</span>
+<span class="lineNum">    1138 </span>            :     if (tmp != null) {
+<span class="lineNum">    1139 </span><span class="lineNoCov">          0 :       output.value.add(tmp2);</span>
 <span class="lineNum">    1140 </span>            :     }
-<span class="lineNum">    1141 </span>            : 
-<span class="lineNum">    1142 </span><span class="lineNoCov">          0 :     var tmp2 = parseObjectCreationExpression();</span>
-<span class="lineNum">    1143 </span>            :     if (tmp != null) {
-<span class="lineNum">    1144 </span><span class="lineNoCov">          0 :       output.value.add(tmp2);</span>
-<span class="lineNum">    1145 </span>            :     }
-<span class="lineNum">    1146 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
-<span class="lineNum">    1147 </span>            : 
-<span class="lineNum">    1148 </span>            :     //typof
-<span class="lineNum">    1149 </span><span class="lineNoCov">          0 :     if (_tokens[_position].value == &quot;typeof&quot; &amp;&amp;</span>
-<span class="lineNum">    1150 </span><span class="lineNoCov">          0 :         _tokens[_position] is KeywordToken) {</span>
-<span class="lineNum">    1151 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1152 </span><span class="lineNoCov">          0 :       _position++;</span>
-<span class="lineNum">    1153 </span><span class="lineNoCov">          0 :       if (_tokens[_position].value == '(') {</span>
-<span class="lineNum">    1154 </span><span class="lineNoCov">          0 :         output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1155 </span><span class="lineNoCov">          0 :         _position++;</span>
-<span class="lineNum">    1156 </span><span class="lineNoCov">          0 :         if (_tokens[_position].value == &quot;void&quot; ||</span>
-<span class="lineNum">    1157 </span><span class="lineNoCov">          0 :             _tokens[_position] is IdentifierToken) {</span>
-<span class="lineNum">    1158 </span><span class="lineNoCov">          0 :           output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1159 </span><span class="lineNoCov">          0 :           _position++;</span>
-<span class="lineNum">    1160 </span><span class="lineNoCov">          0 :           if (_tokens[_position].value == ')') {</span>
-<span class="lineNum">    1161 </span><span class="lineNoCov">          0 :             output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1162 </span><span class="lineNoCov">          0 :             _position++;</span>
-<span class="lineNum">    1163 </span>            :             return output;
-<span class="lineNum">    1164 </span>            :           }
-<span class="lineNum">    1165 </span>            :         }
-<span class="lineNum">    1166 </span><span class="lineNoCov">          0 :         _position = startPos;</span>
-<span class="lineNum">    1167 </span>            :         return null;
-<span class="lineNum">    1168 </span>            :       }
-<span class="lineNum">    1169 </span><span class="lineNoCov">          0 :       _position = startPos;</span>
-<span class="lineNum">    1170 </span>            :       return null;
-<span class="lineNum">    1171 </span>            :     }
-<span class="lineNum">    1172 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
-<span class="lineNum">    1173 </span>            :     return null;
-<span class="lineNum">    1174 </span>            :   }
-<span class="lineNum">    1175 </span>            : 
-<span class="lineNum">    1176 </span>            :   //helper methods for parseExpression()
-<span class="lineNum">    1177 </span><span class="lineNoCov">          0 :   PrimaryExpression parseInvocationExpression() {</span>
-<span class="lineNum">    1178 </span><span class="lineNoCov">          0 :     InvocationExpression output = InvocationExpression(List());</span>
-<span class="lineNum">    1179 </span><span class="lineNoCov">          0 :     int startPos = _position;</span>
-<span class="lineNum">    1180 </span><span class="lineNoCov">          0 :     if (_tokens[_position] is PrimaryExpression) {</span>
-<span class="lineNum">    1181 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1182 </span><span class="lineNoCov">          0 :       _position++;</span>
-<span class="lineNum">    1183 </span>            :       //argument list - optional
-<span class="lineNum">    1184 </span><span class="lineNoCov">          0 :       if (_tokens[_position].value == '(') {</span>
-<span class="lineNum">    1185 </span><span class="lineNoCov">          0 :         while (_tokens[_position].value != ')') {</span>
-<span class="lineNum">    1186 </span><span class="lineNoCov">          0 :           output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1187 </span><span class="lineNoCov">          0 :           _position++;</span>
-<span class="lineNum">    1188 </span>            :         }
-<span class="lineNum">    1189 </span>            :       }
-<span class="lineNum">    1190 </span>            :       return output;
-<span class="lineNum">    1191 </span>            :     }
-<span class="lineNum">    1192 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
-<span class="lineNum">    1193 </span>            :     return null;
-<span class="lineNum">    1194 </span>            :   }
-<span class="lineNum">    1195 </span>            : 
-<span class="lineNum">    1196 </span><span class="lineNoCov">          0 :   PrimaryExpression parseObjectCreationExpression() {</span>
-<span class="lineNum">    1197 </span><span class="lineNoCov">          0 :     ObjectCreationExpression output = ObjectCreationExpression(List());</span>
-<span class="lineNum">    1198 </span><span class="lineNoCov">          0 :     int startPos = _position;</span>
-<span class="lineNum">    1199 </span><span class="lineNoCov">          0 :     if (_tokens[_position].value == &quot;new&quot; &amp;&amp;</span>
-<span class="lineNum">    1200 </span><span class="lineNoCov">          0 :         _tokens[_position] is KeywordToken) {</span>
-<span class="lineNum">    1201 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1202 </span><span class="lineNoCov">          0 :       _position++;</span>
-<span class="lineNum">    1203 </span><span class="lineNoCov">          0 :       if (parseType() != null) {</span>
-<span class="lineNum">    1204 </span><span class="lineNoCov">          0 :         output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1205 </span><span class="lineNoCov">          0 :         _position++;</span>
-<span class="lineNum">    1206 </span>            :         //argument list - optional
-<span class="lineNum">    1207 </span><span class="lineNoCov">          0 :         if (_tokens[_position].value == '(') {</span>
-<span class="lineNum">    1208 </span><span class="lineNoCov">          0 :           while (_tokens[_position].value != ')') {</span>
-<span class="lineNum">    1209 </span><span class="lineNoCov">          0 :             output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1210 </span><span class="lineNoCov">          0 :             _position++;</span>
-<span class="lineNum">    1211 </span>            :           }
-<span class="lineNum">    1212 </span>            :         }
-<span class="lineNum">    1213 </span>            :         return output;
-<span class="lineNum">    1214 </span>            :       }
-<span class="lineNum">    1215 </span><span class="lineNoCov">          0 :       _position = startPos;</span>
-<span class="lineNum">    1216 </span>            :       return null;
-<span class="lineNum">    1217 </span>            :     }
-<span class="lineNum">    1218 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
-<span class="lineNum">    1219 </span>            :     return null;
-<span class="lineNum">    1220 </span>            :   }
-<span class="lineNum">    1221 </span>            : 
-<span class="lineNum">    1222 </span><span class="lineNoCov">          0 :   PrimaryExpression parseAssignmentExpression() {</span>
-<span class="lineNum">    1223 </span><span class="lineNoCov">          0 :     AssignmentExpression output = AssignmentExpression(List());</span>
-<span class="lineNum">    1224 </span><span class="lineNoCov">          0 :     int startPos = _position;</span>
-<span class="lineNum">    1225 </span><span class="lineNoCov">          0 :     var tmpexp = parseExpression();</span>
-<span class="lineNum">    1226 </span>            :     if (tmpexp != null) {
-<span class="lineNum">    1227 </span><span class="lineNoCov">          0 :       output.value.add(tmpexp);</span>
-<span class="lineNum">    1228 </span><span class="lineNoCov">          0 :       _position++;</span>
-<span class="lineNum">    1229 </span><span class="lineNoCov">          0 :       if (_tokens[_position].value == '=' ||</span>
-<span class="lineNum">    1230 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '+=' ||</span>
-<span class="lineNum">    1231 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '-=' ||</span>
-<span class="lineNum">    1232 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '*=' ||</span>
-<span class="lineNum">    1233 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '/=' ||</span>
-<span class="lineNum">    1234 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '%=' ||</span>
-<span class="lineNum">    1235 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '&amp;=' ||</span>
-<span class="lineNum">    1236 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '|=' ||</span>
-<span class="lineNum">    1237 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '^=' ||</span>
-<span class="lineNum">    1238 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '&lt;&lt;=') {</span>
-<span class="lineNum">    1239 </span><span class="lineNoCov">          0 :         output.value.add(_tokens[_position]);</span>
-<span class="lineNum">    1240 </span><span class="lineNoCov">          0 :         _position++;</span>
-<span class="lineNum">    1241 </span><span class="lineNoCov">          0 :         var tmpexp2 = parseExpression();</span>
-<span class="lineNum">    1242 </span>            :         if (tmpexp2 != null) {
-<span class="lineNum">    1243 </span><span class="lineNoCov">          0 :           output.value.add(tmpexp2);</span>
-<span class="lineNum">    1244 </span><span class="lineNoCov">          0 :           _position++;</span>
-<span class="lineNum">    1245 </span>            :           return output;
-<span class="lineNum">    1246 </span>            :         }
-<span class="lineNum">    1247 </span><span class="lineNoCov">          0 :         _position = startPos;</span>
-<span class="lineNum">    1248 </span>            :       }
-<span class="lineNum">    1249 </span><span class="lineNoCov">          0 :       _position = startPos;</span>
-<span class="lineNum">    1250 </span>            :     }
-<span class="lineNum">    1251 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
-<span class="lineNum">    1252 </span>            :     return null;
-<span class="lineNum">    1253 </span>            :   }
-<span class="lineNum">    1254 </span>            : 
-<span class="lineNum">    1255 </span><span class="lineNoCov">          0 :   Namespace parse(){</span>
-<span class="lineNum">    1256 </span><span class="lineNoCov">          0 :     var output = Namespace(new List());</span>
-<span class="lineNum">    1257 </span><span class="lineNoCov">          0 :     while(_position &lt;= _tokens.length ){</span>
-<span class="lineNum">    1258 </span><span class="lineNoCov">          0 :       var temp = parseClass();</span>
-<span class="lineNum">    1259 </span>            :       if(temp != null){
-<span class="lineNum">    1260 </span><span class="lineNoCov">          0 :         output.value.add(temp);</span>
-<span class="lineNum">    1261 </span>            :       }
-<span class="lineNum">    1262 </span>            :       else{
-<span class="lineNum">    1263 </span>            :         return null;
-<span class="lineNum">    1264 </span>            :       }
-<span class="lineNum">    1265 </span>            :     }
-<span class="lineNum">    1266 </span>            :     return output;
-<span class="lineNum">    1267 </span>            :   }
-<span class="lineNum">    1268 </span>            : 
-<span class="lineNum">    1269 </span>            : 
-<span class="lineNum">    1270 </span>            : }
+<span class="lineNum">    1141 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
+<span class="lineNum">    1142 </span>            : 
+<span class="lineNum">    1143 </span>            :     //typof
+<span class="lineNum">    1144 </span><span class="lineNoCov">          0 :     if (_tokens[_position].value == &quot;typeof&quot; &amp;&amp;</span>
+<span class="lineNum">    1145 </span><span class="lineNoCov">          0 :         _tokens[_position] is KeywordToken) {</span>
+<span class="lineNum">    1146 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1147 </span><span class="lineNoCov">          0 :       _position++;</span>
+<span class="lineNum">    1148 </span><span class="lineNoCov">          0 :       if (_tokens[_position].value == '(') {</span>
+<span class="lineNum">    1149 </span><span class="lineNoCov">          0 :         output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1150 </span><span class="lineNoCov">          0 :         _position++;</span>
+<span class="lineNum">    1151 </span><span class="lineNoCov">          0 :         if (_tokens[_position].value == &quot;void&quot; ||</span>
+<span class="lineNum">    1152 </span><span class="lineNoCov">          0 :             _tokens[_position] is IdentifierToken) {</span>
+<span class="lineNum">    1153 </span><span class="lineNoCov">          0 :           output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1154 </span><span class="lineNoCov">          0 :           _position++;</span>
+<span class="lineNum">    1155 </span><span class="lineNoCov">          0 :           if (_tokens[_position].value == ')') {</span>
+<span class="lineNum">    1156 </span><span class="lineNoCov">          0 :             output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1157 </span><span class="lineNoCov">          0 :             _position++;</span>
+<span class="lineNum">    1158 </span>            :             return output;
+<span class="lineNum">    1159 </span>            :           }
+<span class="lineNum">    1160 </span>            :         }
+<span class="lineNum">    1161 </span><span class="lineNoCov">          0 :         _position = startPos;</span>
+<span class="lineNum">    1162 </span>            :         return null;
+<span class="lineNum">    1163 </span>            :       }
+<span class="lineNum">    1164 </span><span class="lineNoCov">          0 :       _position = startPos;</span>
+<span class="lineNum">    1165 </span>            :       return null;
+<span class="lineNum">    1166 </span>            :     }
+<span class="lineNum">    1167 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
+<span class="lineNum">    1168 </span>            :     return null;
+<span class="lineNum">    1169 </span>            :   }
+<span class="lineNum">    1170 </span>            : 
+<span class="lineNum">    1171 </span>            :   //helper methods for parseExpression()
+<span class="lineNum">    1172 </span><span class="lineNoCov">          0 :   PrimaryExpression parseInvocationExpression() {</span>
+<span class="lineNum">    1173 </span><span class="lineNoCov">          0 :     InvocationExpression output = InvocationExpression(List());</span>
+<span class="lineNum">    1174 </span><span class="lineNoCov">          0 :     int startPos = _position;</span>
+<span class="lineNum">    1175 </span><span class="lineNoCov">          0 :     if (_tokens[_position] is PrimaryExpression) {</span>
+<span class="lineNum">    1176 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1177 </span><span class="lineNoCov">          0 :       _position++;</span>
+<span class="lineNum">    1178 </span>            :       //argument list - optional
+<span class="lineNum">    1179 </span><span class="lineNoCov">          0 :       if (_tokens[_position].value == '(') {</span>
+<span class="lineNum">    1180 </span><span class="lineNoCov">          0 :         while (_tokens[_position].value != ')') {</span>
+<span class="lineNum">    1181 </span><span class="lineNoCov">          0 :           output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1182 </span><span class="lineNoCov">          0 :           _position++;</span>
+<span class="lineNum">    1183 </span>            :         }
+<span class="lineNum">    1184 </span>            :       }
+<span class="lineNum">    1185 </span>            :       return output;
+<span class="lineNum">    1186 </span>            :     }
+<span class="lineNum">    1187 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
+<span class="lineNum">    1188 </span>            :     return null;
+<span class="lineNum">    1189 </span>            :   }
+<span class="lineNum">    1190 </span>            : 
+<span class="lineNum">    1191 </span><span class="lineNoCov">          0 :   PrimaryExpression parseObjectCreationExpression() {</span>
+<span class="lineNum">    1192 </span><span class="lineNoCov">          0 :     ObjectCreationExpression output = ObjectCreationExpression(List());</span>
+<span class="lineNum">    1193 </span><span class="lineNoCov">          0 :     int startPos = _position;</span>
+<span class="lineNum">    1194 </span><span class="lineNoCov">          0 :     if (_tokens[_position].value == &quot;new&quot; &amp;&amp;</span>
+<span class="lineNum">    1195 </span><span class="lineNoCov">          0 :         _tokens[_position] is KeywordToken) {</span>
+<span class="lineNum">    1196 </span><span class="lineNoCov">          0 :       output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1197 </span><span class="lineNoCov">          0 :       _position++;</span>
+<span class="lineNum">    1198 </span><span class="lineNoCov">          0 :       if (parseType() != null) {</span>
+<span class="lineNum">    1199 </span><span class="lineNoCov">          0 :         output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1200 </span><span class="lineNoCov">          0 :         _position++;</span>
+<span class="lineNum">    1201 </span>            :         //argument list - optional
+<span class="lineNum">    1202 </span><span class="lineNoCov">          0 :         if (_tokens[_position].value == '(') {</span>
+<span class="lineNum">    1203 </span><span class="lineNoCov">          0 :           while (_tokens[_position].value != ')') {</span>
+<span class="lineNum">    1204 </span><span class="lineNoCov">          0 :             output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1205 </span><span class="lineNoCov">          0 :             _position++;</span>
+<span class="lineNum">    1206 </span>            :           }
+<span class="lineNum">    1207 </span>            :         }
+<span class="lineNum">    1208 </span>            :         return output;
+<span class="lineNum">    1209 </span>            :       }
+<span class="lineNum">    1210 </span><span class="lineNoCov">          0 :       _position = startPos;</span>
+<span class="lineNum">    1211 </span>            :       return null;
+<span class="lineNum">    1212 </span>            :     }
+<span class="lineNum">    1213 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
+<span class="lineNum">    1214 </span>            :     return null;
+<span class="lineNum">    1215 </span>            :   }
+<span class="lineNum">    1216 </span>            : 
+<span class="lineNum">    1217 </span><span class="lineNoCov">          0 :   PrimaryExpression parseAssignmentExpression() {</span>
+<span class="lineNum">    1218 </span><span class="lineNoCov">          0 :     AssignmentExpression output = AssignmentExpression(List());</span>
+<span class="lineNum">    1219 </span><span class="lineNoCov">          0 :     int startPos = _position;</span>
+<span class="lineNum">    1220 </span><span class="lineNoCov">          0 :     var tmpexp = parseExpression();</span>
+<span class="lineNum">    1221 </span>            :     if (tmpexp != null) {
+<span class="lineNum">    1222 </span><span class="lineNoCov">          0 :       output.value.add(tmpexp);</span>
+<span class="lineNum">    1223 </span><span class="lineNoCov">          0 :       _position++;</span>
+<span class="lineNum">    1224 </span><span class="lineNoCov">          0 :       if (_tokens[_position].value == '=' ||</span>
+<span class="lineNum">    1225 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '+=' ||</span>
+<span class="lineNum">    1226 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '-=' ||</span>
+<span class="lineNum">    1227 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '*=' ||</span>
+<span class="lineNum">    1228 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '/=' ||</span>
+<span class="lineNum">    1229 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '%=' ||</span>
+<span class="lineNum">    1230 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '&amp;=' ||</span>
+<span class="lineNum">    1231 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '|=' ||</span>
+<span class="lineNum">    1232 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '^=' ||</span>
+<span class="lineNum">    1233 </span><span class="lineNoCov">          0 :           _tokens[_position].value == '&lt;&lt;=') {</span>
+<span class="lineNum">    1234 </span><span class="lineNoCov">          0 :         output.value.add(_tokens[_position]);</span>
+<span class="lineNum">    1235 </span><span class="lineNoCov">          0 :         _position++;</span>
+<span class="lineNum">    1236 </span><span class="lineNoCov">          0 :         var tmpexp2 = parseExpression();</span>
+<span class="lineNum">    1237 </span>            :         if (tmpexp2 != null) {
+<span class="lineNum">    1238 </span><span class="lineNoCov">          0 :           output.value.add(tmpexp2);</span>
+<span class="lineNum">    1239 </span><span class="lineNoCov">          0 :           _position++;</span>
+<span class="lineNum">    1240 </span>            :           return output;
+<span class="lineNum">    1241 </span>            :         }
+<span class="lineNum">    1242 </span><span class="lineNoCov">          0 :         _position = startPos;</span>
+<span class="lineNum">    1243 </span>            :       }
+<span class="lineNum">    1244 </span><span class="lineNoCov">          0 :       _position = startPos;</span>
+<span class="lineNum">    1245 </span>            :     }
+<span class="lineNum">    1246 </span><span class="lineNoCov">          0 :     _position = startPos;</span>
+<span class="lineNum">    1247 </span>            :     return null;
+<span class="lineNum">    1248 </span>            :   }
+<span class="lineNum">    1249 </span>            : 
+<span class="lineNum">    1250 </span><span class="lineNoCov">          0 :   Namespace parse(){</span>
+<span class="lineNum">    1251 </span><span class="lineNoCov">          0 :     var output = Namespace(new List());</span>
+<span class="lineNum">    1252 </span><span class="lineNoCov">          0 :     while(_position &lt;= _tokens.length ){</span>
+<span class="lineNum">    1253 </span><span class="lineNoCov">          0 :       var temp = parseClass();</span>
+<span class="lineNum">    1254 </span>            :       if(temp != null){
+<span class="lineNum">    1255 </span><span class="lineNoCov">          0 :         output.value.add(temp);</span>
+<span class="lineNum">    1256 </span>            :       }
+<span class="lineNum">    1257 </span>            :       else{
+<span class="lineNum">    1258 </span>            :         return null;
+<span class="lineNum">    1259 </span>            :       }
+<span class="lineNum">    1260 </span>            :     }
+<span class="lineNum">    1261 </span>            :     return output;
+<span class="lineNum">    1262 </span>            :   }
+<span class="lineNum">    1263 </span>            : 
+<span class="lineNum">    1264 </span>            : 
+<span class="lineNum">    1265 </span>            : }
 </pre>
       </td>
     </tr>
