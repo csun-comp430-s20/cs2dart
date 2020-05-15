@@ -10,9 +10,11 @@ import 'package:cs2dart/src/expressions/variants/primary_no_array_creation_expre
 import 'package:cs2dart/src/types/variants/reference_type.dart';
 import 'package:cs2dart/tokens.dart';
 import 'package:cs2dart/expressions.dart';
-
+import '../classes/variants/variants/variants/FixedParam.dart';
 import 'dart:io';
 
+import '../namespaces/namespace.dart';
+import '../namespaces/namespace.dart';
 import '../parser/parser_ast2.dart';
 import '../../parser.dart';
 import '../interfaces/interface.dart';
@@ -23,15 +25,19 @@ import '../interfaces/variants/InterfaceModifier.dart';
 import '../../statement.dart';
 import '../classes/classAST.dart';
 import '../classes/variants/ClassBody.dart';
-import '../classes/variants/variants/ConstantDeclaration.dart';
+//import '../classes/variants/variants/ConstantDeclaration.dart';
 import '../classes/variants/variants/ConstructorDeclaration.dart';
 import '../classes/variants/variants/FieldDeclaration.dart';
 import '../classes/variants/variants/MethodDeclaration.dart';
 import '../classes/variants/ClassDeclaration.dart';
 import '../classes/variants/ClassBase.dart';
 import '../classes/variants/ClassModifier.dart';
+import '../statements/variants/DeclarationStatementVariants/constant_declaration.dart';
 import '../statements/variants/EmbeddedStatementVariants/expression_statement.dart';
 import '../statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/LocalVariableDeclaratorsVariants/LocalVariableDeclaratorVariants/local_variable_initializer.dart';
+import '../tokens/variants/identifier_token.dart';
+import '../tokens/variants/identifier_token.dart';
+import '../tokens/variants/identifier_token.dart';
 import '../types/type.dart';
 import '../types/variants/reference_type.dart';
 import '../types/variants/value_type.dart';
@@ -115,29 +121,135 @@ class Parser {
     }
   }
 
-  //wait for others to finish to finish class+interface methods
-  ConstantDeclaration parseConstDeclaration() {
-    var startPos = _position;
-    var output = ConstantDeclaration(new List());
-    if (_tokens[_position].value == 'const') {
-      output.value.add(_tokens[_position]);
-      _position++;
-      if (_tokens[_position] is KeywordToken) {
-        //if(isType())
-      } else {
-        _position = startPos;
+  
+
+ 
+
+  FixedParam parseFixedParam(){
+    //var startPos = _position;
+    var output = FixedParam(new List());
+    var type = parseType();
+    if(type != null){
+      output.value.add(type);
+      if(_tokens[_position] is IdentifierToken){
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      }
+      else{
         return null;
       }
-    } else {
+    }
+    else{
       return null;
     }
   }
 
-  FieldDeclaration parseFieldDeclaration() {}
+  MethodDeclaration parseMethodDeclaration() {
+    var startPos = _position;
+    var output = MethodDeclaration(new List());
+    var returnType = parseType();
+    if (returnType != null){
+      output.value.add(returnType);
+    }
+    else{
+      if(_tokens[_position].value == 'void'){
+        output.value.add(_tokens[_position]);
+        _position++;
+      }
+      else{
+        return null;
+      }
+    }
+    if(_tokens[_position] is IdentifierToken){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position].value == '('){
+        output.value.add(_tokens[_position]);
+        _position++;
+        var param;
+        while(_tokens[_position].value != ')'){
+          if(_position > _tokens.length){
+            _position = startPos;
+            return null;
+          }
+          param = parseFixedParam();
+          if(param!=null){
+            output.value.add(param);
+          }
+          else{
+            _position = startPos;
+            return null;
+          }
+        }
+        output.value.add(_tokens[_position]);
+        _position++;
+        var block = parseBlockStatement();
+        if(block != null){
+          output.value.add(block);
+          return output;
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      _position = startPos;
+      return null;
+    }
+  }
 
-  MethodDeclaration parseMethodDeclaration() {}
-
-  ConstructorDeclaration parseConstructorDeclaration() {}
+  ConstructorDeclaration parseConstructorDeclaration() {
+    var startPos = _position;
+    var output = ConstructorDeclaration(new List());
+    if(_tokens[_position] is IdentifierToken){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position].value == '('){
+        output.value.add(_tokens[_position]);
+        _position++;
+        var param;
+        while(_tokens[_position].value != ')'){
+          if(_position > _tokens.length){
+            _position = startPos;
+            return null;
+          }
+          param = parseFixedParam();
+          if(param!=null){
+            output.value.add(param);
+          }
+          else{
+            _position = startPos;
+            return null;
+          }
+        }
+        output.value.add(_tokens[_position]);
+        _position++;
+        var block = parseBlockStatement();
+        if(block != null){
+          output.value.add(block);
+          return output;
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
 
   //done, need to finish helper methods
   ClassBody parseClassBody() {
@@ -153,11 +265,12 @@ class Parser {
           _position = startPos;
           return null;
         }
-        var constDecl = parseConstDeclaration();
+        var constDecl = parseConstantDeclaration();
+        
         if (constDecl != null) {
           output.value.add(constDecl);
         } else {
-          var fieldDecl = parseFieldDeclaration();
+          var fieldDecl = parseLocalVariableDeclaration();
           if (fieldDecl != null) {
             output.value.add(fieldDecl);
           } else {
@@ -236,71 +349,71 @@ class Parser {
     }
   }
 
-  //finish
-  InterfaceBody parseInterfaceBody() {
-    return null;
-  }
+  // //finish
+  // InterfaceBody parseInterfaceBody() {
+  //   return null;
+  // }
 
   // InterfaceModifier parseInterfaceModifier(){
   //   return null;
   // }
   //seems done
-  InterfaceBase parseInterfaceBase() {
-    var startPos = _position;
-    var output = InterfaceBase(new List());
-    if (_tokens[_position] is OperatorOrPunctuatorToken &&
-        _tokens[_position].value == ':') {
-      output.value.add(_tokens[_position]);
-      _position++;
-      if (_tokens[_position] is IdentifierToken) {
-        output.value.add(_tokens[_position]);
-        _position++;
-        return output;
-      } else {
-        _position = startPos;
-        return null;
-      }
-    } else {
-      _position = startPos;
-      return null;
-    }
-  }
+  // InterfaceBase parseInterfaceBase() {
+  //   var startPos = _position;
+  //   var output = InterfaceBase(new List());
+  //   if (_tokens[_position] is OperatorOrPunctuatorToken &&
+  //       _tokens[_position].value == ':') {
+  //     output.value.add(_tokens[_position]);
+  //     _position++;
+  //     if (_tokens[_position] is IdentifierToken) {
+  //       output.value.add(_tokens[_position]);
+  //       _position++;
+  //       return output;
+  //     } else {
+  //       _position = startPos;
+  //       return null;
+  //     }
+  //   } else {
+  //     _position = startPos;
+  //     return null;
+  //   }
+  // }
 
-  //Seems done
-  InterfaceDeclaration parseInterface() {
-    var startPos = _position;
-    var output = InterfaceDeclaration(new List());
-    //interface modifier COMEBACK TO THIS
-    // if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'interface'){
+  // //Seems done
+  // InterfaceDeclaration parseInterface() {
+  //   var startPos = _position;
+  //   var output = InterfaceDeclaration(new List());
+  //   //interface modifier COMEBACK TO THIS
+  //   // if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'interface'){
 
-    // }
-    //interface keyword
-    if (_tokens[_position] is KeywordToken &&
-        _tokens[_position].value == 'interface') {
-      output.value.add(_tokens[_position]);
-      _position++;
-      var body = parseInterfaceBody();
-      //interface Body
-      if (body != null) {
-        output.value.add(body);
-        _position++;
-        if (_tokens[_position] is OperatorOrPunctuatorToken &&
-            _tokens[_position].value == ';') {
-          output.value.add(_tokens[_position]);
-          _position++;
-          return output;
-        } else {
-          return output;
-        }
-      } else {
-        _position = startPos;
-        return null;
-      }
-    } else {
-      _position = startPos;
-      return null;
-    }
-  }
+  //   // }
+  //   //interface keyword
+  //   if (_tokens[_position] is KeywordToken &&
+  //       _tokens[_position].value == 'interface') {
+  //     output.value.add(_tokens[_position]);
+  //     _position++;
+  //     var body = parseInterfaceBody();
+  //     //interface Body
+  //     if (body != null) {
+  //       output.value.add(body);
+  //       _position++;
+  //       if (_tokens[_position] is OperatorOrPunctuatorToken &&
+  //           _tokens[_position].value == ';') {
+  //         output.value.add(_tokens[_position]);
+  //         _position++;
+  //         return output;
+  //       } else {
+  //         return output;
+  //       }
+  //     } else {
+  //       _position = startPos;
+  //       return null;
+  //     }
+  //   } else {
+  //     _position = startPos;
+  //     return null;
+  //   }
+  //}
 
   //=================================================================================
   //=================================================================================
@@ -1141,4 +1254,20 @@ class Parser {
     _position = startPos;
     return null;
   }
+
+  Namespace parse(){
+    var output = Namespace(new List());
+    while(_position <= _tokens.length ){
+      var temp = parseClass();
+      if(temp != null){
+        output.value.add(temp);
+      }
+      else{
+        return null;
+      }
+    }
+    return output;
+  }
+
+
 }
