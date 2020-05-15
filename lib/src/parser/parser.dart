@@ -973,7 +973,7 @@ class Parser {
       NOT SUPPORTED:
       alias
       element access not supported because there is no array support
-      'base' keyword
+      'base' keyword 
       post decrement and increment
       anonymous object creation
       delegate
