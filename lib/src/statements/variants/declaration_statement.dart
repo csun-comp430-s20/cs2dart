@@ -1,4 +1,5 @@
 import '../statement.dart';
+
 enum DeclarationStatementType {
   local_variable_declaration,
   constant_declaration,

@@ -2,6 +2,9 @@ import 'package:cs2dart/parser.dart';
 import 'package:cs2dart/src/classes/classAST.dart';
 import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
 import 'package:cs2dart/src/expressions/primary_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/assignment_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/invocation_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/object_creation_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/parenthesized_expression.dart';
 import 'package:cs2dart/src/types/variants/reference_type.dart';
 import 'package:cs2dart/tokens.dart';
@@ -502,8 +505,329 @@ class Parser {
     return null;
   }
 
+  //Done
+  Block parseBlockStatement(){
+    var startPos = _position;
+    var output = Block(new List());
+    if(_tokens[_position].value == '{'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      var temp;
+      while(_tokens[_position].value != '}'){
+        if(_position > _tokens.length){
+          _position = startPos;
+          return null;
+        }
+        temp = parseStatements();
+        if (temp != null){
+          output.value.add(temp);
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+      if(_tokens[_position].value == '}'){
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      }
+      else{
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
+
+  //Done
+  EmptyStatement parseEmptyStatement(){
+    if(_tokens[_position].value == ';'){
+      var output = EmptyStatement(new List());
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    }
+    else{
+      return null;
+    }
+  }
+
+  //To-Do when expression methods are made
+  ExpressionStatement parseExpressionStatement(){
+
+  }
+
+  //Finished when ExpressionStatement Finished
+  ForStatement parseForStatement(){
+    var startPos = _position;
+    var output = ForStatement(new List());
+    if(_tokens[_position].value == 'for'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position].value == '('){
+         output.value.add(_tokens[_position]);
+         _position++;
+         //IMPORTANT: using Statement here might be a bad idea, look here first for bugs in for loop
+         Statement initializer = parseLocalVariableDeclaration();
+         if(initializer == null){
+           initializer = parseExpressionStatement();
+         }
+         if(initializer != null){
+           output.value.add(initializer);
+           if(_tokens[_position].value == ';'){
+             output.value.add(_tokens[_position]);
+             _position++;
+             var condition = parseBooleanExpression();
+             if(condition != null){
+               output.value.add(condition);
+               if(_tokens[_position].value == ';'){
+                 output.value.add(_tokens[_position]);
+                 _position++;
+                 var iterator = parseExpressionStatement();
+                 if(iterator != null){
+                   output.value.add(iterator);
+                   if(_tokens[_position].value == ')'){
+                     output.value.add(_tokens[_position]);
+                     _position++;
+                     var embedded = parseEmbeddedStatement();
+                     if(embedded != null){
+                       output.value.add(embedded);
+                       return output;
+                     }
+                     else{
+                       _position = startPos;
+                       return null;
+                     }
+                   }
+                   else{
+                     _position = startPos;
+                     return null;
+                   }
+                 }
+                 else{
+                   _position = startPos;
+                   return null;
+                 }
+               }
+               else{
+                 _position = startPos;
+                 return null;
+               }
+             }
+             else{
+               _position = startPos;
+               return null;
+             }
+           }
+         }
+         else{
+           _position = startPos;
+           return null;
+         }
+
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
+
+  //Finishe when Expression methods are created
+  WhileStatement parseWhileStatement(){
+    var startPos = _position;
+    var output = WhileStatement(new List());
+    if(_tokens[_position].value == 'while'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position].value == '('){
+        output.value.add(_tokens[_position]);
+        _position++;
+        var boolean = parseBooleanExpression();
+        if(boolean != null){
+          output.value.add(boolean);
+          if(_tokens[_position].value == ')'){
+            output.value.add(_tokens[_position]);
+            _position++;
+            var embeded = parseEmbeddedStatement();
+            if(embeded != null){
+              output.value.add(embeded);
+              return output;
+            }
+            else{
+              _position = startPos;
+              return null;
+            }
+          }
+          else{
+            _position = startPos;
+            return null;
+          }
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
+
+  //finished when expression methods are created
+  IterationStatement parseIterationStatement(){
+    IterationStatement output = parseForStatement();
+    if(output != null){
+      return output;
+    }
+    else{
+      output = parseWhileStatement();
+      if (output != null){
+        return output;
+      }
+      else{
+        return null;
+      }
+    }
+  }
+
+
+  JumpStatement parseJumpStatement(){
+    var startPos = _position;
+    var output = JumpStatement(new List());
+    if(_tokens[_position].value == 'return'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      var expression = parseExpression();
+      if(expression != null){
+        output.value.add(expression);
+      }
+      if(_tokens[_position].value == ';'){
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
+
+  //finished when expression methods are created
+  SelectionStatement parseSelectionStatement(){
+    var startPos = _position;
+    var output = SelectionStatement(new List());
+    if(_tokens[_position].value == 'if'){
+      output.value.add(_tokens[_position]);
+      _position++;
+      if(_tokens[_position].value == '('){
+        var boolean = parseBooleanExpression();
+        if(boolean != null){
+          output.value.add(boolean);
+          if(_tokens[_position].value == ')'){
+            output.value.add(_tokens[_position]);
+            _position++;
+            var embeded = parseEmbeddedStatement();
+            if(embeded != null){
+              output.value.add(embeded);
+              if(_tokens[_position].value == 'else'){
+                output.value.add(_tokens[_position]);
+                _position++;
+                var embeded2 = parseEmbeddedStatement();
+                if(embeded2 != null){
+                  output.value.add(embeded2);
+                  return output;
+                }
+                else{
+                  _position = startPos;
+                  return null;
+                }
+              }
+              else{
+                return output;
+              }
+            }
+            else{
+              _position = startPos;
+              return null;
+            }
+          }
+          else{
+            _position = startPos;
+            return null;
+          }
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    else{
+      return null;
+    }
+  }
+
+  //need to finish methods
   EmbeddedStatement parseEmbeddedStatement()
   {
+    //var startPos = _position;
+    //IMPORTANT: When doing typecheck, make sure doing inheritance like this doesnt screw up type
+    EmbeddedStatement output = parseBlockStatement();
+    if(output != null){
+      return output;
+    }
+    else{
+      output = parseEmptyStatement();
+      if(output != null){
+        return output;
+      }
+      else{
+        output = parseExpressionStatement();
+        if(output != null){
+          return output;
+        }
+        else{
+          output = parseIterationStatement();
+          if(output != null){
+            return output;
+          }
+          else{
+            output = parseJumpStatement();
+            if(output != null){
+              return output;
+            }
+            else{
+              output = parseSelectionStatement();
+              if(output != null){
+                return output;
+              }
+              else{
+                return null;
+              }
+            }
+          }
+        }
+      }
+    }
 
   }
 
@@ -643,7 +967,7 @@ class Parser {
     }
   }
 
-  PrimaryExpression ParseExpression() {
+    PrimaryExpression parseExpression() {
     /*
       NOT SUPPORTED:
       alias
@@ -667,21 +991,29 @@ class Parser {
       _position++;
       return output;
     }
+    _position = startPos;
     //parenthesized expression
     if (_tokens[_position].value == '(') {
       output.value.add(_tokens[_position]);
       _position++;
-      output.value.add(ParseExpression());
+      //output.value.add(ParseExpression());
+    var tmp3 = parseExpression();
+    if (tmp3 != null){
+      output.value.add(tmp3);
+      _position++;
+    }
       if (_tokens[_position].value == ')') {
         output.value.add(_tokens[_position]);
         _position++;
         return output;
       }
+      _position = startPos;
+      return null;
     }
+    _position = startPos;
     //member access
     //may need a helper method
-    if (_tokens[_position] is PrimaryExpression ||
-        parseType() != null) {
+    if (_tokens[_position] is PrimaryExpression || parseType() != null) {
       output.value.add(_tokens[_position]);
       _position++;
       if (_tokens[_position].value == '.') {
@@ -699,21 +1031,20 @@ class Parser {
           }
           return output;
         }
+        _position = startPos;
+        return null;
       }
+      _position = startPos;
     }
-    //invocation expression
-    if (_tokens[_position] is PrimaryExpression) {
-      output.value.add(_tokens[_position]);
+    _position = startPos;
+
+    var tmp = parseInvocationExpression();
+    if (tmp != null){
+      output.value.add(tmp);
       _position++;
-      //argument list - optional
-      if (_tokens[_position].value == '(') {
-        while (_tokens[_position].value != ')') {
-          output.value.add(_tokens[_position]);
-          _position++;
-        }
-      }
       return output;
     }
+    _position = startPos;
     //'this' access
     if (_tokens[_position].value == "this" &&
         _tokens[_position] is KeywordToken) {
@@ -721,24 +1052,13 @@ class Parser {
       _position++;
       return output;
     }
-    //object creation
-    if (_tokens[_position].value == "new" &&
-        _tokens[_position] is KeywordToken) {
-      output.value.add(_tokens[_position]);
-      _position++;
-      if (parseType() != null) {
-        output.value.add(_tokens[_position]);
-        _position++;
-        //argument list - optional
-        if (_tokens[_position].value == '(') {
-          while (_tokens[_position].value != ')') {
-            output.value.add(_tokens[_position]);
-            _position++;
-          }
-        }
-        return output;
-      }
+
+    var tmp2 = parseObjectCreationExpression();
+    if (tmp != null){
+      output.value.add(tmp2);
     }
+    _position = startPos;
+
     //typof
     if (_tokens[_position].value == "typeof" &&
         _tokens[_position] is KeywordToken) {
@@ -758,6 +1078,84 @@ class Parser {
           }
         }
       }
+    }
+    _position = startPos;
+    return null;
+  }
+
+  //helper methods for parseExpression()
+  PrimaryExpression parseInvocationExpression() {
+    InvocationExpression output = InvocationExpression(List());
+    int startPos = _position;
+    if (_tokens[_position] is PrimaryExpression) {
+      output.value.add(_tokens[_position]);
+      _position++;
+      //argument list - optional
+      if (_tokens[_position].value == '(') {
+        while (_tokens[_position].value != ')') {
+          output.value.add(_tokens[_position]);
+          _position++;
+        }
+      }
+      return output;
+    }
+    _position = startPos;
+
+  }
+
+  PrimaryExpression parseObjectCreationExpression() {
+    ObjectCreationExpression output = ObjectCreationExpression(List());
+    int startPos = _position;
+    if (_tokens[_position].value == "new" &&
+        _tokens[_position] is KeywordToken) {
+      output.value.add(_tokens[_position]);
+      _position++;
+      if (parseType() != null) {
+        output.value.add(_tokens[_position]);
+        _position++;
+        //argument list - optional
+        if (_tokens[_position].value == '(') {
+          while (_tokens[_position].value != ')') {
+            output.value.add(_tokens[_position]);
+            _position++;
+          }
+        }
+        return output;
+      }
+      _position = startPos;
+    }
+    _position = startPos;
+    return null;
+  }
+
+  PrimaryExpression parseAssignmentExpression() {
+    AssignmentExpression output = AssignmentExpression(List());
+    int startPos = _position;
+    var tmpexp = parseExpression();
+    if (tmpexp != null) {
+      output.value.add(tmpexp);
+      _position++;
+      if (_tokens[_position].value == '=' ||
+          _tokens[_position].value == '+=' ||
+          _tokens[_position].value == '-=' ||
+          _tokens[_position].value == '*=' ||
+          _tokens[_position].value == '/=' ||
+          _tokens[_position].value == '%=' ||
+          _tokens[_position].value == '&=' ||
+          _tokens[_position].value == '|=' ||
+          _tokens[_position].value == '^=' ||
+          _tokens[_position].value == '<<=') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var tmpexp2 = parseExpression();
+        if (tmpexp2 != null) {
+          output.value.add(tmpexp2);
+          _position++;
+          return output;
+        }
+        _position = startPos;
+      }
+      _position = startPos;
     }
     _position = startPos;
     return null;
