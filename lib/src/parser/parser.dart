@@ -4,6 +4,8 @@ import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
 import 'package:cs2dart/src/expressions/primary_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/additive_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/assignment_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/conditional_and_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/conditional_or_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/equality_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/invocation_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/multiplicative_expression.dart';
@@ -1300,6 +1302,58 @@ class Parser {
           _tokens[_position].value == '<=' ||
           _tokens[_position].value == '>=' ||
           _tokens[_position].value == 'is') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var tmpexp = parseExpression();
+        if (tmpexp != null) {
+          output.value.add(tmpexp);
+          //_position++;
+          return output;
+        }
+        _position = startPos;
+        return null;
+      }
+      _position = startPos;
+      return null;
+    }
+    _position = startPos;
+    return null;
+  }
+
+  PrimaryExpression parseConditionalAndExpression() {
+    ConditionalAndExpression output = ConditionalAndExpression(List());
+    int startPos = _position;
+    var tmpexp = parseExpression();
+    if (tmpexp != null) {
+      output.value.add(tmpexp);
+      //_position++;
+      if (_tokens[_position].value == '&&') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var tmpexp = parseExpression();
+        if (tmpexp != null) {
+          output.value.add(tmpexp);
+          //_position++;
+          return output;
+        }
+        _position = startPos;
+        return null;
+      }
+      _position = startPos;
+      return null;
+    }
+    _position = startPos;
+    return null;
+  }
+
+  PrimaryExpression parseConditionalOrExpression() {
+    ConditionalOrExpression output = ConditionalOrExpression(List());
+    int startPos = _position;
+    var tmpexp = parseExpression();
+    if (tmpexp != null) {
+      output.value.add(tmpexp);
+      //_position++;
+      if (_tokens[_position].value == '||') {
         output.value.add(_tokens[_position]);
         _position++;
         var tmpexp = parseExpression();
