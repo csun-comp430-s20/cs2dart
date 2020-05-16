@@ -22,7 +22,14 @@ enum PrimaryNoArrayCreationExpressionType {
   nameof_expression,
   anonymous_method_expression,
   primary_no_array_creation_expression_unsafe,
-  assignment_expression
+  assignment_expression,
+  multiplicative_expression,
+  additive_expression,
+  relational_expression,
+  equality_expression,
+  conditional_and_expression,
+  conditional_or_expression
+
 }
 
 class PrimaryNoArrayCreationExpression implements PrimaryExpression {
