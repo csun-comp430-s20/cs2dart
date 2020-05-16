@@ -1342,7 +1342,6 @@ class Parser {
     return null;
   }
 
-<<<<<<< HEAD
   PrimaryExpression parseAdditiveExpression() {
     var output = AdditiveExpression(List());
     var startPos = _position;
@@ -1505,9 +1504,6 @@ class Parser {
     return null;
   }
 
-=======
-  // All of the classes exist in a Namespace the root of a program
->>>>>>> a875edfe79409628723e79e59188315ca0f84806
   Namespace parse() {
     var output = Namespace(new List());
     while (_position <= _tokens.length) {
