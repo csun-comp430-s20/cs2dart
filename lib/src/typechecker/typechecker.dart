@@ -28,10 +28,10 @@ class Typechecker {
     _classDeclarations = HashMap<String, ClassDeclaration>();
     for (ClassDeclaration classDec in namespace.value) {
       // value[2].value is the name of the class from the stored token from list
-      if (!_classDeclarations.containsKey(classDec.value[2].value)) {
-        _classDeclarations[classDec.value[2].value] = classDec;
+      if (!_classDeclarations.containsKey(classDec.value[1].value)) {
+        _classDeclarations[classDec.value[1].value] = classDec;
       } else {
-        throw IllTypedException('Duplicate class declaration name: ' + classDec.value[2].value);
+        throw IllTypedException('Duplicate class declaration name: ' + classDec.value[1].value);
       }
     }
   } // Typechecker
@@ -44,7 +44,7 @@ class Typechecker {
     }
   } // typecheckNamespace
 
-  // Typechecks the type declaration 
+  // Typechecks the class declaration 
   void typecheckClassDeclaration(final ClassDeclaration classDec) {
     if (classDec.value[2].runtimeType == ClassBase) {
       // This should be a classBody
