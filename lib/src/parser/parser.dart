@@ -2,8 +2,10 @@ import 'package:cs2dart/parser.dart';
 import 'package:cs2dart/src/classes/classAST.dart';
 import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
 import 'package:cs2dart/src/expressions/primary_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/additive_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/assignment_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/invocation_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/multiplicative_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/object_creation_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/parenthesized_expression.dart';
 import 'package:cs2dart/src/expressions/variants/primary_no_array_creation_expression.dart';
@@ -1199,6 +1201,57 @@ class Parser {
         _position = startPos;
       }
       _position = startPos;
+    }
+    _position = startPos;
+    return null;
+  }
+
+  PrimaryExpression parseAdditiveExpression() {
+    AdditiveExpression output = AdditiveExpression(List());
+    int startPos = _position;
+    var tmpexp = parseExpression();
+    if (tmpexp != null) {
+      output.value.add(tmpexp);
+      //_position++;
+      if (_tokens[_position].value == '+' || _tokens[_position].value == '-') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var tmpexp = parseExpression();
+        if (tmpexp != null) {
+          output.value.add(tmpexp);
+          //_position++;
+          return output;
+        }
+        _position = startPos;
+        return null;
+      }
+      _position = startPos;
+      return null;
+    }
+    _position = startPos;
+    return null;
+  }
+    PrimaryExpression parseMultiplicativeExpression() {
+    MultiplicativeExpression output = MultiplicativeExpression(List());
+    int startPos = _position;
+    var tmpexp = parseExpression();
+    if (tmpexp != null) {
+      output.value.add(tmpexp);
+      //_position++;
+      if (_tokens[_position].value == '*' || _tokens[_position].value == '/') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var tmpexp = parseExpression();
+        if (tmpexp != null) {
+          output.value.add(tmpexp);
+          //_position++;
+          return output;
+        }
+        _position = startPos;
+        return null;
+      }
+      _position = startPos;
+      return null;
     }
     _position = startPos;
     return null;
