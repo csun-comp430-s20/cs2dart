@@ -13,6 +13,4 @@ class InterfaceBody implements InterfaceAST{
     return _type;
   }
   static final InterfaceKind _type = InterfaceKind.interfaceBody;
-
-
 }
