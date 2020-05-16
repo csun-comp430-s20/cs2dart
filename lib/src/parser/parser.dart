@@ -749,7 +749,7 @@ class Parser {
     }
   }
 
-  ForStatement parseForStatement() {
+ ForStatement parseForStatement() {
     print("here728");
     var startPos = _position;
     var output = ForStatement(new List());
