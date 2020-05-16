@@ -208,6 +208,11 @@ class Parser {
     }
   }
 
+  // 0 --> identifier
+  // 1 --> (
+  // 2 --> parseFixedParam()
+  // 3 --> )
+  // 4 --> parseBlockStatement()
   ConstructorDeclaration parseConstructorDeclaration() {
     var startPos = _position;
     var output = ConstructorDeclaration(new List());
@@ -256,7 +261,12 @@ class Parser {
 
   // parseClassBody Breakdown
   // first is always '{'
-  // second 
+  // second till X can be the following until '}':
+  //     constantDeclaration
+  //     localVariableDeclaration
+  //     localMethodDeclaration
+  //     constructorDeclaration
+  // X is '}'
   // done, need to finish helper methods
   ClassBody parseClassBody() {
     var startPos = _position;
@@ -536,7 +546,11 @@ class Parser {
     return null;
   }
 
-   ConstantDeclaration parseConstantDeclaration() {
+  // 0 --> const
+  // 1 --> identifier
+  // 2 --> '='
+  // 3 --> parseExpression()
+  ConstantDeclaration parseConstantDeclaration() {
     var startPos = _position;
     var output = ConstantDeclaration(List());
     if (_tokens[_position].value == "const") {
