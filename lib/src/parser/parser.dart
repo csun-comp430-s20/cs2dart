@@ -472,18 +472,18 @@ class Parser {
     return null;
   }
 
-  LocalVariableDeclarators parseLocalVariableDeclarators() {
-    var startPos = _position;
-    var output = LocalVariableDeclarators(List());
-    var tmpVarDec = parseLocalVariableDeclarator();
-    if (tmpVarDec != null) {
-      output.value.add(tmpVarDec);
-      //_position++;
-      return output;
-    }
-    _position = startPos;
-    return null;
-  }
+  // LocalVariableDeclarators parseLocalVariableDeclarators() {
+  //   var startPos = _position;
+  //   var output = LocalVariableDeclarators(List());
+  //   var tmpVarDec = parseLocalVariableDeclarator();
+  //   if (tmpVarDec != null) {
+  //     output.value.add(tmpVarDec);
+  //     //_position++;
+  //     return output;
+  //   }
+  //   _position = startPos;
+  //   return null;
+  // }
 
   LocalVariableType parseLocalVariableType() {
     var startPos = _position;
@@ -508,7 +508,7 @@ class Parser {
       output.value.add(newLocalVarType);
       //_position++;
       
-      var newLocalVarDec = parseLocalVariableDeclarators();
+      var newLocalVarDec = parseLocalVariableDeclarator();
       
       if (newLocalVarDec != null) {
         //print("here513");
@@ -524,13 +524,21 @@ class Parser {
     return null;
   }
 
-   ConstantDeclaration parseConstantDeclaration() {
+  ConstantDeclaration parseConstantDeclaration(){
+
+    //print("here 529");
     var startPos = _position;
     var output = ConstantDeclaration(List());
-    if (_tokens[_position].value == "const") {
+    if(_tokens[_position].value == 'const'){
+      //print("here533");
       output.value.add(_tokens[_position]);
       _position++;
-      if (_tokens[_position].type == TokenType.identifier) {
+      var type = parseType();
+      if (type != null){
+        //print("here538");
+        output.value.add(type);
+        if (_tokens[_position].type == TokenType.identifier) {
+          //print("here541");
         output.value.add(_tokens[_position]);
         _position++;
         if (_tokens[_position].value == "=") {
@@ -546,15 +554,54 @@ class Parser {
           _position = startPos;
           return null;
         }
-        _position = startPos;
-        return null;
+        return output;
       }
       _position = startPos;
       return null;
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
     }
-    _position = startPos;
-    return null;
+    else{
+      return null;
+    }
   }
+
+  //  ConstantDeclaration parseConstantDeclaration() {
+  //    print("here528");
+  //   var startPos = _position;
+  //   var output = ConstantDeclaration(List());
+  //   if (_tokens[_position].value == "const") {
+  //     print("here532");
+  //     output.value.add(_tokens[_position]);
+  //     _position++;
+  //     if (_tokens[_position].type == TokenType.identifier) {
+  //       output.value.add(_tokens[_position]);
+  //       _position++;
+  //       if (_tokens[_position].value == "=") {
+  //         output.value.add(_tokens[_position]);
+  //         _position++;
+  //         var tmpExpr = parseExpression();
+  //         if (tmpExpr != null)
+  //         {
+  //           output.value.add(tmpExpr);
+  //           //_position++;
+  //           return output;
+  //         }
+  //         _position = startPos;
+  //         return null;
+  //       }
+  //       _position = startPos;
+  //       return null;
+  //     }
+  //     _position = startPos;
+  //     return null;
+  //   }
+  //   _position = startPos;
+  //   return null;
+  // }
 //====================================================================
 //top level parsers for Statements====================================
 //====================================================================
@@ -678,12 +725,15 @@ class Parser {
 
   
   ForStatement parseForStatement() {
+    print("here728");
     var startPos = _position;
     var output = ForStatement(new List());
     if (_tokens[_position].value == 'for') {
+      print("here732");
       output.value.add(_tokens[_position]);
       _position++;
       if(_tokens[_position].value == '('){
+        print('here736');
          output.value.add(_tokens[_position]);
          _position++;
          //IMPORTANT: using Statement here might be a bad idea, look here first for bugs in for loop
@@ -692,12 +742,15 @@ class Parser {
            initializer = parseExpressionStatement();
          }
          if(initializer != null){
+           print("here745");
            output.value.add(initializer);
            if(_tokens[_position].value == ';'){
+             print("here748");
              output.value.add(_tokens[_position]);
              _position++;
              var condition = parseExpression();
              if(condition != null){
+               print('here753');
                output.value.add(condition);
                if(_tokens[_position].value == ';'){
                  output.value.add(_tokens[_position]);
@@ -1058,8 +1111,9 @@ class Parser {
       nameof - tentative
     */
     //TODO: make proper fail states and add returns and fix compile error with parstyle paramater
-    int startPos = _position;
-    PrimaryNoArrayCreationExpression output =
+    print('here1114');
+    var startPos = _position;
+    var output =
         PrimaryNoArrayCreationExpression(List());
     //literals
     if (_tokens[_position].type == TokenType.characterLiteral ||
