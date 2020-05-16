@@ -1231,7 +1231,8 @@ class Parser {
     _position = startPos;
     return null;
   }
-    PrimaryExpression parseMultiplicativeExpression() {
+
+  PrimaryExpression parseMultiplicativeExpression() {
     MultiplicativeExpression output = MultiplicativeExpression(List());
     int startPos = _position;
     var tmpexp = parseExpression();
