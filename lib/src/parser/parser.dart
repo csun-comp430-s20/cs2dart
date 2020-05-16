@@ -146,10 +146,13 @@ class Parser {
   }
 
   MethodDeclaration parseMethodDeclaration() {
+    print('here149');
     var startPos = _position;
     var output = MethodDeclaration(new List());
+    print(_tokens[_position].value);
     var returnType = parseType();
     if (returnType != null) {
+      print('here154');
       output.value.add(returnType);
     } else {
       if (_tokens[_position].value == 'void') {
@@ -166,8 +169,9 @@ class Parser {
         output.value.add(_tokens[_position]);
         _position++;
         var param;
+        print("here169");
         while (_tokens[_position].value != ')') {
-          if (_position > _tokens.length) {
+          if (_position >= _tokens.length) {
             _position = startPos;
             return null;
           }
@@ -243,6 +247,7 @@ class Parser {
 
   //done, need to finish helper methods
   ClassBody parseClassBody() {
+    print("here246");
     var startPos = _position;
     var output = ClassBody(new List());
     if (_tokens[_position] is OperatorOrPunctuatorToken &&
@@ -250,8 +255,9 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       while (_tokens[_position].value != '}') {
+        print(_tokens[_position].value);
         //if end of list without braket return null
-        if (_position > _tokens.length) {
+        if (_position >= _tokens.length) {
           _position = startPos;
           return null;
         }
@@ -259,11 +265,48 @@ class Parser {
 
         if (constDecl != null) {
           output.value.add(constDecl);
-        } else {
+          if(_tokens[_position].value == ';'){
+            output.value.add(_tokens[_position]);
+            _position++;
+            
+          }
+          else{
+            _position = startPos;
+            return null;
+          }
+        } 
+        else {
           var fieldDecl = parseLocalVariableDeclaration();
+          print(fieldDecl.runtimeType.toString());
+          
           if (fieldDecl != null) {
+            print("here269");
             output.value.add(fieldDecl);
+            if(_tokens[_position].value == ';'){
+              output.value.add(_tokens[_position]);
+              _position++;
+            }
+            else{
+              output.value.removeLast();
+              _position = _position -2;
+              print("here");
+             var methodDecl = parseMethodDeclaration();
+             print(methodDecl.runtimeType.toString());
+             if(methodDecl !=null){
+               output.value.add(methodDecl);
+             }
+             else{
+               var constructorDecl = parseConstructorDeclaration();
+              if (constructorDecl != null) {
+                output.value.add(constructorDecl);
+              } else {
+                _position = startPos;
+                return null;
+              }
+             }
+            }
           } else {
+            print("here268");
             var methodDecl = parseMethodDeclaration();
             if (methodDecl != null) {
               output.value.add(methodDecl);
@@ -320,10 +363,15 @@ class Parser {
         var body = parseClassBody();
         if (body != null) {
           output.value.add(body);
-          if (_tokens[_position] is OperatorOrPunctuatorToken &&
-              _tokens[_position].value == ';') {
-            output.value.add(_tokens[_position]);
-            _position++;
+          //print("here323");
+          //print(_position);
+          //print(_tokens.length);
+          if(_position < _tokens.length){
+            if (_tokens[_position] is OperatorOrPunctuatorToken &&
+                _tokens[_position].value == ';') {
+              output.value.add(_tokens[_position]);
+              _position++;
+            }
           }
           return output;
         } else {
@@ -495,7 +543,7 @@ class Parser {
         //print("here513");
         output.value.add(newLocalVarDec);
         //_position++;
-
+        //print(output.runtimeType.toString());
         return output;
       }
       _position = startPos;
@@ -1193,8 +1241,8 @@ class Parser {
 
   //helper methods for parseExpression()
   PrimaryExpression parseInvocationExpression() {
-    InvocationExpression output = InvocationExpression(List());
-    int startPos = _position;
+    var output = InvocationExpression(List());
+    var startPos = _position;
     if (_tokens[_position] is PrimaryExpression) {
       output.value.add(_tokens[_position]);
       _position++;
@@ -1212,8 +1260,8 @@ class Parser {
   }
 
   PrimaryExpression parseObjectCreationExpression() {
-    ObjectCreationExpression output = ObjectCreationExpression(List());
-    int startPos = _position;
+    var output = ObjectCreationExpression(List());
+    var startPos = _position;
     if (_tokens[_position].value == "new" &&
         _tokens[_position] is KeywordToken) {
       output.value.add(_tokens[_position]);
@@ -1238,8 +1286,8 @@ class Parser {
   }
 
   PrimaryExpression parseAssignmentExpression() {
-    AssignmentExpression output = AssignmentExpression(List());
-    int startPos = _position;
+    var output = AssignmentExpression(List());
+    var startPos = _position;
     var tmpexp = parseExpression();
     if (tmpexp != null) {
       output.value.add(tmpexp);
@@ -1271,8 +1319,8 @@ class Parser {
   }
 
   PrimaryExpression parseAdditiveExpression() {
-    AdditiveExpression output = AdditiveExpression(List());
-    int startPos = _position;
+    var output = AdditiveExpression(List());
+    var startPos = _position;
     var tmpexp = parseExpression();
     if (tmpexp != null) {
       output.value.add(tmpexp);
@@ -1297,8 +1345,8 @@ class Parser {
   }
 
   PrimaryExpression parseMultiplicativeExpression() {
-    MultiplicativeExpression output = MultiplicativeExpression(List());
-    int startPos = _position;
+    var output = MultiplicativeExpression(List());
+    var startPos = _position;
     var tmpexp = parseExpression();
     if (tmpexp != null) {
       output.value.add(tmpexp);

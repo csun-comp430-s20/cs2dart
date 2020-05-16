@@ -188,16 +188,46 @@ test('integral type test', () {
     var parseResult = Parser(token).parseStatements();
     
     print(parseResult.runtimeType.toString());
-    // expect('DeclarationStatement', parseResult.runtimeType.toString());
-    // expect('ConstantDeclaration', parseResult.value[0].runtimeType.toString());
-    // expect('KeywordToken', parseResult.value[0].value[0].runtimeType.toString());
-    // expect('ReferenceType', parseResult.value[0].value[1].runtimeType.toString());
-    // expect('IdentifierToken', parseResult.value[0].value[2].runtimeType.toString());
+    
   });
   //expression tests
 
   //class tests
+  test('empty class Test', () {
+    var token = Lexer('class someClass{}').lexify();
+    var parseResult = Parser(token).parseClass();
+    print(parseResult.runtimeType.toString());
 
-  
+    expect(parseResult.runtimeType.toString(),"ClassDeclaration");
+  });
+
+  test('class with variable declaration test', (){
+    var token = Lexer('class someClass{int x = 1;}').lexify();
+    var parseResult = Parser(token).parseClass();
+
+    expect(parseResult.runtimeType.toString(),"ClassDeclaration");
+  });
+
+  test('class with const variable declaration test', (){
+    var token = Lexer('class someClass{const int x = 1;}').lexify();
+    var parseResult = Parser(token).parseClass();
+
+    expect(parseResult.runtimeType.toString(),"ClassDeclaration");
+  });
+
+  test('class with method declaration test', (){
+    var token = Lexer('class someClass{int method(){}}').lexify();
+    var parseResult = Parser(token).parseClass();
+
+    expect(parseResult.runtimeType.toString(),"ClassDeclaration");
+  });
+
+  test('class with Constructor declaration test', (){
+    var token = Lexer('class someClass{SomeClass(){}}').lexify();
+    var parseResult = Parser(token).parseClass();
+
+    expect(parseResult.runtimeType.toString(),"ClassDeclaration");
+  });
+
    
 }
