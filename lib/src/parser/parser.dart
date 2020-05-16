@@ -4,10 +4,12 @@ import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
 import 'package:cs2dart/src/expressions/primary_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/additive_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/assignment_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/equality_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/invocation_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/multiplicative_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/object_creation_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/parenthesized_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/relational_expression.dart';
 import 'package:cs2dart/src/expressions/variants/primary_no_array_creation_expression.dart';
 import 'package:cs2dart/src/types/variants/reference_type.dart';
 import 'package:cs2dart/tokens.dart';
@@ -1239,7 +1241,65 @@ class Parser {
     if (tmpexp != null) {
       output.value.add(tmpexp);
       //_position++;
-      if (_tokens[_position].value == '*' || _tokens[_position].value == '/') {
+      if (_tokens[_position].value == '*' ||
+          _tokens[_position].value == '/' ||
+          _tokens[_position].value == '%') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var tmpexp = parseExpression();
+        if (tmpexp != null) {
+          output.value.add(tmpexp);
+          //_position++;
+          return output;
+        }
+        _position = startPos;
+        return null;
+      }
+      _position = startPos;
+      return null;
+    }
+    _position = startPos;
+    return null;
+  }
+
+  PrimaryExpression parseEqualityExpression() {
+    EqualitylExpression output = EqualitylExpression(List());
+    int startPos = _position;
+    var tmpexp = parseExpression();
+    if (tmpexp != null) {
+      output.value.add(tmpexp);
+      //_position++;
+      if (_tokens[_position].value == '=' || _tokens[_position].value == '!=') {
+        output.value.add(_tokens[_position]);
+        _position++;
+        var tmpexp = parseExpression();
+        if (tmpexp != null) {
+          output.value.add(tmpexp);
+          //_position++;
+          return output;
+        }
+        _position = startPos;
+        return null;
+      }
+      _position = startPos;
+      return null;
+    }
+    _position = startPos;
+    return null;
+  }
+
+  PrimaryExpression parseRelationalExpression() {
+    RelationalExpression output = RelationalExpression(List());
+    int startPos = _position;
+    var tmpexp = parseExpression();
+    if (tmpexp != null) {
+      output.value.add(tmpexp);
+      //_position++;
+      if (_tokens[_position].value == '<' ||
+          _tokens[_position].value == '>' ||
+          _tokens[_position].value == '<=' ||
+          _tokens[_position].value == '>=' ||
+          _tokens[_position].value == 'is') {
         output.value.add(_tokens[_position]);
         _position++;
         var tmpexp = parseExpression();
