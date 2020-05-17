@@ -20,7 +20,7 @@ import 'package:cs2dart/tokens.dart';
 // Hypothetical imports for the syntax above and below
 
 // Classes are verified by name through constructor
-// 
+//
 
 class Typechecker {
 
@@ -50,11 +50,7 @@ class Typechecker {
     }
   } // typecheckNamespace
 
-<<<<<<< HEAD
   // Typechecks the class declarations from a namespace object
-=======
-  // Typechecks the class declaration 
->>>>>>> 2ea4d49bbc5d062f147607edf76c411b048498ef
   void typecheckClassDeclaration(final ClassDeclaration classDec) {
     var i = 0;
     while (i < classDec.value.length - 1) {
@@ -80,21 +76,21 @@ class Typechecker {
       // The extends is valid
       return;
     } else {
-      throw IllTypedException('Class ' + className + 
+      throw IllTypedException('Class ' + className +
         'extends non-existant class: + classBase.value[0].value');
     }
   }
 
   // Typecheckes the class body objects
   void typecheckClassBody(final ClassBody classBody, final String className) {
-    
-    Map<String, ConstantDeclaration> listOfConstantDeclsName = 
+
+    Map<String, ConstantDeclaration> listOfConstantDeclsName =
       HashMap<String, ConstantDeclaration>();
-    Map<String, LocalVariableDeclaration> listOfLocalVariableDeclsName = 
+    Map<String, LocalVariableDeclaration> listOfLocalVariableDeclsName =
       HashMap<String, LocalVariableDeclaration>();
-    Map<String, MethodDeclaration> listOfMethodDeclsName = 
+    Map<String, MethodDeclaration> listOfMethodDeclsName =
       HashMap<String, MethodDeclaration>();
-    Map<String, ConstructorDeclaration> listOfConstructorDeclsName = 
+    Map<String, ConstructorDeclaration> listOfConstructorDeclsName =
       HashMap<String, ConstructorDeclaration>();
 
     var i = 0;
@@ -114,7 +110,7 @@ class Typechecker {
         }
 
       } else if (classBodyElement is LocalVariableDeclaration) {
-        listOfLocalVariableDeclsName[getLocalVariableDeclaratorName(classBodyElement.value[1])] 
+        listOfLocalVariableDeclsName[getLocalVariableDeclaratorName(classBodyElement.value[1])]
           = classBodyElement;
         typecheckLocalVariableDeclaration(classBodyElement);
 
@@ -122,7 +118,7 @@ class Typechecker {
 
       } else if (classBodyElement is MethodDeclaration) {
         listOfMethodDeclsName[classBodyElement.value[1].value] = typecheckMethodDeclaration();
-        
+
       } else if (classBodyElement is ConstructorDeclaration) {
         // value[0] is the name of the constructor
         if (!listOfConstructorDeclsName.containsKey(classBodyElement.value[0])) {
@@ -138,7 +134,7 @@ class Typechecker {
 
   // its broken need to wait on this
   void typecheckExpression(final ExpressionStatement expressionStmt) {
-    
+
   }
 
   typecheckMethodDeclaration(final MethodDeclaration methodDeclaration) {
@@ -350,7 +346,7 @@ class Typechecker {
       typecheckEmbeddedStatement(whileStatement.value[4]);
     }
   }
-  
+
   void typecheckJumpStatement(final JumpStatement jumpStatement) {
     // Go back to this
     if (true) {
@@ -380,5 +376,5 @@ class Typechecker {
       throw IllTypedException('Unrecognized embedded statement under if\'s false branch.');
     }
   }
-  
+
 }

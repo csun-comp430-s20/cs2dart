@@ -297,17 +297,17 @@ class Parser {
           if(_tokens[_position].value == ';'){
             output.value.add(_tokens[_position]);
             _position++;
-            
+
           }
           else{
             _position = startPos;
             return null;
           }
-        } 
+        }
         else {
           var fieldDecl = parseLocalVariableDeclaration();
           print(fieldDecl.runtimeType.toString());
-          
+
           if (fieldDecl != null) {
             print("here269");
             output.value.add(fieldDecl);
@@ -578,9 +578,9 @@ class Parser {
       //print("here506");
       output.value.add(newLocalVarType);
       //_position++;
-      
+
       var newLocalVarDec = parseLocalVariableDeclarator();
-      
+
       if (newLocalVarDec != null) {
         //print("here513");
         output.value.add(newLocalVarDec);
@@ -947,7 +947,7 @@ class Parser {
   }
 
   // 0 --> For Statement Object
-  // or...   
+  // or...
   // 0 --> While Statement Object
   //finished when expression methods are created
   IterationStatement parseIterationStatement() {
@@ -1433,7 +1433,7 @@ class Parser {
           output.value.add(_tokens[_position]);
           _position++;
           return output;
-        }  
+        }
          else{
           _position = startPos;
           return null;
@@ -1443,14 +1443,14 @@ class Parser {
         _position = startPos;
         return null;
       }
-      
+
       _position = startPos;
       return null;
     }
     return null;
   }
 
-  Exp parseExpression(){
+  PrimaryExpression parseExpression(){
     var output;
     output = parsePrimaryExpression();
     if(output != null){
@@ -1509,7 +1509,7 @@ class Parser {
   //     NOT SUPPORTED:
   //     alias
   //     element access not supported because there is no array support
-  //     'base' keyword 
+  //     'base' keyword
   //     post decrement and increment
   //     anonymous object creation
   //     delegate
@@ -1688,7 +1688,7 @@ class Parser {
     else{
       return null;
     }
-    
+
   }
 
   ObjectCreationExpression parseObjectCreationExpression() {
@@ -1911,10 +1911,10 @@ class Parser {
     _position = startPos;
     return null;
   }
-  
+
   Namespace parse() {
     var output = Namespace(new List());
-    while (_position <= _tokens.length) {
+    while (_position < _tokens.length) {
       var temp = parseClass();
       if (temp != null) {
         output.value.add(temp);

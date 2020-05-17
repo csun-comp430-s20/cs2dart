@@ -1,7 +1,7 @@
 import '../local_variable_declaration.dart';
 // import '../../../statement.dart';
 
-class LocalVariableType implements LocalVariableDeclaration {
+class LocalVariableType implements LocalVariableDeclaration, Type {
 
   LocalVariableType(
     this._value,
