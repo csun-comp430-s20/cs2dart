@@ -203,7 +203,9 @@ class Parser {
         _position++;
         var block = parseBlockStatement();
         if (block != null) {
+          print('===============Debugcomment=============444');
           output.value.add(block);
+          print(output.value[output.value.length - 1].value);
           return output;
         } else {
           _position = startPos;

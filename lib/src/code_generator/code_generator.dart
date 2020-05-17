@@ -128,10 +128,12 @@ class ClassGenerator {
         }
       }
       print('===============Debugcomment=============15');
+      print(input.value);
       if (input.value is List)
       {
         for (var t = 0; t < input.value.length; t++)
         {
+          print('===============Debugcomment=============777');
           print(input.value[t].value);
           if (!(input.value[t] is Block))
           {
@@ -190,6 +192,7 @@ class ClassGenerator {
 
     String genExpressionStatement(ExpressionStatement input){
 
+      //is this replaced by getExpressionCode??
 
     }
 
@@ -309,15 +312,18 @@ class ClassGenerator {
 
     String genLocalVariableDeclarationCode(LocalVariableDeclaration input){
       var output = '';
-      print('===============Debugcomment=============777');
-      print(input.value[0]);
-      output += genTypeCode(input.value[0]) + ' ';
+      print('===============Debugcomment=============365');
+      print(input.value);
+      output += genTypeCode(input.value[0]);
       output += genLocalVariabelDeclaratorCode(input.value[1]);
       return output;
     }
   //
     String genLocalVariabelDeclaratorCode(LocalVariableDeclarator input){
       var output = '';
+      print('===============Debugcomment=============42');
+      print(input.value);
+      print(input);
       output += input.value[0].value + ' ';
       if (input.value.length > 1){
         output += input.value[1].value + ' ';
@@ -328,7 +334,18 @@ class ClassGenerator {
     }
     String genLocalVariableInitializer(LocalVariableInitializer input){
       var output = '';
-      output += genExpressionCode(input.value[0]) + ' ';
+      print(input.value);
+
+      if (input.value[0] is Literal && input.value.length == 1)
+      {
+        //the value of the literal is placed
+        output += input.value[0].value[0].value;
+      }
+      else
+      {
+        output += genExpressionCode(input.value[0]) + ' ';
+      }
+      print(output);
       return output;
     }
   //
@@ -346,7 +363,19 @@ class ClassGenerator {
   String genExpressionCode(PrimaryExpression input)
   {
     print('AAAAAAAAAAAAAAAAAAAAAH this needs to be written');
+    //Were this method to be called, the following error would occur during testing, since output is null.
+
+    //Error:
+    // NoSuchMethodError: The method '+' was called on null.
+    // Receiver: null
+    // Tried calling: +(" ")
+
+
+    var output;
+    return output;
   }
+
+//========================================================================
 
   String genTypeCode(LocalVariableType input){
     var output = '';
