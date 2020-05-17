@@ -1,21 +1,37 @@
 import 'dart:collection';
 import 'dart:html';
 
+import 'package:cs2dart/expressions.dart';
 import 'package:cs2dart/src/classes/variants/ClassBase.dart';
 import 'package:cs2dart/src/classes/variants/ClassBody.dart';
 import 'package:cs2dart/src/classes/variants/variants/ConstructorDeclaration.dart';
 import 'package:cs2dart/src/classes/variants/variants/MethodDeclaration.dart';
 import 'package:cs2dart/src/classes/variants/variants/variants/FixedParam.dart';
+import 'package:cs2dart/src/expressions/primary_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/additive_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/assignment_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/conditional_and_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/conditional_or_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/equality_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/invocation_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/literal.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/member_access.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/multiplicative_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/object_creation_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/parenthesized_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/relational_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/this_access.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/typeof_expression.dart';
 import 'package:cs2dart/src/interfaces/variants/InterfaceDeclaration.dart';
 import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
 import 'package:cs2dart/src/namespaces/namespace.dart';
 import 'package:cs2dart/src/statements/variants/DeclarationStatementVariants/constant_declaration.dart';
 import 'package:cs2dart/src/typechecker/ill_typed_expection.dart';
+import 'package:cs2dart/src/types/variants/variants/floating_point_type.dart';
+import 'package:cs2dart/src/types/variants/variants/integral_type.dart';
 import 'package:cs2dart/statement.dart';
 import 'package:cs2dart/tokens.dart';
+import 'package:cs2dart/types.dart';
 
 // Hypothetical imports for the syntax above and below
 
@@ -50,11 +66,7 @@ class Typechecker {
     }
   } // typecheckNamespace
 
-<<<<<<< HEAD
-  // Typechecks the class declarations from a namespace object
-=======
   // Typechecks the class declaration 
->>>>>>> 2ea4d49bbc5d062f147607edf76c411b048498ef
   void typecheckClassDeclaration(final ClassDeclaration classDec) {
     var i = 0;
     while (i < classDec.value.length - 1) {
@@ -114,31 +126,154 @@ class Typechecker {
         }
 
       } else if (classBodyElement is LocalVariableDeclaration) {
+
+
         listOfLocalVariableDeclsName[getLocalVariableDeclaratorName(classBodyElement.value[1])] 
-          = classBodyElement;
+          = classBodyElement.value[i];
         typecheckLocalVariableDeclaration(classBodyElement);
 
 
 
       } else if (classBodyElement is MethodDeclaration) {
-        listOfMethodDeclsName[classBodyElement.value[1].value] = typecheckMethodDeclaration();
+
+
+        listOfMethodDeclsName[classBodyElement.value[1].value] =
+          typecheckMethodDeclaration(classBodyElement.value[i]);
         
       } else if (classBodyElement is ConstructorDeclaration) {
+
+
         // value[0] is the name of the constructor
         if (!listOfConstructorDeclsName.containsKey(classBodyElement.value[0])) {
           listOfConstructorDeclsName[classBodyElement.value[0].value] = classBodyElement;
-          typecheckConstructorDeclaration(classBodyElement, className);
+          typecheckConstructorDeclaration(classBodyElement.value[i], className);
         } else {
           throw IllTypedException('Duplicate constructors in class: $className');
         }
+
+
+
       }
       i++;
     }
   }
 
   // its broken need to wait on this
-  void typecheckExpression(final ExpressionStatement expressionStmt) {
-    
+  void typecheckExpression(final Exp expression) {
+    if (expression.value[0] is PrimaryExpression) {
+      typecheckPrimaryExpression(expression);
+    } else if (expression is AssignmentExpression) {
+      typecheckAssignmentExpression();
+    } else if (expression is AdditiveExpression) {
+      typecheckAdditiveExpression();
+    } else if (expression is MultiplicativeExpression) {
+      typecheckMultiplicativeExpression();
+    } else if (expression is EqualitylExpression) {
+      typecheckEqualitylExpression();
+    } else if (expression is RelationalExpression) {
+      typecheckRelationalExpression();
+    } else if (expression is ConditionalAndExpression) {
+      typecheckConditionalAndExpression();
+    } else if (expression is ConditionalOrExpression) {
+      typecheckConditionalOrExpression();
+    } else {
+      throw IllTypedException('Unrecgonized expression.');
+    }
+  }
+
+  typecheckPrimaryExpression(final PrimaryExpression primaryExpression) {
+    if (primaryExpression is Literal) {
+
+    } else if (primaryExpression is ParenthesizedExpression) {
+      typecheckPrimaryExpression(primaryExpression.value[0]);
+    } else if (primaryExpression is MemberAccess) {
+      typecheckMemberAccess(primaryExpression.value[0]);
+    } else if (primaryExpression is InvocationExpression) {
+      typecheckInvocationExpression(primaryExpression.value[0]);
+    } else if (primaryExpression is ThisAccess) {
+      typecheckThisAccess(primaryExpression.value[0]);
+    } else if (primaryExpression is ObjectCreationExpression) {
+      typecheckObjectCreationExpression(primaryExpression.value[0]);
+    } else if (primaryExpression is TypeOfExpression) {
+      typecheckTypeOfExpression(primaryExpression.value[0]);
+    } else {
+      throw IllTypedException('Unrecognized primary expression.');
+    }
+  }
+
+  typecheckThisAccess(final ThisAccess thisAccess) {
+    // should just return 'this' as a string
+    return thisAccess.value[0].value;
+  }
+
+  typecheckTypeOfExpression(final TypeOfExpression typeOfExpression) {
+    // compare to thing in map probably
+    return;
+  }
+
+  typecheckMemberAccess(final MemberAccess memberAccess) {
+    if (memberAccess.value[0] is PrimaryExpression) {
+      typecheckPrimaryExpression(memberAccess.value[0]);
+    } else if (memberAccess.value[0] is Type) {
+      typecheckType(memberAccess.value[0]);
+    } else {
+      throw IllTypedException('Unrecognized member access.');
+    }
+  }
+
+  typecheckType(final Type type) {
+    if (type.value[0] is ValueType) {
+      typecheckValueType(type.value[0]);
+    } else if (type.value[0] is ReferenceType) {
+      typecheckReferenceType(type.value[0]);
+    } else {
+      throw IllTypedException('Unrecognized type.');
+    }
+  }
+
+  typecheckReferenceType(final ReferenceType referenceType) {
+    if (referenceType.value[0].value == 'object') {
+      return referenceType.value[0].value;
+    } else if (referenceType.value[0].value == 'string') {
+
+    } else if (referenceType.value[0] is IdentifierToken) {
+
+    } else {
+      throw IllTypedException('Unrecognized reference type.');
+    }
+  }
+
+  typecheckValueType(final ValueType valueType) {
+
+    if (valueType.value[0].value == 'bool') {
+
+      return valueType.value[0].value;
+
+    } else if (valueType.value[0].value == 'decimal') {
+
+      return valueType.value[0].value;
+
+    } else if (valueType.value[0] is IntegralType) {
+
+      typecheckIntegralType(valueType.value[0]);
+
+    } else if (valueType.value[0] is FloatingPointType) {
+
+      typecheckFloatingPointType(valueType.value[0]);
+
+    } else {
+      throw IllTypedException('Unrecognized value type.');
+    }
+  }
+
+  // terminal leaf FINALLY
+  typecheckIntegralType(final IntegralType integralType) {
+    return integralType.value[0].value;
+  }
+
+  // terminal leaf FINALLY
+  typecheckFloatingPointType(final FloatingPointType floatingPointType) {
+    return floatingPointType.value[0].value;
   }
 
   typecheckMethodDeclaration(final MethodDeclaration methodDeclaration) {
@@ -156,7 +291,7 @@ class Typechecker {
 
 
 
-    var actualReturnType = getType();
+    // var actualReturnType = getType();
 
   }
 
@@ -229,8 +364,8 @@ class Typechecker {
   }
 
   void typecheckConstantDeclaration(final ConstantDeclaration constantDeclaration) {
-    if (constantDeclaration.value[3] is Expression) {
-      typecheckExpression();
+    if (constantDeclaration.value[3] is Exp) {
+      typecheckExpression(constantDeclaration.value[3]);
     } else {
       throw IllTypedException('');
     }
@@ -282,16 +417,18 @@ class Typechecker {
   // This is broken go back later
   void typecheckAssignmentExpression(final AssignmentExpression assignmentExpression) {
     var typeLHS, typeRHS;
-    if (assignmentExpression.value[0] is Expression) {
+    if (assignmentExpression.value[0] is Exp) {
       // broken
-      typeLHS = typecheckExpression(assignmentExpression.value[0]);
+      typeLHS = 0;
+      typecheckExpression(assignmentExpression.value[0]);
     } else {
       throw IllTypedException('Unrecognized expression.');
     }
 
-    if (assignmentExpression.value[2] is Expression) {
+    if (assignmentExpression.value[2] is Exp) {
       // broken
-      typeRHS = typecheckExpression(assignmentExpression.value[2]);
+      typeRHS = 0;
+      typecheckExpression(assignmentExpression.value[2]);
     } else {
       throw IllTypedException('Unrecognized expression.');
     }
@@ -318,8 +455,8 @@ class Typechecker {
       throw IllTypedException('Unrecognized for loop intializer.');
     }
     // Broken right now go back later
-    if (forStatement.value[4] is Expression) {
-
+    if (forStatement.value[4] is Exp) {
+      typecheckExpression(forStatement.value[4]);
     } else {
       throw IllTypedException('Unrecognized for loop guard');
     }
@@ -340,8 +477,8 @@ class Typechecker {
   // Need a map for a while statement basically a whole new scope
   void typecheckWhileStatement(final WhileStatement whileStatement) {
     // Broken right now go back later
-    if (whileStatement.value[2] is Expression) {
-
+    if (whileStatement.value[2] is Exp) {
+      typecheckExpression(whileStatement.value[2]);
     } else {
       throw IllTypedException('Unrecognized conditional in while loop.');
     }
@@ -362,8 +499,8 @@ class Typechecker {
 
   void typecheckSelectionStatement(final SelectionStatement selectionStatement) {
     // Go back to this
-    if (selectionStatement.value[2] is Expression) {
-
+    if (selectionStatement.value[2] is Exp) {
+      typecheckExpression(selectionStatement.value[2]);
     } else {
       throw IllTypedException('Unrecognized conditional in if statement.');
     }
@@ -380,5 +517,5 @@ class Typechecker {
       throw IllTypedException('Unrecognized embedded statement under if\'s false branch.');
     }
   }
-  
+
 }

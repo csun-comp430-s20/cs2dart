@@ -271,7 +271,7 @@ class Parser {
   // 2 to X --> (Below)
   //     constantDeclaration
   //     localVariableDeclaration
-  //     localMethodDeclaration
+  //     methodDeclaration
   //     constructorDeclaration
   // X is '}'
   // done, need to finish helper methods
@@ -1242,6 +1242,19 @@ class Parser {
     }
   }
 
+  // 0 --> Literal Expression object
+  // or...
+  // 0 --> parenthized Expression object
+  // or...
+  // 0 --> member access expression object
+  // or...
+  // 0 --> invocation expression object
+  // or...
+  // 0 --> this access expression object
+  // or...
+  // 0 --> object creation expression object
+  // or...
+  // 0 --> type of expression object
   // Need to fix up
   PrimaryExpression parsePrimaryExpression(){
     PrimaryExpression output;
@@ -1371,6 +1384,9 @@ class Parser {
     }
   }
 
+  // 0 --> primary expression object    or...   0 --> type object
+  // 1 --> . Token
+  // 2 --> Identifier Token
   MemberAccess parseMemberAccessExpression(){
     var output = MemberAccess(List());
     var startPos = _position;
@@ -1911,7 +1927,7 @@ class Parser {
     _position = startPos;
     return null;
   }
-  
+
   Namespace parse() {
     var output = Namespace(new List());
     while (_position <= _tokens.length) {
