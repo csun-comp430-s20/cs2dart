@@ -1468,7 +1468,11 @@ class Parser {
     return null;
   }
 
+<<<<<<< HEAD
   PrimaryExpression parseExpression(){
+=======
+  PrimaryNoArrayCreationExpression parseExpression(){
+>>>>>>> 30123b49babe24517796b650c813357264bc993a
     var output;
     output = parsePrimaryExpression();
     if(output != null){
