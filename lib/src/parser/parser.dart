@@ -942,6 +942,8 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       if (_tokens[_position].value == '(') {
+        output.value.add(_tokens[_position]);
+        _position++;
         var boolean = parseExpression();
         if (boolean != null) {
           output.value.add(boolean);
