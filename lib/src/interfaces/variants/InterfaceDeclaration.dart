@@ -1,6 +1,6 @@
 import '../interface.dart';
 
-class InterfaceDeclaration implements InterfaceAST{
+class InterfaceDeclaration implements InterfaceAST {
 
   InterfaceDeclaration(this._value);
   List _value;

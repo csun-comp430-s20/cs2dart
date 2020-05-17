@@ -222,6 +222,11 @@ test('integral type test', () {
     expect(parseResult.runtimeType.toString(),"ClassDeclaration");
   });
 
+test('method parse test', (){
+  var token = Lexer('int method(){}').lexify();
+  var parseResult = Parser(token).parseMethodDeclaration();
+  expect(parseResult.runtimeType.toString(),"MethodDeclaration");
+});
   test('class with Constructor declaration test', (){
     var token = Lexer('class someClass{SomeClass(){}}').lexify();
     var parseResult = Parser(token).parseClass();
