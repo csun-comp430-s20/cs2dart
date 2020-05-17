@@ -1357,7 +1357,7 @@ class Parser {
     return null;
   }
 
-  Exp parseExpression(){
+  PrimaryNoArrayCreationExpression parseExpression(){
     var output;
     output = parsePrimaryExpression();
     if(output != null){
