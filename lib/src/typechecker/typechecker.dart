@@ -36,7 +36,7 @@ import 'package:cs2dart/types.dart';
 // Hypothetical imports for the syntax above and below
 
 // Classes are verified by name through constructor
-// 
+//
 
 class Typechecker {
 
@@ -92,21 +92,21 @@ class Typechecker {
       // The extends is valid
       return;
     } else {
-      throw IllTypedException('Class ' + className + 
+      throw IllTypedException('Class ' + className +
         'extends non-existant class: + classBase.value[0].value');
     }
   }
 
   // Typecheckes the class body objects
   void typecheckClassBody(final ClassBody classBody, final String className) {
-    
-    Map<String, ConstantDeclaration> listOfConstantDeclsName = 
+
+    Map<String, ConstantDeclaration> listOfConstantDeclsName =
       HashMap<String, ConstantDeclaration>();
-    Map<String, LocalVariableDeclaration> listOfLocalVariableDeclsName = 
+    Map<String, LocalVariableDeclaration> listOfLocalVariableDeclsName =
       HashMap<String, LocalVariableDeclaration>();
-    Map<String, MethodDeclaration> listOfMethodDeclsName = 
+    Map<String, MethodDeclaration> listOfMethodDeclsName =
       HashMap<String, MethodDeclaration>();
-    Map<String, ConstructorDeclaration> listOfConstructorDeclsName = 
+    Map<String, ConstructorDeclaration> listOfConstructorDeclsName =
       HashMap<String, ConstructorDeclaration>();
 
     var i = 0;
@@ -487,7 +487,7 @@ class Typechecker {
       typecheckEmbeddedStatement(whileStatement.value[4]);
     }
   }
-  
+
   void typecheckJumpStatement(final JumpStatement jumpStatement) {
     // Go back to this
     if (true) {
