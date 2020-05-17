@@ -34,10 +34,11 @@ class ClassGenerator {
     final Namespace _namespace;
 
     String genCode(){
-      String output = '';
-      for(int i = 0; i < _namespace.value.length; i++){
+      var output = '';
+      for(var i = 0; i < _namespace.value.length; i++){
         output += genClassCode(_namespace.value[i]);
       }
+      return output;
     }
 
     String genClassCode(ClassDeclaration classinput){
