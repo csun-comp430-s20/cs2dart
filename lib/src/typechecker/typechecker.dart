@@ -34,10 +34,10 @@ class Typechecker {
     _classDeclarations = HashMap<String, ClassDeclaration>();
     for (ClassDeclaration classDec in namespace.value) {
       // value[2].value is the name of the class from the stored token from list
-      if (!_classDeclarations.containsKey(classDec.value[2].value)) {
-        _classDeclarations[classDec.value[2].value] = classDec;
+      if (!_classDeclarations.containsKey(classDec.value[1].value)) {
+        _classDeclarations[classDec.value[1].value] = classDec;
       } else {
-        throw IllTypedException('Duplicate class declaration name: ' + classDec.value[2].value);
+        throw IllTypedException('Duplicate class declaration name: ' + classDec.value[1].value);
       }
     }
   } // Typechecker
@@ -50,7 +50,11 @@ class Typechecker {
     }
   } // typecheckNamespace
 
+<<<<<<< HEAD
   // Typechecks the class declarations from a namespace object
+=======
+  // Typechecks the class declaration 
+>>>>>>> 2ea4d49bbc5d062f147607edf76c411b048498ef
   void typecheckClassDeclaration(final ClassDeclaration classDec) {
     var i = 0;
     while (i < classDec.value.length - 1) {
