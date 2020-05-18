@@ -1790,7 +1790,7 @@ class Parser {
   // 0 to X --> ClassDeclaration object
   Namespace parse() {
     var output = Namespace(new List());
-    while (_position <= _tokens.length) {
+    while (_position < _tokens.length) {
       var temp = parseClass();
       if (temp != null) {
         output.value.add(temp);
