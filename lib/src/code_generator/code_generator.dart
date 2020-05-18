@@ -4,6 +4,24 @@ import 'package:cs2dart/src/classes/variants/ClassDeclaration.dart';
 import 'package:cs2dart/src/classes/variants/variants/ConstructorDeclaration.dart';
 import 'package:cs2dart/src/classes/variants/variants/MethodDeclaration.dart';
 import 'package:cs2dart/src/classes/variants/variants/variants/FixedParam.dart';
+import 'package:cs2dart/src/expressions/primary_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/additive_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/assignment_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/conditional_and_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/conditional_or_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/equality_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/invocation_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/literal.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/member_access.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/multiplicative_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/object_creation_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/parenthesized_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/relational_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/simple_name.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/this_access.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/typeof_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/unary.dart';
+import 'package:cs2dart/src/expressions/variants/primary_no_array_creation_expression.dart';
 import 'package:cs2dart/src/namespaces/namespace.dart';
 import 'package:cs2dart/src/tokens/variants/keyword_token.dart';
 import 'package:cs2dart/src/types/variants/reference_type.dart';
@@ -22,6 +40,7 @@ class ClassGenerator {
     final Namespace _namespace;
 
     String genCode(){
+      
       var output = '';
       for(var i = 0; i < _namespace.value.length; i++){
         output += genClassCode(_namespace.value[i]);
@@ -191,6 +210,20 @@ class ClassGenerator {
     }
 
     String genExpressionStatement(ExpressionStatement input){
+      var output = '';
+      
+      if (input.value[0] is InvocationExpression){
+        output += genInvocation(input.value[0]);
+      }
+      else if(input.value[0] is ObjectCreationExpression){
+        output += genObjectCreation(input.value[0]);
+      }
+      else{
+        output += genAssignmentExpression(input.value[0]);
+      }
+
+      output += ';';
+      return output; 
 
       //is this replaced by getExpressionCode??
 
@@ -204,6 +237,248 @@ class ClassGenerator {
       else{
         // output += genWhileStatement(input);
       }
+      return output;
+    }
+
+
+    String genTypeOf(TypeOfExpression input){
+      var output = '';
+      output += input.value[2].value;
+      output += '.runtimeType';
+      return output;
+    }
+
+    String genParenthesizedExpression(ParenthesizedExpression input){
+      var output = '';
+      output += '(';
+      output += genExpressionCode(input.value[1]);
+      output += ')';
+      return output;
+    }
+
+    String genMemberAccess(MemberAccess input){
+      var output = '';
+      if(input.value[0] is Type){
+        output += genTypeCode(input.value[0]);
+      }
+      else if(input.value[0] is ThisAccess){
+        output += 'this';
+      }
+      else{
+        output += genSimpleName(input.value[0]);
+      }
+      output += '._';
+      output += input.value[2].value;
+      return output;
+    }
+
+    String genInvocation(InvocationExpression input){
+      var output = '';
+      if(input.value[0] is SimpleName){
+        output += genSimpleName(input.value[0]);
+      }
+      else if(input.value[0] is Literal){
+        output += genLiteral(input.value[0]);
+      }
+      else{
+        output += genMemberAccess(input.value[0]);
+      }
+      output += '(';
+      int i = 1;
+      while(input.value[i].value != ')'){
+        output += input.value[i].value;
+        i++;
+      }
+      output +=  ')';
+      return output;
+      
+    }
+
+    String genLiteral(Literal input){
+      var output = '';
+      output += input.value[0].value;
+      return output;
+    }
+
+    String genObjectCreation(ObjectCreationExpression input){
+      var output = '';
+      output += 'new ';
+      output += genReferenceTypeCode(input.value[1]);
+      output += '(';
+      int i = 3;
+      while(input.value[i].value != ')'){
+        output += input.value[i].value;
+      }
+      output += ')';
+      return output;
+    }
+
+    String genPrimaryExpression(PrimaryExpression input){
+      var output = ' ';
+      if (input is TypeOfExpression){
+        output += genTypeOf(input);
+        return output;
+      }
+      else if(input is ParenthesizedExpression){
+        output += genParenthesizedExpression(input);
+        return output;
+      }
+      else if(input is MemberAccess){
+        output += genMemberAccess(input);
+        return output;
+      }
+      else if(input is InvocationExpression){
+        output += genInvocation(input);
+        return output;
+      }
+      else if(input is ThisAccess){
+        output += 'this';
+        return output;
+      }
+      else if(input is ObjectCreationExpression){
+        output += genObjectCreation(input);
+        return output;
+      }
+      else if(input is Literal){
+        output += genLiteral(input);
+        return output;
+      }
+      else if(input is SimpleName){
+        output += genSimpleName(input);
+        return output;
+      }
+      else{
+        output += genUnary(input);
+        return output;
+      }
+    }
+
+
+    String genAssignmentExpression(AssignmentExpression input){
+      var output = '';
+      output += genExpressionCode(input.value[0]);
+      output += input.value[1].value + ' ';
+      output += genExpressionCode(input.value[2]) + ' ';
+      return output;
+    }
+
+    String genAdditiveExpression(AdditiveExpression input){
+      var output = '';
+      output += genPrimaryExpression(input.value[0]);
+      output += input.value[1].value + ' ';
+      output += genPrimaryExpression(input.value[2]) + ' ';
+      return output;
+    }
+
+    String genMultiplicativeExpression(MultiplicativeExpression input){
+      var output = '';
+      output += genPrimaryExpression(input.value[0]);
+      output += input.value[1].value + ' ';
+      output += genPrimaryExpression(input.value[2]) + ' ';
+      return output;
+    }
+
+    String genEqualityExpression(EqualitylExpression input){
+      var output = '';
+      output += genPrimaryExpression(input.value[0]);
+      output += input.value[1].value + ' ';
+      output += genPrimaryExpression(input.value[2]) + ' ';
+      return output;
+    }
+
+    String genRelationalExpression(RelationalExpression input){
+      var output = '';
+      output += genPrimaryExpression(input.value[0]);
+      output += input.value[1].value + ' ';
+      output += genPrimaryExpression(input.value[2]) + ' ';
+      return output;
+    }
+
+    String genConditionalAndExpression(ConditionalAndExpression input){
+      var output = '';
+      output += genPrimaryExpression(input.value[0]);
+      output += input.value[1].value + ' ';
+      output += genPrimaryExpression(input.value[2]) + ' ';
+      return output;
+    }
+
+    String genConditionalOrExpression(ConditionalOrExpression input){
+      var output = '';
+      output += genPrimaryExpression(input.value[0]);
+      output += input.value[1].value + ' ';
+      output += genPrimaryExpression(input.value[2]) + ' ';
+      return output;
+    }
+
+    String genSimpleName(SimpleName input){
+      var output = '';
+      output += input.value[0].value + ' ';
+      return output;
+    }
+
+    String genExpressionCode(PrimaryNoArrayCreationExpression input){
+      var output = '';
+      if (input is PrimaryExpression){
+        output += genPrimaryExpression(input) + ' ';
+      }
+      else if(input is AssignmentExpression){
+        output += genAssignmentExpression(input) + ' ';
+      }
+      else if(input is AdditiveExpression){
+        output += genAdditiveExpression(input) + ' ';
+      }
+      else if(input is MultiplicativeExpression){
+        output += genMultiplicativeExpression(input) + ' ';
+      }
+      else if(input is EqualitylExpression){
+        output += genEqualityExpression(input) + ' ';
+      }
+      else if(input is RelationalExpression){
+        output += genRelationalExpression(input) + ' ';
+      }
+      else if(input is ConditionalAndExpression){
+        output += genConditionalAndExpression(input) + ' ';
+      }
+      else if(input is ConditionalOrExpression){
+        output += genConditionalOrExpression(input) + ' ';
+      }
+      else if(input is SimpleName){
+        output += genSimpleName(input);
+      }
+      else{
+        output += genUnary(input) + ' ';
+      }
+      return output;
+    }
+    
+    String genUnary(Unary input){
+      var output = '';
+      output += input.value[0].value;
+      return output;
+    }
+
+    String genForStatement(ForStatement input){
+      var output ='';
+      output += input.value[0].value + ' ';
+      output += input.value[1].value + ' ';
+      output += genLocalVariableDeclarationCode(input.value[2]);
+      output += input.value[3].value + ' ';
+      output += genExpressionCode(input.value[4]);
+      output += input.value[5].value + ' ';
+      output += genExpressionStatement(input.value[6]);
+      output += input.value[7].value;
+      output += genEmbeddedStatement(input.value[8]) + ' ';
+      return output;
+    }
+
+    String genWhileStatement(WhileStatement input){
+      var output = '';
+      output += input.value[0].value + ' ';
+      output += input.value[1].value + ' ';
+      output += genExpressionCode(input.value[2]);
+      output += input.value[3] + ' ';
+      output += genEmbeddedStatement(input.value[4]) + ' ';
+
       return output;
     }
 
