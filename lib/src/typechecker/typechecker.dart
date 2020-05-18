@@ -139,6 +139,14 @@ class Typechecker {
                                       in class: ${className}''');
         }
 
+        if (!listOfLocalVariableDeclsName.containsKey(classBodyElement.value[1].value)) {
+          // value[3] becuase that's the Expression object (value) of the const expression
+          listOfConstantDeclsName[classBodyElement.value[1].value] = classBodyElement.value[3];
+        } else {
+          throw IllTypedException('''Duplicate constant declaration name: ${classBodyElement.value[1].value},
+                                      in class: ${className}''');
+        }
+
 
       // Need to work on this
       } else if (classBodyElement is LocalVariableDeclaration) {
@@ -147,7 +155,7 @@ class Typechecker {
 
 
         listOfLocalVariableDeclsName[nameOfLocalVarDecl] = classBodyElement.value[i];
-        typecheckLocalVariableDeclaration(classBodyElement.value[i], );
+        // typecheckLocalVariableDeclaration(classBodyElement.value[i], );
 
 
 
@@ -157,7 +165,7 @@ class Typechecker {
         // Um we don't have a type class (we do but SHHHH) or a Name class so just strings
         if(!listOfMethodDeclsName.containsKey(classBodyElement.value[1].value)) {
           listOfMethodDeclsName[classBodyElement.value[i].value] = classBodyElement.value[i];
-          typecheckMethodDeclaration(classBodyElement.value[i]);
+          // typecheckMethodDeclaration(classBodyElement.value[i]);
         } else {
           throw IllTypedException('Duplicate method in class: $className');
         }
@@ -195,31 +203,31 @@ class Typechecker {
 
     } else if (expression.value[0] is AssignmentExpression) {
 
-      gamma.addAll(typecheckAssignmentExpression(expression.value[0], gamma, componentName));
+      // gamma.addAll(typecheckAssignmentExpression(expression.value[0]));
 
     } else if (expression.value[0] is AdditiveExpression) {
 
-      gamma.addAll(typecheckAdditiveExpression(expression.value[0], gamma, componentName));
+      // gamma.addAll(typecheckAdditiveExpression(expression.value[0]));
 
     } else if (expression.value[0] is MultiplicativeExpression) {
 
-      gamma.addAll(typecheckMultiplicativeExpression(expression.value[0], gamma, componentName));
+      // gamma.addAll(typecheckMultiplicativeExpression(expression.value[0]));
 
     } else if (expression.value[0] is EqualitylExpression) {
 
-      gamma.addAll(typecheckEqualityExpression(expression.value[0], gamma, componentName));
+      // gamma.addAll(typecheckEqualityExpression(expression.value[0]));
 
     } else if (expression.value[0] is RelationalExpression) {
 
-      gamma.addAll(typecheckRelationalExpression(expression.value[0], gamma, componentName));
+      // gamma.addAll(typecheckRelationalExpression(expression.value[0]));
 
     } else if (expression.value[0] is ConditionalAndExpression) {
 
-      gamma.addAll(typecheckConditionalAndExpression(expression.value[0], gamma, componentName));
+      // gamma.addAll(typecheckConditionalAndExpression(expression.value[0]));
 
     } else if (expression.value[0] is ConditionalOrExpression) {
 
-      gamma.addAll(typecheckConditionalOrExpression(expression.value[0], gamma, componentName));
+      // gamma.addAll(typecheckConditionalOrExpression(expression.value[0]));
 
     } else {
       throw IllTypedException('Unrecgonized expression.');
@@ -227,97 +235,97 @@ class Typechecker {
     return gamma;
   }
 
-  void typecheckAdditiveExpression(final AdditiveExpression additiveExpression) {
+  Map<String, String> typecheckAdditiveExpression(final AdditiveExpression additiveExpression) {
     var lhs;
     var rhs;
     if (additiveExpression.value[0] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(additiveExpression.value[0]);
+      // typecheckExpression(additiveExpression.value[0]);
     } else {
       throw IllTypedException('Unrecognized additive expression.');
     }
 
     if (additiveExpression.value[2] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(additiveExpression.value[2]);
+      // typecheckExpression(additiveExpression.value[2]);
     } else {
       throw IllTypedException('Unrecognized additive expression.');
     }
   }
 
-  void typecheckMultiplicativeExpression(final MultiplicativeExpression multiplicativeExpression) {
+  Map<String, String> typecheckMultiplicativeExpression(final MultiplicativeExpression multiplicativeExpression) {
     var lhs;
     var rhs;
     if (multiplicativeExpression.value[0] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(multiplicativeExpression.value[0]);
+      // typecheckExpression(multiplicativeExpression.value[0]);
     } else {
       throw IllTypedException('Unrecognized multiplicative expression.');
     }
 
     if (multiplicativeExpression.value[2] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(multiplicativeExpression.value[2]);
+      // typecheckExpression(multiplicativeExpression.value[2]);
     } else {
       throw IllTypedException('Unrecognized multiplicative expression.');
     }
   }
 
-  void typecheckEqualityExpression(final EqualitylExpression equalityExpression) {
+  Map<String, String> typecheckEqualityExpression(final EqualitylExpression equalityExpression) {
     var lhs;
     var rhs;
     if (equalityExpression.value[0] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(equalityExpression.value[0]);
+      // typecheckExpression(equalityExpression.value[0]);
     } else {
       throw IllTypedException('Unrecognized equality expression.');
     }
 
     if (equalityExpression.value[2] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(equalityExpression.value[2]);
+      // typecheckExpression(equalityExpression.value[2]);
     } else {
       throw IllTypedException('Unrecognized equality expression.');
     }
   }
 
-  void typecheckRelationalExpression(final RelationalExpression relationalExpression) {
+  Map<String, String> typecheckRelationalExpression(final RelationalExpression relationalExpression) {
     var lhs;
     var rhs;
     if (relationalExpression.value[0] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(relationalExpression.value[0]);
+      // typecheckExpression(relationalExpression.value[0]);
     } else {
       throw IllTypedException('Unrecognized relational expression.');
     }
 
     if (relationalExpression.value[2] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(relationalExpression.value[2]);
+      // typecheckExpression(relationalExpression.value[2]);
     } else {
       throw IllTypedException('Unrecognized relational expression.');
     }
   }
 
-  void typecheckConditionalAndExpression(final ConditionalAndExpression conditionalAndExpression) {
+  Map<String, String> typecheckConditionalAndExpression(final ConditionalAndExpression conditionalAndExpression) {
     var lhs;
     var rhs;
     if (conditionalAndExpression.value[0] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(conditionalAndExpression.value[0]);
+      // typecheckExpression(conditionalAndExpression.value[0]);
     } else {
       throw IllTypedException('Unrecognized logical AND expression.');
     }
 
     if (conditionalAndExpression.value[2] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(conditionalAndExpression.value[2]);
+      // typecheckExpression(conditionalAndExpression.value[2]);
     } else {
       throw IllTypedException('Unrecognized logical AND expression.');
     }
   }
 
-  void typecheckConditionalOrExpression(final ConditionalOrExpression conditionalOrExpression) {
+  Map<String, String> typecheckConditionalOrExpression(final ConditionalOrExpression conditionalOrExpression) {
     var lhs;
     var rhs;
     if (conditionalOrExpression.value[0] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(conditionalOrExpression.value[0]);
+      // typecheckExpression(conditionalOrExpression.value[0]);
     } else {
       throw IllTypedException('Unrecognized logical OR expression.');
     }
 
     if (conditionalOrExpression.value[2] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(conditionalOrExpression.value[2]);
+      // typecheckExpression(conditionalOrExpression.value[2]);
     } else {
       throw IllTypedException('Unrecognized logical OR expression.');
     }
@@ -329,30 +337,31 @@ class Typechecker {
                                   final String componentName) {
     if (primaryExpression is Literal) {
       // Need to fix this
-      typecheckLiteral()
+      // typecheckLiteral()
     } else if (primaryExpression is ParenthesizedExpression) {
       gamma.addAll( typecheckPrimaryExpression(primaryExpression.value[0], gamma, componentName) );
     } else if (primaryExpression is MemberAccess) {
       gamma.addAll( typecheckMemberAccess(primaryExpression.value[0], gamma, componentName) );
     } else if (primaryExpression is InvocationExpression) {
-      gamma.addAll( typecheckInvocationExpression(primaryExpression.value[0], gamma, componentName) );
+      // gamma.addAll( typecheckInvocationExpression(primaryExpression.value[0], gamma, componentName) );
     } else if (primaryExpression is ThisAccess) {
-      gamma.addAll( typecheckThisAccess(primaryExpression.value[0], gamma, componentName) );
+      // gamma.addAll( typecheckThisAccess(primaryExpression.value[0], gamma, componentName) );
     } else if (primaryExpression is ObjectCreationExpression) {
-      gamma.addAll( typecheckObjectCreationExpression(primaryExpression.value[0], gamma, componentName) );
+      // gamma.addAll( typecheckObjectCreationExpression(primaryExpression.value[0], gamma, componentName) );
     } else if (primaryExpression is TypeOfExpression) {
-      gamma.addAll( typecheckTypeOfExpression(primaryExpression.value[0], gamma, componenetName) );
+      // gamma.addAll( typecheckTypeOfExpression(primaryExpression.value[0], gamma, componenetName) );
     } else {
       throw IllTypedException('Unrecognized primary expression.');
     }
     return gamma;
   }
 
-  void typecheckThisAccess(final ThisAccess thisAccess) {
+  Map<String, String> typecheckThisAccess(final ThisAccess thisAccess) {
     // should just return 'this' as a string
     return thisAccess.value[0].value;
   }
 
+  // return type needs to be thought out
   void typecheckTypeOfExpression(final TypeOfExpression typeOfExpression) {
     // compare to thing in map probably
     return;
@@ -364,7 +373,7 @@ class Typechecker {
     if (memberAccess.value[0] is PrimaryExpression) {
       gamma.addAll( typecheckPrimaryExpression(memberAccess.value[0], gamma, componentName) );
     } else if (memberAccess.value[0] is Type) {
-      gamma[] = typecheckType(memberAccess.value[0]);
+      // gamma[] = typecheckType(memberAccess.value[0]);
     } else {
       throw IllTypedException('Unrecognized member access.');
     }
@@ -452,7 +461,7 @@ class Typechecker {
     var i = 3;
     while (methodDeclaration.value[i] is FixedParam) {
       try {
-        gamma.addAll(typecheckFixedParam(methodDeclaration.value[i], gamma, methodName));
+        gamma.addAll( typecheckFixedParam(methodDeclaration.value[i], gamma, methodName) );
       } on IllTypedException {
         throw IllTypedException('Incorrect fixed params in method.');
       }
@@ -479,7 +488,7 @@ class Typechecker {
     }
 
     if (localVariableDecl.value[1] is LocalVariableDeclaration) {
-      gamma.addAll( typecheckLocalVariableDeclarator(localVariableDecl.value[1], gamma, componentName, typeOfDecl) );
+      // gamma.addAll( typecheckLocalVariableDeclarator(localVariableDecl.value[1], gamma, componentName, typeOfDecl) );
     } else {
       throw IllTypedException('Unrecognized local variable declaration');
     }
@@ -526,16 +535,17 @@ class Typechecker {
     return gamma;
   }
 
-  // String getLocalVariableDeclaratorName(final LocalVariableDeclarator localVariableDeclarator) {
-  //   return localVariableDeclarator.value[0].value;
-  // }
+  String getLocalVariableDeclaratorName(final LocalVariableDeclarator localVariableDeclarator) {
+    return localVariableDeclarator.value[0].value;
+  }
 
   // typecheckConstructorDeclaration
   void typecheckConstructorDeclaration(final ConstructorDeclaration constructorDeclaration,
                                         final String className) {
+    Map<String, String> gamma = HashMap<String, String>();
     if (constructorDeclaration.value[0].value == className) {
-      typecheckFixedParam(constructorDeclaration.value[2]);
-      typecheckBlockStatement(constructorDeclaration.value[4]);
+      typecheckFixedParam(constructorDeclaration.value[2], gamma, 'constructor + $className');
+      // typecheckBlockStatement(constructorDeclaration.value[4]);
     } else {
       throw IllTypedException('''Constructor ${constructorDeclaration.value[0].value}
                               does not match classname: $className''');
@@ -556,7 +566,6 @@ class Typechecker {
     }
 
     return gamma;
-
   }
 
   // Done
@@ -583,11 +592,11 @@ class Typechecker {
                                           final Map<String, String> gamma,
                                           final String componentName) {
     if (statement is DeclarationStatement) {
-      gamma.addAll( typecheckDeclarationStatement(statement.value[0]), gamma, componentName );
+      // gamma.addAll( typecheckDeclarationStatement(statement.value[0]), gamma, componentName );
     } else if (statement is EmbeddedStatement) {
-      gamma.addAll( typecheckEmbeddedStatement(statement.value[0]), gamma, componentName );
+      // gamma.addAll( typecheckEmbeddedStatement(statement.value[0]), gamma, componentName );
     } else {
-      throw IllTypedException('Unrecognized statement.')
+      throw IllTypedException('Unrecognized statement.');
     }
 
     return gamma;
@@ -600,7 +609,7 @@ class Typechecker {
     if (declarationStatement is LocalVariableDeclaration) {
       gamma.addAll( typecheckLocalVariableDeclaration(declarationStatement.value[0], gamma, componentName) );
     } else if (declarationStatement is ConstantDeclaration) {
-      gamma.addAll( typecheckConstantDeclaration(declarationStatement.value[0], gamma, componentName) );
+      // gamma.addAll( typecheckConstantDeclaration(declarationStatement.value[0], gamma, componentName) );
     } else {
       throw IllTypedException('Unrecognized declaration statement.');
     }
@@ -610,7 +619,7 @@ class Typechecker {
 
   void typecheckConstantDeclaration(final ConstantDeclaration constantDeclaration) {
     if (constantDeclaration.value[3] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(constantDeclaration.value[3]);
+      // typecheckExpression(constantDeclaration.value[3]);
     } else {
       throw IllTypedException('');
     }
@@ -618,7 +627,7 @@ class Typechecker {
 
   void typecheckEmbeddedStatement(final EmbeddedStatement embeddedStatement) {
     if (embeddedStatement is Block) {
-      typecheckBlockStatement(embeddedStatement.value[0]);
+      // typecheckBlockStatement(embeddedStatement.value[0]);
     } else if (embeddedStatement is EmptyStatement) {
       // Do nothing
       // no reason to check an empty statement of its non existant type
@@ -639,9 +648,9 @@ class Typechecker {
   void typecheckExpressionStatement(final ExpressionStatement expressionStatement) {
     // This is broken go back later
     if (expressionStatement is InvocationExpression) {
-      typecheckInvocationExpression(expressionStatement.value[0]);
+      // typecheckInvocationExpression(expressionStatement.value[0]);
     } else if (expressionStatement is ObjectCreationExpression) {
-      typecheckObjectCreationExpression(expressionStatement.value[0]);
+      // typecheckObjectCreationExpression(expressionStatement.value[0]);
     } else if (expressionStatement is AssignmentExpression) {
       typecheckAssignmentExpression(expressionStatement.value[0]);
     } else {
@@ -650,14 +659,14 @@ class Typechecker {
   }
 
   // This is broken go back later
-  void typecheckInvocationExpression(final InvocationExpression invocationExpression) {
+  // void typecheckInvocationExpression(final InvocationExpression invocationExpression) {
 
-  }
+  // }
 
   // This is broken go back later
-  void typecheckObjectCreationExpression(final ObjectCreationExpression objectCreationExpression) {
+  // void typecheckObjectCreationExpression(final ObjectCreationExpression objectCreationExpression) {
 
-  }
+  // }
 
   // This is broken go back later
   void typecheckAssignmentExpression(final AssignmentExpression assignmentExpression) {
@@ -665,7 +674,7 @@ class Typechecker {
     if (assignmentExpression.value[0] is PrimaryNoArrayCreationExpression) {
       // broken
       typeLHS = 0;
-      typecheckExpression(assignmentExpression.value[0]);
+      // typecheckExpression(assignmentExpression.value[0]);
     } else {
       throw IllTypedException('Unrecognized expression.');
     }
@@ -673,7 +682,7 @@ class Typechecker {
     if (assignmentExpression.value[2] is PrimaryNoArrayCreationExpression) {
       // broken
       typeRHS = 0;
-      typecheckExpression(assignmentExpression.value[2]);
+      // typecheckExpression(assignmentExpression.value[2]);
     } else {
       throw IllTypedException('Unrecognized expression.');
     }
@@ -693,7 +702,7 @@ class Typechecker {
   // need maps for typechecking in here
   void typecheckForStatement(final ForStatement forStatement) {
     if (forStatement.value[2] is LocalVariableDeclaration) {
-      typecheckLocalVariableDeclaration(forStatement.value[2]);
+      // typecheckLocalVariableDeclaration(forStatement.value[2]);
     } else if (forStatement.value[2] is ExpressionStatement) {
       typecheckExpressionStatement(forStatement.value[2]);
     } else {
@@ -701,7 +710,7 @@ class Typechecker {
     }
     // Broken right now go back later
     if (forStatement.value[4] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(forStatement.value[4]);
+      // typecheckExpression(forStatement.value[4]);
     } else {
       throw IllTypedException('Unrecognized for loop guard');
     }
@@ -723,7 +732,7 @@ class Typechecker {
   void typecheckWhileStatement(final WhileStatement whileStatement) {
     // Broken right now go back later
     if (whileStatement.value[2] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(whileStatement.value[2]);
+      // typecheckExpression(whileStatement.value[2]);
     } else {
       throw IllTypedException('Unrecognized conditional in while loop.');
     }
@@ -736,7 +745,7 @@ class Typechecker {
   void typecheckJumpStatement(final JumpStatement jumpStatement) {
     // Go back to this
     if (jumpStatement.value[1] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(jumpStatement.value[1]);
+      // typecheckExpression(jumpStatement.value[1]);
     } else {
       throw IllTypedException('Unrecognized jump statement.');
     }
@@ -745,7 +754,7 @@ class Typechecker {
   void typecheckSelectionStatement(final SelectionStatement selectionStatement) {
     // Go back to this
     if (selectionStatement.value[2] is PrimaryNoArrayCreationExpression) {
-      typecheckExpression(selectionStatement.value[2]);
+      // typecheckExpression(selectionStatement.value[2], ga);
     } else {
       throw IllTypedException('Unrecognized conditional in if statement.');
     }
