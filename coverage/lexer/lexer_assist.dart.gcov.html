@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - lcov.info - lexer/lexer_assist.dart</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">lexer</a> - lexer_assist.dart<span style="font-size: 80%;"> (source / <a href="lexer_assist.dart.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">lcov.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntryLo">58.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2020-05-15 16:04:59</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntryHi">-</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // UTF-16, 0 through 9</a>
+<span class="lineNum">       2 </span>            : const _decimalDigits = [48, 49, 50, 51, 52,
+<span class="lineNum">       3 </span>            :                         53, 54, 55, 56, 57];
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            : const _opsAndPuncs = [33, 37, 38, 40, 41, 42, 43, 44,
+<span class="lineNum">       6 </span>            :                       45, 46, 47, 58, 59, 94,
+<span class="lineNum">       7 </span>            :                       123, 124,
+<span class="lineNum">       8 </span>            :                       125,
+<span class="lineNum">       9 </span>            :                       ];
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            : const _Zs = [32, 160, 5760, 8192, 8193,
+<span class="lineNum">      12 </span>            :              8194, 8195, 8196, 8197, 8198,
+<span class="lineNum">      13 </span>            :              8199, 8200, 8201, 8202, 8239,
+<span class="lineNum">      14 </span>            :              8287, 12288];
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span><span class="lineCov">          1 : bool isDecimalDigit(int character) {</span>
+<span class="lineNum">      17 </span><span class="lineCov">          1 :   if (_decimalDigits.contains(character)) {</span>
+<span class="lineNum">      18 </span>            :     return true;
+<span class="lineNum">      19 </span>            :   }
+<span class="lineNum">      20 </span>            :   return false;
+<span class="lineNum">      21 </span>            : }
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span><span class="lineNoCov">          0 : bool isMemberOfZs(int character) {</span>
+<span class="lineNum">      24 </span><span class="lineNoCov">          0 :   if (_Zs.contains(character)) {</span>
+<span class="lineNum">      25 </span>            :     return true;
+<span class="lineNum">      26 </span>            :   }
+<span class="lineNum">      27 </span>            :   return false;
+<span class="lineNum">      28 </span>            : }
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span><span class="lineNoCov">          0 : bool isOperatorOrPunctuator(int character) {</span>
+<span class="lineNum">      31 </span><span class="lineNoCov">          0 :   if (_opsAndPuncs.contains(character)) {</span>
+<span class="lineNum">      32 </span>            :     return true;
+<span class="lineNum">      33 </span>            :   }
+<span class="lineNum">      34 </span>            :   return false;
+<span class="lineNum">      35 </span>            : }
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span><span class="lineCov">          1 : bool isDoubleOp(String chunk) {</span>
+<span class="lineNum">      38 </span><span class="lineCov">          1 :   var _doubleOps = ['??', '::', '++', '--',</span>
+<span class="lineNum">      39 </span>            :                     '&amp;&amp;', '||' ,'-&gt;', '==',
+<span class="lineNum">      40 </span>            :                     '!=','&lt;=','&gt;=','+=',
+<span class="lineNum">      41 </span>            :                     '-=','*=','/=','%=',
+<span class="lineNum">      42 </span>            :                     '&amp;=',',=','^=','&lt;&lt;',
+<span class="lineNum">      43 </span>            :                     '=&gt;'];
+<span class="lineNum">      44 </span><span class="lineCov">          1 :   if (_doubleOps.contains(chunk)) {</span>
+<span class="lineNum">      45 </span>            :     return true;
+<span class="lineNum">      46 </span>            :   }
+<span class="lineNum">      47 </span>            :   return false;
+<span class="lineNum">      48 </span>            : }
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span><span class="lineCov">          1 : bool isTripleOp(String chunk) {</span>
+<span class="lineNum">      51 </span><span class="lineCov">          1 :   if (chunk == '&lt;&lt;=')</span>
+<span class="lineNum">      52 </span>            :   {
+<span class="lineNum">      53 </span>            :     return true;
+<span class="lineNum">      54 </span>            :   }
+<span class="lineNum">      55 </span>            :   return false;
+<span class="lineNum">      56 </span>            : }
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span><span class="lineCov">          1 : bool isKeyword(String keyword) {</span>
+<span class="lineNum">      59 </span><span class="lineCov">          1 :   var list = ['abstract', 'as', 'bool', 'break', 'byte', 'case', 'char', 'class', 'const', 'continue',</span>
+<span class="lineNum">      60 </span>            :               'decimal', 'do', 'double', 'else', 'false', 'float', 'for', 'foreach', 'if', 'in',
+<span class="lineNum">      61 </span>            :               'int', 'interface', 'internal', 'is', 'long', 'new', 'null', 'object', 'private', 'protected', 
+<span class="lineNum">      62 </span>            :               'public', 'readonly', 'return', 'sbyte', 'short', 'static', 'string', 'switch', 'this', 'true', 
+<span class="lineNum">      63 </span>            :               'typeof', 'uint', 'ulong', 'ushort', 'void', 'while'];
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span><span class="lineCov">          1 :   if (list.contains(keyword)) {</span>
+<span class="lineNum">      66 </span>            :     return true;
+<span class="lineNum">      67 </span>            :   }
+<span class="lineNum">      68 </span>            :   return false;
+<span class="lineNum">      69 </span>            : }
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 : bool isWhitespace(String line) {</span>
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :   var list = ['\u{0009}', '\u{000B}', '\u{000C}', '\u{0020}',</span>
+<span class="lineNum">      74 </span>            :               '\u{00A0}', '\u{1680}', '\u{2000}', '\u{2001}',
+<span class="lineNum">      75 </span>            :               '\u{2002}', '\u{2003}', '\u{2004}', '\u{2005}',
+<span class="lineNum">      76 </span>            :               '\u{2006}', '\u{2007}', '\u{2008}', '\u{2009}',
+<span class="lineNum">      77 </span>            :               '\u{200A}', '\u{202F}', '\u{205F}', '\u{3000}'];
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :   if (list.contains(line)) {</span>
+<span class="lineNum">      80 </span>            :     return true;
+<span class="lineNum">      81 </span>            :   }
+<span class="lineNum">      82 </span>            : 
+<span class="lineNum">      83 </span>            :   return false;
+<span class="lineNum">      84 </span>            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
