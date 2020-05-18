@@ -498,9 +498,10 @@ class Parser {
   }
 
   // 0 --> const Token
-  // 1 --> identifier Token
-  // 2 --> '=' Token
-  // 3 --> Expression Object
+  // 1 --> type object
+  // 2 --> identifier Token
+  // 3 --> '=' Token
+  // 4 --> Expression Object
   ConstantDeclaration parseConstantDeclaration() {
     var startPos = _position;
     var output = ConstantDeclaration(List());
