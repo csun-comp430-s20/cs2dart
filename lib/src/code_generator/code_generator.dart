@@ -5,32 +5,20 @@ import 'package:cs2dart/src/classes/variants/variants/ConstructorDeclaration.dar
 import 'package:cs2dart/src/classes/variants/variants/MethodDeclaration.dart';
 import 'package:cs2dart/src/classes/variants/variants/variants/FixedParam.dart';
 import 'package:cs2dart/src/namespaces/namespace.dart';
-import 'package:cs2dart/src/statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/LocalVariableDeclaratorsVariants/LocalVariableDeclaratorVariants/local_variable_initializer.dart';
-import 'package:cs2dart/src/statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/LocalVariableDeclaratorsVariants/local_variable_declarator.dart';
-import 'package:cs2dart/src/statements/variants/DeclarationStatementVariants/constant_declaration.dart';
-import 'package:cs2dart/src/statements/variants/DeclarationStatementVariants/local_variable_declaration.dart';
-import 'package:cs2dart/src/statements/variants/EmbeddedStatementVariants/IterationStatementVariants/for_statement.dart';
-import 'package:cs2dart/src/statements/variants/EmbeddedStatementVariants/IterationStatementVariants/while_statement.dart';
-import 'package:cs2dart/src/statements/variants/EmbeddedStatementVariants/block.dart';
-import 'package:cs2dart/src/statements/variants/EmbeddedStatementVariants/empty_statement.dart';
-import 'package:cs2dart/src/statements/variants/EmbeddedStatementVariants/expression_statement.dart';
-import 'package:cs2dart/src/statements/variants/EmbeddedStatementVariants/iteration_statement.dart';
-import 'package:cs2dart/src/statements/variants/EmbeddedStatementVariants/jump_statement.dart';
-import 'package:cs2dart/src/statements/variants/EmbeddedStatementVariants/selection_statement.dart';
-import 'package:cs2dart/src/statements/variants/declaration_statement.dart';
-import 'package:cs2dart/src/statements/variants/embedded_statement.dart';
-import 'package:cs2dart/src/tokens/token.dart';
 import 'package:cs2dart/src/tokens/variants/keyword_token.dart';
-import 'package:cs2dart/src/types/type.dart';
 import 'package:cs2dart/src/types/variants/reference_type.dart';
 import 'package:cs2dart/src/types/variants/value_type.dart';
 import 'package:cs2dart/src/types/variants/variants/floating_point_type.dart';
 import 'package:cs2dart/src/types/variants/variants/integral_type.dart';
 import 'package:cs2dart/src/statements/statement.dart';
+import 'package:cs2dart/tokens.dart';
+import 'package:cs2dart/expressions.dart';
+import 'package:cs2dart/types.dart';
+import 'package:cs2dart/statement.dart';
 class ClassGenerator {
   ClassGenerator(this._namespace);
-    
-    
+
+
     final Namespace _namespace;
 
     String genCode(){
@@ -45,7 +33,7 @@ class ClassGenerator {
       String output = '';
       output += classinput.value[0].value + ' ';
       output += classinput.value[1].value + ' ';
-      
+
       for (int i = 2; i < classinput.value.length; i++){
         if(classinput.value[i] is ClassBase){
           output += genClassBaseCode(classinput.value[i]) + ' ';
@@ -87,6 +75,7 @@ class ClassGenerator {
         else{
           output += genConstructorDeclorationCode(classBody.value[i]) + ' ';
         }
+        i++;
       }
       output += '}';
       return output;
@@ -109,40 +98,83 @@ class ClassGenerator {
       output += genBlockStatement(input.value[i]) + ' ';
       return output;
     }
-   
-   
+
+
     String genMenthodDeclarationCode(MethodDeclaration input){
       var output = '';
-      if(input.value[0] is KeywordToken){//method is void
-        output += input.value[0].value + ' '; 
+      if(input.value[0] is KeywordToken){ //method is void
+        output += input.value[0].value + ' ';
       }
       else{
         output += genTypeCode(input.value[0]) + ' ';
       }
       output += input.value[1].value;
       output += input.value[2].value;
-      int i = 3;
+      var i = 3;
+      //parameters
       while(i < input.value.length - 1){
-        output += genFixedParam(input.value[i]);
-        if(i < input.value.length - 2){
-          output += ', ';
+        if (input.value[i].value == ')' && ((i+1) == input.value.length - 1))
+        {
+          output += ')';
+          i++;
         }
-        i++;
+        else
+        {
+          output += genFixedParam(input.value[i]);
+          if(i < input.value.length - 2){
+            output += ', ';
+          }
+          i++;
+        }
       }
-      output += input.value[i].value + ' ';
-      i++;
-      output += genBlockStatement(input.value[i]) + ' ';
+      print('===============Debugcomment=============15');
+      print(input.value);
+      if (input.value is List)
+      {
+        for (var t = 0; t < input.value.length; t++)
+        {
+          print('===============Debugcomment=============777');
+          print(input.value[t].value);
+          if (!(input.value[t] is Block))
+          {
+            output += input.value[t].value + ' ';
+          }
+          else
+          {
+            output += genBlockStatement(input.value[t]) + '}';
+          }
+        }
+      }
+      // i++;
       return output;
     }
     String genBlockStatement(Block input){
-      var output;
+      // print(input.value[t].value);
+      var output = '';
+      //beginning bracket of code
       output += input.value[0].value + ' ';
-      int i = 1;
-      while (i < input.value.length - 1){
-        output += genStatements(input.value[i]) + ' ';
+      var i = 1;
+      //for the list of statements
+      while (i < input.value.length){
+        //checks for end of block. Block types will always have a "}" at the end of list.
+        print('===============Debugcomment=============00');
+        print(input.value[i]);
+        if (i == input.value.length - 1)
+        {
+          print('====Debugcomment Statement finished====99');
+          print(input.value[i]);
+          output += '} ';
+          print(output);
+        }
+        else
+        {
+          print('===============Debugcomment=============88');
+          output += genStatements(input.value[i]) + ' ';
+          print(output);
+        }
         i++;
       }
-      output+= input.value[i].value + ' ';
+      // output+= input.value[i].value + ' ';
       return output;
     }
 
@@ -155,72 +187,74 @@ class ClassGenerator {
         output += genEmbeddedStatement(input) + ' ';
       }
       return output;
-      
+
     }
-  
+
     String genExpressionStatement(ExpressionStatement input){
+
+      //is this replaced by getExpressionCode??
 
     }
 
     String genIterationStatement(IterationStatement input){
       var output = '';
       if(input is ForStatement){
-        output += genForStatement(input);
+        // output += genForStatement(input);
       }
       else{
-        output += genWhileStatement(input);
+        // output += genWhileStatement(input);
       }
       return output;
     }
 
-    
 
-    String genForStatement(ForStatement input){
-      var output ='';
-      output += input.value[0].value + ' ';
-      output += input.value[1].value + ' ';
-      output += genLocalVariableDeclarationCode(input.value[2]);
-      output += input.value[3].value + ' ';
-      output += genExpressionCode(input.value[4]);
-      output += input.value[5].value + ' ';
-      output += genExpressionStatement(input.value[6]);
-      output += input.value[7].value;
-      output += genEmbeddedStatement(input.value[8]) + ' ';
-      return output;
-    }
 
-    String genWhileStatement(WhileStatement input){
-      var output = '';
-      output += input.value[0].value + ' ';
-      output += input.value[1].value + ' ';
-      output += genExpressionCode(input.value[2]);
-      output += input.value[3] + ' ';
-      output += genEmbeddedStatement(input.value[4]) + ' ';
-
-      return output;
-    }
-
-    String genJumpStatement(JumpStatement input){
-      var output = '';
-      output += input.value[0].value + ' ';
-      output += genExpressionCode(input.value[1]) + ' ';
-      output += input.value[2].value + ' ';
-      return output;
-    }
-
-    String genSelectionStatement(SelectionStatement input){
-      var output = '';
-      output += input.value[0].value + ' ';
-      output += input.value[1].value + ' ';
-      output += genExpressionCode(input.value[2]) + ' ';
-      output += input.value[3].value + ' ';
-      output += genEmbeddedStatement(input.value[4]);
-      if(input.value.length > 5){
-        output += input.value[5].value + ' ';
-        output += genEmbeddedStatement(input.value[6]) + ' ';
-      }
-      return output;
-    }
+    // String genForStatement(ForStatement input){
+    //   var output ='';
+    //   output += input.value[0].value + ' ';
+    //   output += input.value[1].value + ' ';
+    //   output += genLocalVariableDeclarationCode(input.value[2]);
+    //   output += input.value[3].value + ' ';
+    //   output += genExpressionCode(input.value[4]);
+    //   output += input.value[5].value + ' ';
+    //   output += genExpressionStatement(input.value[6]);
+    //   output += input.value[7].value;
+    //   output += genEmbeddedStatement(input.value[8]) + ' ';
+    //   return output;
+    // }
+    //
+    // String genWhileStatement(WhileStatement input){
+    //   var output = '';
+    //   output += input.value[0].value + ' ';
+    //   output += input.value[1].value + ' ';
+    //   output += genExpressionCode(input.value[2]);
+    //   output += input.value[3] + ' ';
+    //   output += genEmbeddedStatement(input.value[4]) + ' ';
+    //
+    //   return output;
+    // }
+    //
+    // String genJumpStatement(JumpStatement input){
+    //   var output = '';
+    //   output += input.value[0].value + ' ';
+    //   output += genExpressionCode(input.value[1]) + ' ';
+    //   output += input.value[2].value + ' ';
+    //   return output;
+    // }
+    //
+    // String genSelectionStatement(SelectionStatement input){
+    //   var output = '';
+    //   output += input.value[0].value + ' ';
+    //   output += input.value[1].value + ' ';
+    //   output += genExpressionCode(input.value[2]) + ' ';
+    //   output += input.value[3].value + ' ';
+    //   output += genEmbeddedStatement(input.value[4]);
+    //   if(input.value.length > 5){
+    //     output += input.value[5].value + ' ';
+    //     output += genEmbeddedStatement(input.value[6]) + ' ';
+    //   }
+    //   return output;
+    // }
 
 
 
@@ -242,14 +276,14 @@ class ClassGenerator {
         output += genIterationStatement(input);
         return output;
       }
-      else if(input is JumpStatement){
-        output += genJumpStatement(input);
-        return output;
-      }
-      else if(input is SelectionStatement){
-        output += genSelectionStatement(input);
-        return output;
-      }
+      // else if(input is JumpStatement){
+      //   output += genJumpStatement(input);
+      //   return output;
+      // }
+      // else if(input is SelectionStatement){
+      //   output += genSelectionStatement(input);
+      //   return output;
+      // }
       else{
         return null;
       }
@@ -278,13 +312,18 @@ class ClassGenerator {
 
     String genLocalVariableDeclarationCode(LocalVariableDeclaration input){
       var output = '';
-      output += genTypeCode(input.value[0]) + ' ';
+      print('===============Debugcomment=============365');
+      print(input.value);
+      output += genTypeCode(input.value[0]);
       output += genLocalVariabelDeclaratorCode(input.value[1]);
       return output;
     }
-
+  //
     String genLocalVariabelDeclaratorCode(LocalVariableDeclarator input){
       var output = '';
+      print('===============Debugcomment=============42');
+      print(input.value);
+      print(input);
       output += input.value[0].value + ' ';
       if (input.value.length > 1){
         output += input.value[1].value + ' ';
@@ -295,10 +334,21 @@ class ClassGenerator {
     }
     String genLocalVariableInitializer(LocalVariableInitializer input){
       var output = '';
-      output += genExpressionCode(input.value[0]) + ' ';
+      print(input.value);
+
+      if (input.value[0] is Literal && input.value.length == 1)
+      {
+        //the value of the literal is placed
+        output += input.value[0].value[0].value;
+      }
+      else
+      {
+        output += genExpressionCode(input.value[0]) + ' ';
+      }
+      print(output);
       return output;
     }
-
+  //
   String genConstDeclarationCode(ConstantDeclaration value) {
     var output = '';
     output += value.value[0].value + ' ';
@@ -311,7 +361,24 @@ class ClassGenerator {
     return output;
   }
 
-  String genTypeCode(Type input){
+  String genExpressionCode(PrimaryExpression input)
+  {
+    print('AAAAAAAAAAAAAAAAAAAAAH this needs to be written');
+    //Were this method to be called, the following error would occur during testing, since output is null.
+
+    //Error:
+    // NoSuchMethodError: The method '+' was called on null.
+    // Receiver: null
+    // Tried calling: +(" ")
+
+
+    var output;
+    return output;
+  }
+
+//========================================================================
+
+  String genTypeCode(LocalVariableType input){
     var output = '';
     if(input.runtimeType.toString() == 'ValueType'){
       output += genValueTypeCode(input.value[0]) + ' ';
@@ -324,7 +391,7 @@ class ClassGenerator {
 
   String genReferenceTypeCode(ReferenceType input){
     var output = '';
-    
+
       if(input.value[0].value == 'object'){
         output += 'Object ';
         return output;
@@ -337,7 +404,7 @@ class ClassGenerator {
         output += input.value[0].value + ' ';
         return output;
       }
-    
+
   }
 
   String genValueTypeCode(ValueType input){
@@ -367,5 +434,5 @@ class ClassGenerator {
     output += input.value[0].value + ' ';
     return output;
   }
-  
+
 }

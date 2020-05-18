@@ -66,6 +66,7 @@ class Parser {
   final List<Token> _tokens;
   int _position = 0;
 
+  // We don't use this method
   void checkTokenIs(int position, Token input) {
     // equals written, need to test, unsure why error
     if (!_tokens[position].equals(input)) {
@@ -112,8 +113,8 @@ class Parser {
   //end interface helper functions
 
   // parseClassBase Breakdown
-  // first in the list is the extends
-  // second in the list is the base class identifier
+  // 0 --> : Token
+  // 1 --> Identifier Token
   // seems done
   ClassBase parseClassBase() {
     var startPos = _position;
@@ -136,6 +137,8 @@ class Parser {
     }
   }
 
+  // 0 --> Type Object
+  // 1 --> Identifier Token
   FixedParam parseFixedParam() {
     //var startPos = _position;
     var output = FixedParam(new List());
@@ -154,14 +157,18 @@ class Parser {
     }
   }
 
+  // 0 --> Type Object or Void Token
+  // 1 --> Identifier
+  // 2 --> ( Token
+  // 3 to X --> FixedParam Object
+  // X + 1 --> ) Token
+  // X + 2 --> Block Statement Object
   MethodDeclaration parseMethodDeclaration() {
-    print('here149');
     var startPos = _position;
     var output = MethodDeclaration(new List());
     print(_tokens[_position].value);
     var returnType = parseType();
     if (returnType != null) {
-      print('here154');
       output.value.add(returnType);
     } else {
       if (_tokens[_position].value == 'void') {
@@ -179,7 +186,6 @@ class Parser {
         output.value.add(_tokens[_position]);
         _position++;
         var param;
-        print("here169");
         while (_tokens[_position].value != ')') {
           if (_position >= _tokens.length) {
             _position = startPos;
@@ -213,11 +219,11 @@ class Parser {
     }
   }
 
-  // 0 --> identifier
-  // 1 --> (
-  // 2 --> parseFixedParam()
-  // 3 --> )
-  // 4 --> parseBlockStatement()
+  // 0 --> Identifier Token
+  // 1 --> ( Token
+  // 2 --> Fixed Param Object
+  // 3 --> ) Token
+  // 4 --> Block Statement Object
   ConstructorDeclaration parseConstructorDeclaration() {
     var startPos = _position;
     var output = ConstructorDeclaration(new List());
@@ -261,11 +267,11 @@ class Parser {
   }
 
   // parseClassBody Breakdown
-  // first is always '{'
-  // second till X can be the following until '}':
+  // 0 --> { Token
+  // 2 to X --> (Below)
   //     constantDeclaration
   //     localVariableDeclaration
-  //     localMethodDeclaration
+  //     methodDeclaration
   //     constructorDeclaration
   // X is '}'
   // done, need to finish helper methods
@@ -291,19 +297,18 @@ class Parser {
           if(_tokens[_position].value == ';'){
             output.value.add(_tokens[_position]);
             _position++;
-            
+
           }
           else{
             _position = startPos;
             return null;
           }
-        } 
+        }
         else {
           var fieldDecl = parseLocalVariableDeclaration();
           print(fieldDecl.runtimeType.toString());
-          
+
           if (fieldDecl != null) {
-            print("here269");
             output.value.add(fieldDecl);
             if(_tokens[_position].value == ';'){
               output.value.add(_tokens[_position]);
@@ -312,7 +317,6 @@ class Parser {
             else{
               output.value.removeLast();
               _position = _position -2;
-              print("here");
              var methodDecl = parseMethodDeclaration();
              print(methodDecl.runtimeType.toString());
              if(methodDecl !=null){
@@ -329,7 +333,6 @@ class Parser {
              }
             }
           } else {
-            print("here268");
             var methodDecl = parseMethodDeclaration();
             if (methodDecl != null) {
               output.value.add(methodDecl);
@@ -355,19 +358,14 @@ class Parser {
   }
 
   // parseClass Breakdown
-  // first in list is the keyword: class
-  // second in list is the identifier of the class
-  // third (or not present) in the list is the class' base class (extends or implements)
-  // fourth (or third) is the body of the class
-  // fifth (or fourth or not present) can be a semi-colon
+  // 0 --> class Keyword Token
+  // 1 --> Identifier Token
+  // 2 --> Class Base Object     or... 2 --> Class Body Object
+  // 3 --> Class Body Object     or... 3 --> ; Token (optional)
+  // 4 --> ; Token (optional)
   ClassDeclaration parseClass() {
     var startPos = _position;
     var output = ClassDeclaration(new List());
-    //class modifier COME BACK TO THIS
-    // if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'class'){
-
-    // }
-    // class keyword
     if (_tokens[_position] is KeywordToken &&
         _tokens[_position].value == 'class') {
       output.value.add(_tokens[_position]);
@@ -392,9 +390,6 @@ class Parser {
         var body = parseClassBody();
         if (body != null) {
           output.value.add(body);
-          //print("here323");
-          //print(_position);
-          //print(_tokens.length);
           if(_position < _tokens.length){
             if (_tokens[_position] is OperatorOrPunctuatorToken &&
                 _tokens[_position].value == ';') {
@@ -417,80 +412,7 @@ class Parser {
     }
   }
 
-  // //finish
-  // InterfaceBody parseInterfaceBody() {
-  //   return null;
-  // }
-
-  // InterfaceModifier parseInterfaceModifier(){
-  //   return null;
-  // }
-  //seems done
-  // InterfaceBase parseInterfaceBase() {
-  //   var startPos = _position;
-  //   var output = InterfaceBase(new List());
-  //   if (_tokens[_position] is OperatorOrPunctuatorToken &&
-  //       _tokens[_position].value == ':') {
-  //     output.value.add(_tokens[_position]);
-  //     _position++;
-  //     if (_tokens[_position] is IdentifierToken) {
-  //       output.value.add(_tokens[_position]);
-  //       _position++;
-  //       return output;
-  //     } else {
-  //       _position = startPos;
-  //       return null;
-  //     }
-  //   } else {
-  //     _position = startPos;
-  //     return null;
-  //   }
-  // }
-
-  // //Seems done
-  // InterfaceDeclaration parseInterface() {
-  //   var startPos = _position;
-  //   var output = InterfaceDeclaration(new List());
-  //   //interface modifier COMEBACK TO THIS
-  //   // if(_tokens[_position] is KeywordToken && _tokens[_position].value != 'interface'){
-
-  //   // }
-  //   //interface keyword
-  //   if (_tokens[_position] is KeywordToken &&
-  //       _tokens[_position].value == 'interface') {
-  //     output.value.add(_tokens[_position]);
-  //     _position++;
-  //     var body = parseInterfaceBody();
-  //     //interface Body
-  //     if (body != null) {
-  //       output.value.add(body);
-  //       _position++;
-  //       if (_tokens[_position] is OperatorOrPunctuatorToken &&
-  //           _tokens[_position].value == ';') {
-  //         output.value.add(_tokens[_position]);
-  //         _position++;
-  //         return output;
-  //       } else {
-  //         return output;
-  //       }
-  //     } else {
-  //       _position = startPos;
-  //       return null;
-  //     }
-  //   } else {
-  //     _position = startPos;
-  //     return null;
-  //   }
-  //}
-
-  //=================================================================================
-  //=================================================================================
-  //Start of parsers for Statements==================================================
-  //=================================================================================
-  //=================================================================================
-
-  //
-
+  // 0 --> PrimaryNoArrayCreationExpression Object
   LocalVariableInitializer parseLocalVariableInitializer() {
     var tmpExp = parseExpression();
 
@@ -503,6 +425,9 @@ class Parser {
     }
   }
 
+  // 0 --> Identifier
+  // 1 --> = Token
+  // 2 --> Local Variable Initializer Object
   LocalVariableDeclarator parseLocalVariableDeclarator() {
     //print(_position);
     //print(_tokens.length);
@@ -531,19 +456,7 @@ class Parser {
     return null;
   }
 
-  // LocalVariableDeclarators parseLocalVariableDeclarators() {
-  //   var startPos = _position;
-  //   var output = LocalVariableDeclarators(List());
-  //   var tmpVarDec = parseLocalVariableDeclarator();
-  //   if (tmpVarDec != null) {
-  //     output.value.add(tmpVarDec);
-  //     //_position++;
-  //     return output;
-  //   }
-  //   _position = startPos;
-  //   return null;
-  // }
-
+  // 0 --> Type Object
   LocalVariableType parseLocalVariableType() {
     var startPos = _position;
     var output = LocalVariableType(List());
@@ -557,6 +470,8 @@ class Parser {
     return null;
   }
 
+  // 0 --> Local Variable Type
+  // 1 --> Local Variable Declarator Object
   LocalVariableDeclaration parseLocalVariableDeclaration() {
     var startPos = _position;
     var output = LocalVariableDeclaration(List());
@@ -565,9 +480,9 @@ class Parser {
       //print("here506");
       output.value.add(newLocalVarType);
       //_position++;
-      
+
       var newLocalVarDec = parseLocalVariableDeclarator();
-      
+
       if (newLocalVarDec != null) {
         //print("here513");
         output.value.add(newLocalVarDec);
@@ -582,10 +497,10 @@ class Parser {
     return null;
   }
 
-  // 0 --> const
-  // 1 --> identifier
-  // 2 --> '='
-  // 3 --> parseExpression()
+  // 0 --> const Token
+  // 1 --> identifier Token
+  // 2 --> '=' Token
+  // 3 --> Expression Object
   ConstantDeclaration parseConstantDeclaration() {
     var startPos = _position;
     var output = ConstantDeclaration(List());
@@ -595,10 +510,8 @@ class Parser {
       _position++;
       var type = parseType();
       if (type != null){
-        //print("here538");
         output.value.add(type);
         if (_tokens[_position].type == TokenType.identifier) {
-          //print("here541");
         output.value.add(_tokens[_position]);
         _position++;
         if (_tokens[_position].value == "=") {
@@ -628,68 +541,11 @@ class Parser {
     }
   }
 
-  //  ConstantDeclaration parseConstantDeclaration() {
-  //    print("here528");
-  //   var startPos = _position;
-  //   var output = ConstantDeclaration(List());
-  //   if (_tokens[_position].value == "const") {
-  //     print("here532");
-  //     output.value.add(_tokens[_position]);
-  //     _position++;
-  //     if (_tokens[_position].type == TokenType.identifier) {
-  //       output.value.add(_tokens[_position]);
-  //       _position++;
-  //       if (_tokens[_position].value == "=") {
-  //         output.value.add(_tokens[_position]);
-  //         _position++;
-  //         var tmpExpr = parseExpression();
-  //         if (tmpExpr != null)
-  //         {
-  //           output.value.add(tmpExpr);
-  //           //_position++;
-  //           return output;
-  //         }
-  //         _position = startPos;
-  //         return null;
-  //       }
-  //       _position = startPos;
-  //       return null;
-  //     }
-  //     _position = startPos;
-  //     return null;
-  //   }
-  //   _position = startPos;
-  //   return null;
-  // }
-//====================================================================
-//top level parsers for Statements====================================
-//====================================================================
-
-  // LabeledStatement parseLabeledStatement() {
-  //   var startPos = _position;
-  //   var output = LabeledStatement(List());
-  //   if (_tokens[_position].type == TokenType.identifier) {
-  //     output.value.add(_tokens[_position]);
-  //     _position++;
-  //     if (_tokens[_position].value == ':') {
-  //       output.value.add(_tokens[_position]);
-  //       _position++;
-  //       var newStat = parseStatements();
-  //       if (newStat != null) {
-  //         output.value.add(_tokens[_position]);
-  //         _position++;
-  //         return output;
-  //       }
-  //       _position = startPos;
-  //       return null;
-  //     }
-  //     _position = startPos;
-  //     return null;
-  //   }
-  //   _position = startPos;
-  //   return null;
-  // }
-
+  // (Optional 0 indexes)
+  // 0 --> Local Variable Declaration Object
+  // or...
+  // 0 --> Constant Declaration Object
+  // 1 --> ; Token
   DeclarationStatement parseDeclarationStatement() {
     var startPos = _position;
     var output = DeclarationStatement(List());
@@ -712,6 +568,9 @@ class Parser {
     return null;
   }
 
+  // 0 --> { Token
+  // 1 to X --> Statements Object
+  // X + 1 --> } Token
   //Done
   Block parseBlockStatement() {
     var startPos = _position;
@@ -745,6 +604,7 @@ class Parser {
     }
   }
 
+  // 0 --> ; Token
   //Done
   EmptyStatement parseEmptyStatement() {
     if (_tokens[_position].value == ';') {
@@ -757,6 +617,13 @@ class Parser {
     }
   }
 
+  // (Optional 0 indexes)
+  // 0 --> Invocation Expression Object
+  // or...
+  // 0 --> Object Creation Expression Object
+  // or...
+  // 0 --> Assignment Expression Object
+  // 1 --> ; Token
   ExpressionStatement parseExpressionStatement() {
     var startPos = _position;
     var output = ExpressionStatement(new List());
@@ -780,8 +647,16 @@ class Parser {
     }
   }
 
- ForStatement parseForStatement() {
-    print("here728");
+  // 0 --> for keyword Token
+  // 1 --> ( Token
+  // 2 --> Local Variable Declaration Object    or...   2 --> Expression Statement
+  // 3 --> ; Token
+  // 4 --> Expression Object
+  // 5 --> ; Token
+  // 6 --> Expression Statement Object
+  // 7 --> ) Token
+  // 8 --> Embedded Statement Object
+  ForStatement parseForStatement() {
     var startPos = _position;
     var output = ForStatement(new List());
     if (_tokens[_position].value == 'for') {
@@ -798,10 +673,8 @@ class Parser {
            initializer = parseExpressionStatement();
          }
          if(initializer != null){
-           print("here745");
            output.value.add(initializer);
            if(_tokens[_position].value == ';'){
-             print("here748");
              output.value.add(_tokens[_position]);
              _position++;
              var condition = parseExpression();
@@ -864,6 +737,11 @@ class Parser {
     }
   }
 
+  // 0 --> while keyword Token
+  // 1 --> ( Token
+  // 2 --> Expression Object
+  // 3 --> ) Token
+  // 4 --> Embedded Statement Object
   WhileStatement parseWhileStatement() {
     var startPos = _position;
     var output = WhileStatement(new List());
@@ -904,6 +782,9 @@ class Parser {
     }
   }
 
+  // 0 --> For Statement Object
+  // or...
+  // 0 --> While Statement Object
   //finished when expression methods are created
   IterationStatement parseIterationStatement() {
     IterationStatement output = parseForStatement();
@@ -919,6 +800,9 @@ class Parser {
     }
   }
 
+  // 0 --> return keyword Token
+  // 1 --> Expression Object
+  // 2 --> ; Token
   JumpStatement parseJumpStatement() {
     var startPos = _position;
     var output = JumpStatement(new List());
@@ -942,6 +826,13 @@ class Parser {
     }
   }
 
+  // 0 --> if keyword Token
+  // 1 --> ( Token
+  // 2 --> Expression Object
+  // 3 --> ) Token
+  // 4 --> Embedded Statement Object
+  // 5 --> else keyword Token
+  // 6 --> Embedded Statement Object
   SelectionStatement parseSelectionStatement() {
     var startPos = _position;
     var output = SelectionStatement(new List());
@@ -995,6 +886,17 @@ class Parser {
     }
   }
 
+  // 0 --> Block Statement Object
+  // or...
+  // 0 --> Empty Statement Object
+  // or...
+  // 0 --> Expression Statement Object
+  // or...
+  // 0 --> Iteration Statement Object
+  // or...
+  // 0 --> Jump Statement Object
+  // or...
+  // 0 --> Selection Statement Object
   EmbeddedStatement parseEmbeddedStatement() {
     //var startPos = _position;
     //IMPORTANT: When doing typecheck, make sure doing inheritance like this doesnt screw up type
@@ -1031,10 +933,9 @@ class Parser {
     }
   }
 
-  //====================================================================
-  //Main parser for Statements==========================================
-  //====================================================================
-
+  // 0 --> Declaration Statement Object
+  // or...
+  // 0 --> Embedded Statement Object
   Statement parseStatements() {
     Statement output;
     output = parseDeclarationStatement();
@@ -1046,12 +947,11 @@ class Parser {
     }
   }
 
-  //=================================================================================
-  //=================================================================================
-  //end of parsers for Statements====================================================
-  //=================================================================================
-  //=================================================================================
-
+  // 0 --> sbyte keyword Token
+  // or...
+  // 0 --> byte keyword Token
+  // or...
+  // 0 --> (THE REST OF THE TYPES BELOW) Token
   IntegralType parseIntegralType() {
     var output = IntegralType(new List());
     if (_tokens[_position].value == 'sbyte' ||
@@ -1071,6 +971,9 @@ class Parser {
     }
   }
 
+  // 0 --> float keyword Token
+  // or...
+  // 0 --> double keyword Token
   FloatingPointType parseFloatingPointType() {
     var output = FloatingPointType(new List());
     if (_tokens[_position].value == 'float' ||
@@ -1083,6 +986,13 @@ class Parser {
     }
   }
 
+  // 0 --> bool keyword Token
+  // or...
+  // 0 --> decimal keyword Token
+  // or...
+  // 0 --> Integral Type Object
+  // or...
+  // 0 --> Floating Point Type Object
   ValueType parseValueType() {
     //var startPos = _position;
     var output = ValueType(new List());
@@ -1113,6 +1023,11 @@ class Parser {
     }
   }
 
+  // 0 --> object keyword Token
+  // or...
+  // 0 --> string keyword Token
+  // or...
+  // 0 --> identifier Token
   ReferenceType parseReferenceType() {
     var output = ReferenceType(new List());
     if (_tokens[_position].value == 'object') {
@@ -1134,6 +1049,9 @@ class Parser {
     }
   }
 
+  // 0 --> Value Type Object
+  // or...
+  // 0 --> Reference Type Object
   Type parseType() {
     //var startPos = _position;
     var output;
@@ -1150,6 +1068,20 @@ class Parser {
     }
   }
 
+  // 0 --> Literal Expression object
+  // or...
+  // 0 --> parenthized Expression object
+  // or...
+  // 0 --> member access expression object
+  // or...
+  // 0 --> invocation expression object
+  // or...
+  // 0 --> this access expression object
+  // or...
+  // 0 --> object creation expression object
+  // or...
+  // 0 --> type of expression object
+  // Need to fix up
   PrimaryExpression parsePrimaryExpression(){
     PrimaryExpression output;
     output = parseTypeOfExpression();
@@ -1207,6 +1139,7 @@ class Parser {
     }
   }
 
+  // 0 --> this
   ThisAccess parseThisAccessExpression(){
     var output = ThisAccess(List());
     var startPos = _position;
@@ -1220,9 +1153,12 @@ class Parser {
       _position = startPos;
       return null;
     }
-
   }
 
+  // 0 --> typeof Expression
+  // 1 --> ( Token
+  // 2 --> identifer Token    or...   void Token    or...   Type object
+  // 3 --> ) Token
   TypeOfExpression parseTypeOfExpression(){
     var output = TypeOfExpression(List());
     var startPos = _position;
@@ -1287,10 +1223,11 @@ class Parser {
     else{
       return null;
     }
-
-
   }
 
+  // 0 --> primary expression object    or...   0 --> type object
+  // 1 --> . Token
+  // 2 --> Identifier Token
   MemberAccess parseMemberAccessExpression(){
     var output = MemberAccess(List());
     var startPos = _position;
@@ -1334,30 +1271,31 @@ class Parser {
   }
 
   SimpleName parseSimpleName(){
-    var output = SimpleName(List());
-    if(_tokens[_position] is IdentifierToken){
-      output.value.add(_tokens[_position]);
-      _position++;
-      return output;
-    }
-    else{
-      return null;
-    }
-  }
+	    var output = SimpleName(List());
+	    if(_tokens[_position] is IdentifierToken){
+	      output.value.add(_tokens[_position]);
+	      _position++;
+	      return output;
+	    }
+	    else{
+	      return null;
+	    }
+	  }
+	
+	  Unary parseUnary(){
+	    var output = Unary(List());
+	    if(_tokens[_position].value == 'true' ||
+	      _tokens[_position].value == 'false'){
+	        output.value.add(_tokens[_position]);
+	        _position++;
+	        return output;
+	      }
+	      else{
+	        return null;
+	      }
+	  }
 
-  Unary parseUnary(){
-    var output = Unary(List());
-    if(_tokens[_position].value == 'true' ||
-      _tokens[_position].value == 'false'){
-        output.value.add(_tokens[_position]);
-        _position++;
-        return output;
-      }
-      else{
-        return null;
-      }
-  }
-
+  // 0 --> characterLiteral token or integerLiteral token or stringLiteral token
   Literal parseLiteralExpression(){
     var output = Literal(List());
     if (_tokens[_position].type == TokenType.characterLiteral ||
@@ -1370,6 +1308,9 @@ class Parser {
     return null;
   }
 
+  // 0 --> ( Token
+  // 1 --> Expression Token
+  // 2 --> ) Token
   ParenthesizedExpression parseParenthizedExpression(){
     var output = ParenthesizedExpression(List());
     var startPos = _position;
@@ -1384,23 +1325,37 @@ class Parser {
           output.value.add(_tokens[_position]);
           _position++;
           return output;
-        }  
+        }
          else{
           _position = startPos;
           return null;
         }
         //_position++;
-      }else{
+      } else {
         _position = startPos;
         return null;
       }
-      
       _position = startPos;
       return null;
     }
     return null;
   }
 
+  // 0 --> primary expression object
+  // or...
+  // 0 --> assignment expression object
+  // or...
+  // 0 --> additive expression object
+  // or...
+  // 0 --> multiplicative expression object
+  // or...
+  // 0 --> equality expression object
+  // or...
+  // 0 --> relational expression object
+  // or...
+  // 0 --> conditional AND expression object
+  // or...
+  // 0 --> conditional OR expression object
   PrimaryNoArrayCreationExpression parseExpression(){
     var output;
     output = parsePrimaryExpression();
@@ -1464,140 +1419,21 @@ class Parser {
         }
       }
     }
-
   }
 
-  // Expression parseExpression() {
-  //   /*
-  //     NOT SUPPORTED:
-  //     alias
-  //     element access not supported because there is no array support
-  //     'base' keyword 
-  //     post decrement and increment
-  //     anonymous object creation
-  //     delegate
-  //     checked vs unchecked - tentative
-  //     default values -  tentative
-  //     nameof - tentative
-  //   */
-  //   //TODO: make proper fail states and add returns and fix compile error with parstyle paramater
-  //   print('here1114');
-  //   var startPos = _position;
-  //   var output =
-  //       PrimaryNoArrayCreationExpression(List());
-  //   //literals
-  //   if (_tokens[_position].type == TokenType.characterLiteral ||
-  //       _tokens[_position].type == TokenType.integerLiteral ||
-  //       _tokens[_position].type == TokenType.stringLiteral) {
-  //     output.value.add(_tokens[_position]);
-  //     _position++;
-  //     return output;
-  //   }
-  //   _position = startPos;
-  //   //parenthesized expression
-  //   if (_tokens[_position].value == '(') {
-  //     output.value.add(_tokens[_position]);
-  //     _position++;
-  //     //output.value.add(ParseExpression());
-  //     var tmp3 = parseExpression();
-  //     if (tmp3 != null) {
-  //       output.value.add(tmp3);
-  //       //_position++;
-  //     }
-  //     if (_tokens[_position].value == ')') {
-  //       output.value.add(_tokens[_position]);
-  //       _position++;
-  //       return output;
-  //     }
-  //     _position = startPos;
-  //     return null;
-  //   }
-  //   _position = startPos;
-  //   //member access
-  //   //may need a helper method
-  //   if (_tokens[_position] is PrimaryExpression || parseType() != null) {
-  //     output.value.add(_tokens[_position]);
-  //     _position++;
-  //     if (_tokens[_position].value == '.') {
-  //       output.value.add(_tokens[_position]);
-  //       _position++;
-  //       if (_tokens[_position] is IdentifierToken) {
-  //         output.value.add(_tokens[_position]);
-  //         _position++;
-  //         //argument list - optional
-  //         if (_tokens[_position].value == '<') {
-  //           while (_tokens[_position].value != '>') {
-  //             output.value.add(_tokens[_position]);
-  //             _position++;
-  //           }
-  //         }
-  //         return output;
-  //       }
-  //       _position = startPos;
-  //       return null;
-  //     }
-  //     _position = startPos;
-  //   }
-  //   _position = startPos;
-
-  //   var tmp = parseInvocationExpression();
-  //   if (tmp != null) {
-  //     output.value.add(tmp);
-  //     //_position++;
-  //     return output;
-  //   }
-  //   _position = startPos;
-  //   //'this' access
-  //   if (_tokens[_position].value == "this" &&
-  //       _tokens[_position] is KeywordToken) {
-  //     output.value.add(_tokens[_position]);
-  //     _position++;
-  //     return output;
-  //   }
-
-  //   var tmp2 = parseObjectCreationExpression();
-  //   if (tmp != null) {
-  //     output.value.add(tmp2);
-  //   }
-  //   _position = startPos;
-
-  //   //typof
-  //   if (_tokens[_position].value == "typeof" &&
-  //       _tokens[_position] is KeywordToken) {
-  //     output.value.add(_tokens[_position]);
-  //     _position++;
-  //     if (_tokens[_position].value == '(') {
-  //       output.value.add(_tokens[_position]);
-  //       _position++;
-  //       if (_tokens[_position].value == "void" ||
-  //           _tokens[_position] is IdentifierToken) {
-  //         output.value.add(_tokens[_position]);
-  //         _position++;
-  //         if (_tokens[_position].value == ')') {
-  //           output.value.add(_tokens[_position]);
-  //           _position++;
-  //           return output;
-  //         }
-  //       }
-  //       _position = startPos;
-  //       return null;
-  //     }
-  //     _position = startPos;
-  //     return null;
-  //   }
-  //   _position = startPos;
-  //   return null;
-  // }
-
-  //helper methods for parseExpression()
+  // 0 --> primary expression object
+  // 1 --> ( token
+  // 2 to X --> identifier token   or...  expression object
+  //            followed by a , token for every identifier or expression token
+  // X + 2 --> ) token
+  // helper methods for parseExpression()
   InvocationExpression parseInvocationExpression() {
     var output = InvocationExpression(List());
     var startPos = _position;
     var simple = parseSimpleName();
     if(simple != null){
       output.value.add(simple);
-    }
-    else{
+    } else {
       var literal = parseLiteralExpression();
       if (literal != null){
         output.value.add(literal);
@@ -1617,37 +1453,38 @@ class Parser {
       output.value.add(_tokens[_position]);
       _position++;
       while(_tokens[_position].value != ')'){
-        if(_position >= _tokens.length){
+        if(_position >= _tokens.length) {
           _position = startPos;
           return null;
         }
         if(_tokens[_position] is IdentifierToken){
-            output.value.add(_tokens[_position]);
-            _position++;
-            //this might be off, look here first when bug hunting
-            if(_position < _tokens.length - 1){
-              if(_tokens[_position].value == ',')
-              {
-                output.value.add(_tokens[_position]);
-              }
-              else{
-                _position = startPos;
-                return null;
-              }
+          output.value.add(_tokens[_position]);
+          _position++;
+          //this might be off, look here first when bug hunting
+          if(_position < _tokens.length - 1){
+            if(_tokens[_position].value == ',')
+            {
+              output.value.add(_tokens[_position]);
             }
+            else{
+              _position = startPos;
+              return null;
+            }
+          }
         }
-
       }
       output.value.add(_tokens[_position]);
       _position++;
       return output;
-    }
-    else{
+    } else {
       _position = startPos;
       return null;
     }
   }
 
+  // broken
+  // 0 --> new keyword Token
+  // 1 --> Type object
   ObjectCreationExpression parseObjectCreationExpression() {
     var output = ObjectCreationExpression(List());
     var startPos = _position;
@@ -1674,7 +1511,10 @@ class Parser {
     return null;
   }
 
-  AssignmentExpression parseAssignmentExpression(){
+  // 0 --> Expression
+  // 1 --> = or....... Tokens (a bunch, look below)
+  // 2 --> Expression
+  AssignmentExpression parseAssignmentExpression() {
     var output = AssignmentExpression(List());
     var startPos = _position;
     var memberAccess = parseMemberAccessExpression();
@@ -1761,16 +1601,15 @@ class Parser {
             }
           }
         }
-        }
-        else{
-          _position = startPos;
-          return null;
-        }
-      
-
+      } else {
+        _position = startPos;
+        return null;
+      }
   }
 
-
+  // 0 --> Expression object
+  // 1 --> + or - Token
+  // 2 --> Expression object
   AdditiveExpression parseAdditiveExpression() {
     var output = AdditiveExpression(List());
     var startPos = _position;
@@ -1797,6 +1636,9 @@ class Parser {
     return null;
   }
 
+  // 0 --> Expression object
+  // 1 --> * or / or % Token
+  // 2 --> Expression object
   MultiplicativeExpression parseMultiplicativeExpression() {
     var output = MultiplicativeExpression(List());
     var startPos = _position;
@@ -1825,19 +1667,9 @@ class Parser {
     return null;
   }
 
-  // EqualitylExpression parseEqualityExpression(){
-  //   var output;
-  //   var startPos = _position;
-  //   var rela = parseRelationalExpression();
-  //   if(rela != null)
-  //   {
-  //     output.value.add(rela);
-  //   }
-  //   else{
-  //     var prim = parsePrimaryExpression();
-  //     if(prim != null)
-  //   }
-  // }
+  // 0 --> Expression object
+  // 1 --> == or != Token
+  // 2 --> Expression object
   EqualitylExpression parseEqualityExpression() {
     var output = EqualitylExpression(List());
     var startPos = _position;
@@ -1864,6 +1696,9 @@ class Parser {
     return null;
   }
 
+  // 0 --> Expression object
+  // 1 --> < or > or <= or >= or is Token
+  // 2 --> Expression object
   RelationalExpression parseRelationalExpression() {
     var output = RelationalExpression(List());
     var startPos = _position;
@@ -1894,6 +1729,9 @@ class Parser {
     return null;
   }
 
+  // 0 --> Expression object
+  // 1 --> && Token
+  // 2 --> Expression object
   ConditionalAndExpression parseConditionalAndExpression() {
     var output = ConditionalAndExpression(List());
     var startPos = _position;
@@ -1920,6 +1758,9 @@ class Parser {
     return null;
   }
 
+  // 0 --> Expression
+  // 1 --> || Token
+  // 2 --> Expression
   ConditionalOrExpression parseConditionalOrExpression() {
     var output = ConditionalOrExpression(List());
     var startPos = _position;
@@ -1946,6 +1787,7 @@ class Parser {
     return null;
   }
 
+  // 0 to X --> ClassDeclaration object
   Namespace parse() {
     var output = Namespace(new List());
     while (_position <= _tokens.length) {
