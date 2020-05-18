@@ -1130,6 +1130,9 @@ class Parser {
                       if(output != null){
                         return output;
                       }
+                      else{
+                        return null;
+                      }
                     }
                 }
               }
@@ -1359,7 +1362,7 @@ class Parser {
   // 0 --> conditional OR expression object
   PrimaryNoArrayCreationExpression parseExpression(){
     var output;
-    output = parsePrimaryExpression();
+    output = parseConditionalOrExpression();
     if(output != null){
       return output;
     }
@@ -1394,7 +1397,7 @@ class Parser {
                   return output;
                 }
                 else{
-                  output = parseConditionalOrExpression();
+                  output = parsePrimaryExpression();
                   if(output != null){
                     return output;
                   }
@@ -1488,14 +1491,16 @@ class Parser {
   // 1 --> Type object
   ObjectCreationExpression parseObjectCreationExpression() {
     var output = ObjectCreationExpression(List());
+   
     var startPos = _position;
     if (_tokens[_position].value == "new" &&
         _tokens[_position] is KeywordToken) {
       output.value.add(_tokens[_position]);
       _position++;
-      if (parseType() != null) {
-        output.value.add(_tokens[_position]);
-        _position++;
+      var type = parseReferenceType();
+      if (type != null) {
+        output.value.add(type);
+        //_position++;
         //argument list - optional
         if (_tokens[_position].value == '(') {
           while (_tokens[_position].value != ')') {
@@ -1503,6 +1508,7 @@ class Parser {
             _position++;
           }
         }
+        output.value.add(_tokens[_position]);
         return output;
       }
       _position = startPos;
@@ -1791,7 +1797,7 @@ class Parser {
   // 0 to X --> ClassDeclaration object
   Namespace parse() {
     var output = Namespace(new List());
-    while (_position <= _tokens.length) {
+    while (_position < _tokens.length) {
       var temp = parseClass();
       if (temp != null) {
         output.value.add(temp);
