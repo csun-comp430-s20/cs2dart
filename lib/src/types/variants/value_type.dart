@@ -14,7 +14,7 @@ class ValueType implements Type {
     return _value;
   }
 
-  TypeKind get type{
+  Object get type{
     return _type;
   }
   static final TypeKind _type = TypeKind.valueType;

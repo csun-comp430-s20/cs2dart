@@ -131,40 +131,34 @@ class ClassGenerator {
       output += input.value[2].value;
       var i = 3;
       //parameters
-      while(i < input.value.length - 1)
+      while(i < input.value.length - 2)
       {
-        if (input.value[i].value == ')' && ((i+1) == input.value.length - 1))
+        // if (input.value[i].value == ')' && ((i+1) == input.value.length - 1))
+        // {
+        //   output += ')';
+        //   i++;
+        // }
+        // else
+        // {
+        if (input.value[i] is FixedParam)
         {
-          output += ')';
-          print('===============Debugcomment=============14');
-          print(output);
-          i++;
-          print(input.value[i]);
-        }
-        else
-        {
-          print('===============Debugcomment=============15');
-          print(output);
-          print(input.value[i].value);
           output += genFixedParam(input.value[i]);
-          if(i < input.value.length - 2){
-            output += ', ';
-          }
-          i++;
         }
-        //iterate in block
-        for (var t = 0; t < input.value[i].value.length; t++)
+        else if (i < input.value.length - 3)
         {
-          if (!(input.value[i].value[t] is Block))
-          {
-            output += input.value[i].value[t].value + ' ';
-          }
-          else
-          {
-            output += genBlockStatement(input.value[i].value[t].value) + '}';
-          }
+          output += ', ';
         }
+        //   if(i < input.value.length - 2){
+        //   }
+        i++;
+        // }
       }
+      print('===============Debugcomment=============15');
+      print(input.value);
+      output += input.value[i].value;
+      i++;
+      output += genBlockStatement(input.value[i]);
+      // }
       // i++;
       return output;
     }
@@ -175,24 +169,23 @@ class ClassGenerator {
       output += input.value[0].value + ' ';
       var i = 1;
       //for the list of statements
-      while (i < input.value.length){
+      while (i < input.value.length - 1){
         //checks for end of block. Block types will always have a "}" at the end of list.
         print('===============Debugcomment=============00');
         print(input.value[i]);
-        print(output);
-        // if (i == input.value.length - 1)
-        // {
-        //   print('====Debugcomment Statement finished====99');
-        //   print(input.value[i]);
-        //   output += '} ';
-        //   print(output);
-        // }
-        // else
-        // {
-        //   print('===============Debugcomment=============88');
+        if (i == input.value.length - 1)
+        {
+          print('====Debugcomment Statement finished====99');
+          print(input.value[i]);
+          output += '}';
+          print(output);
+        }
+        else
+        {
+          print('===============Debugcomment=============88');
           output += genStatements(input.value[i]) + ' ';
         //   print(output);
-        // }
+        }
         i++;
       }
       output+= input.value[i].value + ' ';
@@ -638,20 +631,6 @@ class ClassGenerator {
     return output;
   }
 
-  // String genExpressionCode(PrimaryExpression input)
-  // {
-  //   print('AAAAAAAAAAAAAAAAAAAAAH this needs to be written');
-  //   //Were this method to be called, the following error would occur during testing, since output is null.
-  //
-  //   //Error:
-  //   // NoSuchMethodError: The method '+' was called on null.
-  //   // Receiver: null
-  //   // Tried calling: +(" ")
-  //
-  //
-  //   var output;
-  //   return output;
-  // }
 
 //========================================================================
 

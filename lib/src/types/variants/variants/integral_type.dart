@@ -4,7 +4,7 @@ import '../value_type.dart';
 
 
 
-class IntegralType implements Type {
+class IntegralType implements ValueType {
   IntegralType(this._value);
 
   final List _value;
