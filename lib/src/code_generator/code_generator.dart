@@ -40,7 +40,7 @@ class ClassGenerator {
     final Namespace _namespace;
 
     String genCode(){
-      
+
       var output = '';
       for(var i = 0; i < _namespace.value.length; i++){
         output += genClassCode(_namespace.value[i]);
@@ -88,7 +88,7 @@ class ClassGenerator {
           i += 2;
         }
         else if(classBody.value[i] is MethodDeclaration){
-          output += genMenthodDeclarationCode(classBody.value[i]) + ' ';
+          output += genMenthodDeclarationCode(classBody.value[i]);
 
         }
         else{
@@ -131,36 +131,37 @@ class ClassGenerator {
       output += input.value[2].value;
       var i = 3;
       //parameters
-      while(i < input.value.length - 1){
+      while(i < input.value.length - 1)
+      {
         if (input.value[i].value == ')' && ((i+1) == input.value.length - 1))
         {
           output += ')';
+          print('===============Debugcomment=============14');
+          print(output);
           i++;
+          print(input.value[i]);
         }
         else
         {
+          print('===============Debugcomment=============15');
+          print(output);
+          print(input.value[i].value);
           output += genFixedParam(input.value[i]);
           if(i < input.value.length - 2){
             output += ', ';
           }
           i++;
         }
-      }
-      print('===============Debugcomment=============15');
-      print(input.value);
-      if (input.value is List)
-      {
-        for (var t = 0; t < input.value.length; t++)
+        //iterate in block
+        for (var t = 0; t < input.value[i].value.length; t++)
         {
-          print('===============Debugcomment=============777');
-          print(input.value[t].value);
-          if (!(input.value[t] is Block))
+          if (!(input.value[i].value[t] is Block))
           {
-            output += input.value[t].value + ' ';
+            output += input.value[i].value[t].value + ' ';
           }
           else
           {
-            output += genBlockStatement(input.value[t]) + '}';
+            output += genBlockStatement(input.value[i].value[t].value) + '}';
           }
         }
       }
@@ -178,22 +179,23 @@ class ClassGenerator {
         //checks for end of block. Block types will always have a "}" at the end of list.
         print('===============Debugcomment=============00');
         print(input.value[i]);
-        if (i == input.value.length - 1)
-        {
-          print('====Debugcomment Statement finished====99');
-          print(input.value[i]);
-          output += '} ';
-          print(output);
-        }
-        else
-        {
-          print('===============Debugcomment=============88');
+        print(output);
+        // if (i == input.value.length - 1)
+        // {
+        //   print('====Debugcomment Statement finished====99');
+        //   print(input.value[i]);
+        //   output += '} ';
+        //   print(output);
+        // }
+        // else
+        // {
+        //   print('===============Debugcomment=============88');
           output += genStatements(input.value[i]) + ' ';
-          print(output);
-        }
+        //   print(output);
+        // }
         i++;
       }
-      // output+= input.value[i].value + ' ';
+      output+= input.value[i].value + ' ';
       return output;
     }
 
@@ -211,7 +213,7 @@ class ClassGenerator {
 
     String genExpressionStatement(ExpressionStatement input){
       var output = '';
-      
+
       if (input.value[0] is InvocationExpression){
         output += genInvocation(input.value[0]);
       }
@@ -223,7 +225,7 @@ class ClassGenerator {
       }
 
       output += ';';
-      return output; 
+      return output;
 
       //is this replaced by getExpressionCode??
 
@@ -291,7 +293,7 @@ class ClassGenerator {
       }
       output +=  ')';
       return output;
-      
+
     }
 
     String genLiteral(Literal input){
@@ -450,7 +452,7 @@ class ClassGenerator {
       }
       return output;
     }
-    
+
     String genUnary(Unary input){
       var output = '';
       output += input.value[0].value;
@@ -636,20 +638,20 @@ class ClassGenerator {
     return output;
   }
 
-  String genExpressionCode(PrimaryExpression input)
-  {
-    print('AAAAAAAAAAAAAAAAAAAAAH this needs to be written');
-    //Were this method to be called, the following error would occur during testing, since output is null.
-
-    //Error:
-    // NoSuchMethodError: The method '+' was called on null.
-    // Receiver: null
-    // Tried calling: +(" ")
-
-
-    var output;
-    return output;
-  }
+  // String genExpressionCode(PrimaryExpression input)
+  // {
+  //   print('AAAAAAAAAAAAAAAAAAAAAH this needs to be written');
+  //   //Were this method to be called, the following error would occur during testing, since output is null.
+  //
+  //   //Error:
+  //   // NoSuchMethodError: The method '+' was called on null.
+  //   // Receiver: null
+  //   // Tried calling: +(" ")
+  //
+  //
+  //   var output;
+  //   return output;
+  // }
 
 //========================================================================
 
