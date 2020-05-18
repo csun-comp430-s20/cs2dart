@@ -14,8 +14,10 @@ import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressio
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/object_creation_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/parenthesized_expression.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/relational_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/simple_name.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/this_access.dart';
 import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/typeof_expression.dart';
+import 'package:cs2dart/src/expressions/variants/PrimaryNoArrayCreationExpressionVariants/unary.dart';
 import 'package:cs2dart/src/expressions/variants/primary_no_array_creation_expression.dart';
 import 'package:cs2dart/src/types/variants/reference_type.dart';
 import 'package:cs2dart/tokens.dart';
@@ -170,6 +172,7 @@ class Parser {
       }
     }
     if (_tokens[_position] is IdentifierToken) {
+
       output.value.add(_tokens[_position]);
       _position++;
       if (_tokens[_position].value == '(') {
@@ -1149,7 +1152,7 @@ class Parser {
 
   PrimaryExpression parsePrimaryExpression(){
     PrimaryExpression output;
-    output = parseLiteralExpression();
+    output = parseTypeOfExpression();
     if(output != null){
       return output;
     }
@@ -1179,12 +1182,22 @@ class Parser {
                 return output;
               }
               else{
-                output = parseTypeOfExpression();
+                output = parseLiteralExpression();
+                
                 if(output != null){
                   return output;
                 }
                 else{
-                  return null;
+                   output = parseSimpleName();
+                    if(output != null){
+                      return output;
+                    }
+                    else{
+                      output = parseUnary();
+                      if(output != null){
+                        return output;
+                      }
+                    }
                 }
               }
             }
@@ -1281,9 +1294,9 @@ class Parser {
   MemberAccess parseMemberAccessExpression(){
     var output = MemberAccess(List());
     var startPos = _position;
-    var primExpression = parsePrimaryExpression();
-    if(primExpression != null){
-      output.value.add(primExpression);
+    var thisExpression = parseThisAccessExpression();
+    if(thisExpression != null){
+      output.value.add(thisExpression);
     }
     else{
       var type = parseType();
@@ -1291,8 +1304,14 @@ class Parser {
         output.value.add(type);
       }
       else{
-        _position = startPos;
-        return null;
+        var name = parseSimpleName();
+        if(name != null){
+          output.value.add(name);
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
       }
     }
     if (_tokens[_position].value == '.'){
@@ -1314,11 +1333,36 @@ class Parser {
     }
   }
 
+  SimpleName parseSimpleName(){
+    var output = SimpleName(List());
+    if(_tokens[_position] is IdentifierToken){
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
+    }
+    else{
+      return null;
+    }
+  }
+
+  Unary parseUnary(){
+    var output = Unary(List());
+    if(_tokens[_position].value == 'true' ||
+      _tokens[_position].value == 'false'){
+        output.value.add(_tokens[_position]);
+        _position++;
+        return output;
+      }
+      else{
+        return null;
+      }
+  }
+
   Literal parseLiteralExpression(){
     var output = Literal(List());
     if (_tokens[_position].type == TokenType.characterLiteral ||
         _tokens[_position].type == TokenType.integerLiteral ||
-        _tokens[_position].type == TokenType.stringLiteral) {
+        _tokens[_position].type == TokenType.stringLiteral ) {
       output.value.add(_tokens[_position]);
       _position++;
       return output;
@@ -1399,7 +1443,19 @@ class Parser {
                     return output;
                   }
                   else{
-                    return null;
+                    output = parseSimpleName();
+                    if(output != null){
+                      return output;
+                    }
+                    else{
+                      output = parseUnary();
+                      if(output != null){
+                        return output;
+                      }
+                      else{
+                        return null;
+                      }
+                    }
                   }
                 }
               }
@@ -1537,18 +1593,35 @@ class Parser {
   InvocationExpression parseInvocationExpression() {
     var output = InvocationExpression(List());
     var startPos = _position;
-    var primExp = parsePrimaryExpression();
-    if(primExp != null){
-      output.value.add(primExp);
-      if(_tokens[_position].value == '('){
-        output.value.add(_tokens[_position]);
-        _position++;
-        while(_tokens[_position].value != ')'){
-          if(_position >= _tokens.length){
-            _position = startPos;
-            return null;
-          }
-          if(_tokens[_position] is IdentifierToken){
+    var simple = parseSimpleName();
+    if(simple != null){
+      output.value.add(simple);
+    }
+    else{
+      var literal = parseLiteralExpression();
+      if (literal != null){
+        output.value.add(literal);
+      }
+      else{
+        var memAccess = parseMemberAccessExpression();
+        if(memAccess != null){
+          output.value.add(memAccess);
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      }
+    }
+    if(_tokens[_position].value == '('){
+      output.value.add(_tokens[_position]);
+      _position++;
+      while(_tokens[_position].value != ')'){
+        if(_position >= _tokens.length){
+          _position = startPos;
+          return null;
+        }
+        if(_tokens[_position] is IdentifierToken){
             output.value.add(_tokens[_position]);
             _position++;
             //this might be off, look here first when bug hunting
@@ -1562,40 +1635,17 @@ class Parser {
                 return null;
               }
             }
-          }
-          else{
-            var exp = parseExpression();
-            if(exp != null){
-              output.value.add(exp);
-              if(_tokens[_position].value == ',')
-              {
-                output.value.add(_tokens[_position]);
-              }
-              else{
-                _position = startPos;
-                return null;
-              }
-            }
-            else{
-              _position = startPos;
-              return null;
-            }
-          }
-
         }
-        output.value.add(_tokens[_position]);
-        _position++;
-        return output;
+
       }
-      else{
-        _position = startPos;
-        return null;
-      }
+      output.value.add(_tokens[_position]);
+      _position++;
+      return output;
     }
     else{
+      _position = startPos;
       return null;
     }
-    
   }
 
   ObjectCreationExpression parseObjectCreationExpression() {
@@ -1624,14 +1674,24 @@ class Parser {
     return null;
   }
 
-  AssignmentExpression parseAssignmentExpression() {
+  AssignmentExpression parseAssignmentExpression(){
     var output = AssignmentExpression(List());
     var startPos = _position;
-    var tmpexp = parseExpression();
-    if (tmpexp != null) {
-      output.value.add(tmpexp);
-      //_position++;
-      if (_tokens[_position].value == '=' ||
+    var memberAccess = parseMemberAccessExpression();
+    if(memberAccess != null){
+      output.value.add(memberAccess);
+    }
+    else{
+      var simple = parseSimpleName();
+      if(simple != null){
+        output.value.add(simple);
+      }
+      else{
+        _position = startPos;
+        return null;
+      }
+    }
+    if (_tokens[_position].value == '=' ||
           _tokens[_position].value == '+=' ||
           _tokens[_position].value == '-=' ||
           _tokens[_position].value == '*=' ||
@@ -1643,31 +1703,85 @@ class Parser {
           _tokens[_position].value == '<<=') {
         output.value.add(_tokens[_position]);
         _position++;
-        var tmpexp2 = parseExpression();
-        if (tmpexp2 != null) {
-          output.value.add(tmpexp2);
-          //_position++;
+        var member = parseMemberAccessExpression();
+        if (member != null){
+          output.value.add(member);
           return output;
         }
-        _position = startPos;
-      }
-      _position = startPos;
-    }
-    _position = startPos;
-    return null;
+        else{
+          var invoc = parseInvocationExpression();
+          if(invoc != null){
+            output.value.add(invoc);
+            return output;
+          }
+          else{
+            var obj = parseObjectCreationExpression();
+            if(obj != null){
+              output.value.add(invoc);
+              return output;
+            }
+            else{
+              var add = parseAdditiveExpression();
+              if(add != null){
+                output.value.add(add);
+                return output;
+              }
+              else{
+                var mult = parseMultiplicativeExpression();
+                if(mult != null){
+                  output.value.add(mult);
+                  return output;
+                }
+                else{
+                  var unary = parseUnary();
+                  if(unary != null){
+                    output.value.add(unary);
+                    return output;
+                  }
+                  else{
+                    var simple = parseSimpleName();
+                    if(simple != null){
+                      output.value.add(simple);
+                      return output;
+                    }
+                    else{
+                      var literal = parseLiteralExpression();
+                      if(literal != null){
+                        output.value.add(literal);
+                        return output;
+                      }
+                      else{
+                        _position = startPos;
+                        return null;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        }
+        else{
+          _position = startPos;
+          return null;
+        }
+      
+
   }
+
 
   AdditiveExpression parseAdditiveExpression() {
     var output = AdditiveExpression(List());
     var startPos = _position;
-    var tmpexp = parseExpression();
+    var tmpexp = parsePrimaryExpression();
     if (tmpexp != null) {
       output.value.add(tmpexp);
       //_position++;
       if (_tokens[_position].value == '+' || _tokens[_position].value == '-') {
         output.value.add(_tokens[_position]);
         _position++;
-        var tmpexp = parseExpression();
+        var tmpexp = parsePrimaryExpression();
         if (tmpexp != null) {
           output.value.add(tmpexp);
           //_position++;
@@ -1686,7 +1800,7 @@ class Parser {
   MultiplicativeExpression parseMultiplicativeExpression() {
     var output = MultiplicativeExpression(List());
     var startPos = _position;
-    var tmpexp = parseExpression();
+    var tmpexp = parsePrimaryExpression();
     if (tmpexp != null) {
       output.value.add(tmpexp);
       //_position++;
@@ -1695,7 +1809,7 @@ class Parser {
           _tokens[_position].value == '%') {
         output.value.add(_tokens[_position]);
         _position++;
-        var tmpexp = parseExpression();
+        var tmpexp = parsePrimaryExpression();
         if (tmpexp != null) {
           output.value.add(tmpexp);
           //_position++;
@@ -1711,17 +1825,30 @@ class Parser {
     return null;
   }
 
+  // EqualitylExpression parseEqualityExpression(){
+  //   var output;
+  //   var startPos = _position;
+  //   var rela = parseRelationalExpression();
+  //   if(rela != null)
+  //   {
+  //     output.value.add(rela);
+  //   }
+  //   else{
+  //     var prim = parsePrimaryExpression();
+  //     if(prim != null)
+  //   }
+  // }
   EqualitylExpression parseEqualityExpression() {
     var output = EqualitylExpression(List());
     var startPos = _position;
-    var tmpexp = parseExpression();
+    var tmpexp = parsePrimaryExpression();
     if (tmpexp != null) {
       output.value.add(tmpexp);
       //_position++;
-      if (_tokens[_position].value == '=' || _tokens[_position].value == '!=') {
+      if (_tokens[_position].value == '==' || _tokens[_position].value == '!=') {
         output.value.add(_tokens[_position]);
         _position++;
-        var tmpexp = parseExpression();
+        var tmpexp = parsePrimaryExpression();
         if (tmpexp != null) {
           output.value.add(tmpexp);
           //_position++;
@@ -1740,7 +1867,7 @@ class Parser {
   RelationalExpression parseRelationalExpression() {
     var output = RelationalExpression(List());
     var startPos = _position;
-    var tmpexp = parseExpression();
+    var tmpexp = parsePrimaryExpression();
     if (tmpexp != null) {
       output.value.add(tmpexp);
       //_position++;
@@ -1751,7 +1878,7 @@ class Parser {
           _tokens[_position].value == 'is') {
         output.value.add(_tokens[_position]);
         _position++;
-        var tmpexp = parseExpression();
+        var tmpexp = parsePrimaryExpression();
         if (tmpexp != null) {
           output.value.add(tmpexp);
           //_position++;
@@ -1770,14 +1897,14 @@ class Parser {
   ConditionalAndExpression parseConditionalAndExpression() {
     var output = ConditionalAndExpression(List());
     var startPos = _position;
-    var tmpexp = parseExpression();
+    var tmpexp = parsePrimaryExpression();
     if (tmpexp != null) {
       output.value.add(tmpexp);
       //_position++;
       if (_tokens[_position].value == '&&') {
         output.value.add(_tokens[_position]);
         _position++;
-        var tmpexp = parseExpression();
+        var tmpexp = parsePrimaryExpression();
         if (tmpexp != null) {
           output.value.add(tmpexp);
           //_position++;
@@ -1796,14 +1923,14 @@ class Parser {
   ConditionalOrExpression parseConditionalOrExpression() {
     var output = ConditionalOrExpression(List());
     var startPos = _position;
-    var tmpexp = parseExpression();
+    var tmpexp = parsePrimaryExpression();
     if (tmpexp != null) {
       output.value.add(tmpexp);
       //_position++;
       if (_tokens[_position].value == '||') {
         output.value.add(_tokens[_position]);
         _position++;
-        var tmpexp = parseExpression();
+        var tmpexp = parsePrimaryExpression();
         if (tmpexp != null) {
           output.value.add(tmpexp);
           //_position++;

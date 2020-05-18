@@ -28,7 +28,8 @@ enum PrimaryNoArrayCreationExpressionType {
   relational_expression,
   equality_expression,
   conditional_and_expression,
-  conditional_or_expression
+  conditional_or_expression,
+  unary
 
 }
 

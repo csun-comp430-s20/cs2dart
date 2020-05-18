@@ -190,6 +190,26 @@ test('integral type test', () {
     print(parseResult.runtimeType.toString());
     
   });
+
+  test('Block with 2 statements test ', () {
+    var token = Lexer('{int x; int y;}').lexify();
+    var parseResult = Parser(token).parseBlockStatement();
+
+    print(parseResult.value[2].runtimeType.toString());
+
+    expect(parseResult.runtimeType.toString(), 'Block');
+  });
+
+    test('Method with Block with 2 statements test ', () {
+      var token = Lexer('int Main(){int x; bool y = false;}').lexify();
+      var parseResult = Parser(token).parseMethodDeclaration();
+
+      print(parseResult.value[4].runtimeType.toString());
+      print(parseResult.value[4].value[1].runtimeType.toString());
+      print(parseResult.value[4].value[2].runtimeType.toString());
+
+      expect(parseResult.runtimeType.toString(), 'MethodDeclaration');
+    });
   //expression tests
 
   //class tests
