@@ -26,14 +26,14 @@ void main() {
     //
     //   expect(parseResult.runtimeType.toString(), 'MethodDeclaration');
     // });
-  // test('class code test', () {
-  //   var listOfTokens  = Lexer('class Program {}').lexify();
-  //   var parser = Parser(listOfTokens);
-  //   var outputParse = parser.parse();
-  //   var cg = ClassGenerator(outputParse);
-  //   // print('===============Debugcomment=============10');
-  //   expect('class Program { } ', cg.genCode());
-  // });
+  test('class code test', () {
+    var listOfTokens  = Lexer('class Program {}').lexify();
+    var parser = Parser(listOfTokens);
+    var outputParse = parser.parse();
+    var cg = ClassGenerator(outputParse);
+    // print('===============Debugcomment=============10');
+    expect('class Program { } ', cg.genCode());
+  });
   test('method code test', () {
     var listOfTokens  = Lexer('class Program {void Main(){}}').lexify();
     var parser = Parser(listOfTokens);
@@ -43,6 +43,9 @@ void main() {
     print(cg.genCode());
     expect('class Program { void Main(){ } } ', cg.genCode());
   });
+
+  //Something wrong with the parser..
+
   // test('method code test with parameters', () {
   //   var listOfTokens  = Lexer('class Program {void Main(int a){}}').lexify();
   //   var parser = Parser(listOfTokens);
@@ -65,17 +68,19 @@ void main() {
   //   expect('class Program { void Main(){; } } ', cg.genCode());
   // });
 
-  // test('test if statement', () {
-  //   var listOfTokens  = Lexer('class Program {void Main(){string name = "Chad";}}').lexify();
-  //   var parser = Parser(listOfTokens);
-  //   var outputParse = parser.parse();
-  //   var cg = ClassGenerator(outputParse);
-  //   // print('===============Debugcomment=============10');
-  //   expect('class Program { void Main(){int num = 10; num = 5 + num; } } ', cg.genCode());
-  // });
+  test('test variable declaration statement', () {
+    var listOfTokens  = Lexer('class Program {void Main(){string name = "Chad";}}').lexify();
+    var parser = Parser(listOfTokens);
+    var outputParse = parser.parse();
+    var cg = ClassGenerator(outputParse);
+    // print('===============Debugcomment=============10');
+    expect('class Program { void Main(){ String  name = "Chad";  } } ', cg.genCode());
+  });
+
+  //Parseing error
 
   // test('test if statement', () {
-  //   var listOfTokens  = Lexer('class Program {void Main(){string name = "Chad";}}').lexify();
+  //   var listOfTokens  = Lexer('class Program {void Main(){int num = 10; num = 5 + num; }}').lexify();
   //   var parser = Parser(listOfTokens);
   //   var outputParse = parser.parse();
   //   var cg = ClassGenerator(outputParse);

@@ -4,7 +4,7 @@ import '../value_type.dart';
 
 
 
-class FloatingPointType implements Type {
+class FloatingPointType implements ValueType {
   FloatingPointType(this._value);
 
   final List _value;
