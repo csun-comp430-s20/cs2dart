@@ -19,9 +19,12 @@ export 'src/statements/variants/DeclarationStatementVariants/local_variable_decl
 //src/statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/
 export 'src/statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/local_variable_declarators.dart';
 export 'src/statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/local_variable_type.dart';
+export 'src/statements/variants/DeclarationStatementVariants/constant_declaration.dart';
+
 
 //src/statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/LocalVariableDeclaratorsVariants/
 export 'src/statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/LocalVariableDeclaratorsVariants/local_variable_declarator.dart';
+export 'src/statements/variants/DeclarationStatementVariants/LocalVariableDeclarationVariants/LocalVariableDeclaratorsVariants/LocalVariableDeclaratorVariants/local_variable_initializer.dart';
 
 /////=====================================================================================
 /////======================EMBEDDEDSTATEMENTS==========================================
